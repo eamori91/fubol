@@ -31,12 +31,13 @@ Herramienta avanzada e integrada para el análisis comprehensivo de partidos de 
 - **Rate limiting y seguridad**: Control de acceso y uso
 
 ### Integración de Datos Externos
-- **Actualización automática**: Datos desde fuentes públicas (football-data.org, etc.)
+- **Actualización automática**: Datos desde fuentes públicas (football-data.org, espn.com, etc.)
 - **Formatos abiertos**: Compatibilidad con datasets públicos
 - **Cache inteligente**: Optimización de rendimiento y uso de recursos
 
 ### Unificación de Fuentes de Datos Gratuitas
 - **Adaptador Unificado**: Integración de múltiples fuentes gratuitas
+- **ESPN API**: Integración con la API no oficial de ESPN para datos actualizados
 - **Próximos Partidos**: Calendario completo de partidos futuros
 - **Datos Históricos**: Información de equipos y resultados pasados
 - **Información de Árbitros**: Estadísticas y tendencias de árbitros

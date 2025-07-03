@@ -6,6 +6,7 @@ Este módulo se encarga de recopilar datos de diversas fuentes gratuitas como:
 - ESPN FC (Web scraping)
 - World Football Data (CSV)
 - Football-data.org (API con plan gratuito)
+- ESPN API (API no oficial)
 
 Los datos se unifican en un formato estándar para ser utilizados por el sistema.
 """
@@ -25,6 +26,9 @@ from pathlib import Path
 import threading
 import time
 import random
+
+# Importar el nuevo adaptador de ESPN API
+from utils.espn_api import ESPNAPI
 
 # Configurar logging
 logging.basicConfig(
@@ -64,6 +68,9 @@ class UnifiedDataAdapter:
         self.use_espn_data = os.environ.get('USE_ESPN_DATA', 'true').lower() == 'true'
         self.espn_base_url = os.environ.get('ESPN_BASE_URL', 'https://www.espn.com/soccer')
         
+        # ESPN API (API no oficial)
+        self.use_espn_api = os.environ.get('USE_ESPN_API', 'true').lower() == 'true'
+        
         # World Football Data (CSV)
         self.use_world_football = os.environ.get('USE_WORLD_FOOTBALL', 'true').lower() == 'true'
         self.world_football_url = os.environ.get('WORLD_FOOTBALL_URL', 
@@ -83,6 +90,8 @@ class UnifiedDataAdapter:
         if self.use_open_football:
             count += 1
         if self.use_espn_data:
+            count += 1
+        if self.use_espn_api:
             count += 1
         if self.use_world_football:
             count += 1
@@ -130,6 +139,9 @@ class UnifiedDataAdapter:
         
         if self.use_espn_data:
             source_functions.append(self._get_proximos_partidos_espn)
+            
+        if self.use_espn_api:
+            source_functions.append(self._get_proximos_partidos_espn_api)
         
         # Ejecutar en paralelo
         with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -197,6 +209,9 @@ class UnifiedDataAdapter:
         
         if self.use_espn_data:
             source_functions.append(lambda: self._get_equipo_espn(nombre_equipo))
+            
+        if self.use_espn_api:
+            source_functions.append(lambda: self._get_equipo_espn_api(nombre_equipo))
         
         # Ejecutar en paralelo
         with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -263,6 +278,9 @@ class UnifiedDataAdapter:
         
         if self.use_espn_data:
             source_functions.append(lambda: self._get_jugadores_espn(nombre_equipo))
+            
+        if self.use_espn_api:
+            source_functions.append(lambda: self._get_jugadores_espn_api(nombre_equipo))
         
         # Ejecutar en paralelo
         with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -644,6 +662,37 @@ class UnifiedDataAdapter:
         logger.info(f"Se generaron {len(resultado)} partidos próximos simulados desde ESPN")
         return resultado
     
+    def _get_proximos_partidos_espn_api(self) -> List[Dict[str, Any]]:
+        """Obtiene próximos partidos desde la API no oficial de ESPN."""
+        try:
+            # Inicializar el adaptador de ESPN API
+            espn_api = ESPNAPI()
+            
+            # Lista de códigos de liga a consultar
+            ligas = ["PD", "PL", "BL1", "SA", "FL1"]
+            
+            # Calcular fechas desde hoy hasta 14 días después
+            fecha_inicio = datetime.now().strftime('%Y-%m-%d')
+            fecha_fin = (datetime.now() + timedelta(days=14)).strftime('%Y-%m-%d')
+            
+            resultados = []
+            
+            # Obtener próximos partidos para cada liga
+            for liga in ligas:
+                try:
+                    partidos = espn_api.fetch_matches(league=liga, date_from=fecha_inicio, date_to=fecha_fin)
+                    if partidos:
+                        resultados.extend(partidos)
+                except Exception as e:
+                    logger.warning(f"Error al obtener partidos de la liga {liga} desde ESPN API: {str(e)}")
+            
+            logger.info(f"Obtenidos {len(resultados)} próximos partidos desde ESPN API")
+            return resultados
+            
+        except Exception as e:
+            logger.error(f"Error al obtener próximos partidos desde ESPN API: {str(e)}")
+            return []
+    
     def _get_equipo_football_data_api(self, nombre_equipo: str) -> Dict[str, Any]:
         """Obtiene datos de un equipo desde Football-Data.org API."""
         try:
@@ -757,6 +806,43 @@ class UnifiedDataAdapter:
         
         # Si no se encuentra, devolver diccionario vacío
         return {}
+    
+    def _get_equipo_espn_api(self, nombre_equipo: str) -> Dict[str, Any]:
+        """Obtiene datos de un equipo desde la API no oficial de ESPN."""
+        try:
+            # Inicializar el adaptador de ESPN API
+            espn_api = ESPNAPI()
+            
+            # Normalizar el nombre del equipo para búsqueda
+            nombre_normalizado = self._normalizar_nombre_equipo(nombre_equipo)
+            
+            # Lista de ligas principales para buscar
+            ligas = ["PD", "PL", "BL1", "SA", "FL1"]
+            
+            # Buscar en cada liga
+            for liga in ligas:
+                try:
+                    # Obtener todos los equipos de la liga
+                    equipos = espn_api.fetch_teams(league=liga)
+                    
+                    # Buscar por nombre normalizado
+                    for equipo in equipos:
+                        nombre_eq_norm = self._normalizar_nombre_equipo(equipo.get('nombre', ''))
+                        nombre_corto_norm = self._normalizar_nombre_equipo(equipo.get('nombre_corto', ''))
+                        
+                        if nombre_eq_norm == nombre_normalizado or nombre_corto_norm == nombre_normalizado:
+                            logger.info(f"Equipo {nombre_equipo} encontrado en liga {liga} via ESPN API")
+                            return equipo
+                            
+                except Exception as e:
+                    logger.warning(f"Error al buscar equipo en liga {liga} desde ESPN API: {str(e)}")
+            
+            logger.warning(f"Equipo {nombre_equipo} no encontrado via ESPN API")
+            return {}
+            
+        except Exception as e:
+            logger.error(f"Error al obtener datos del equipo {nombre_equipo} desde ESPN API: {str(e)}")
+            return {}
     
     def _get_jugadores_football_data_api(self, nombre_equipo: str) -> List[Dict[str, Any]]:
         """Obtiene jugadores de un equipo desde Football-Data.org API."""
@@ -888,6 +974,35 @@ class UnifiedDataAdapter:
         # Si no se encuentra, devolver lista vacía
         return []
     
+    def _get_jugadores_espn_api(self, nombre_equipo: str) -> List[Dict[str, Any]]:
+        """Obtiene jugadores de un equipo desde la API no oficial de ESPN."""
+        try:
+            # Inicializar el adaptador de ESPN API
+            espn_api = ESPNAPI()
+            
+            # Primero necesitamos encontrar el ID del equipo
+            equipo = self._get_equipo_espn_api(nombre_equipo)
+            
+            if not equipo or 'id' not in equipo:
+                logger.warning(f"No se pudo encontrar el equipo {nombre_equipo} en ESPN API")
+                return []
+                
+            team_id = equipo['id']
+            
+            # Obtener jugadores usando el ID del equipo
+            jugadores = espn_api.fetch_players(team_id=team_id)
+            
+            if not jugadores:
+                logger.warning(f"No se encontraron jugadores para el equipo {nombre_equipo} (ID: {team_id}) en ESPN API")
+                return []
+                
+            logger.info(f"Se encontraron {len(jugadores)} jugadores para el equipo {nombre_equipo} via ESPN API")
+            return jugadores
+            
+        except Exception as e:
+            logger.error(f"Error al obtener jugadores del equipo {nombre_equipo} desde ESPN API: {str(e)}")
+            return []
+    
     def _get_arbitros_football_data_api(self) -> List[Dict[str, Any]]:
         """Obtiene árbitros desde Football-Data.org API."""
         # Football-Data.org no tiene un endpoint específico para árbitros
@@ -924,7 +1039,7 @@ class UnifiedDataAdapter:
                             
                             if referee_id not in arbitros:
                                 arbitros[referee_id] = {
-                                    'id': str(referee_id),
+                                    'id': str(referee.get('id')),
                                     'nombre': referee.get('name', ''),
                                     'nacionalidad': referee.get('nationality', ''),
                                     'fuente': 'football-data.org'

@@ -1222,3 +1222,38 @@ Demostración completada. Revisa los resultados en el directorio de salida.
 2025-07-02 22:03:05,780 - demo_integracion - WARNING - Por favor, configura las variables de entorno API_FOOTBALL_KEY y API_FOOTBALL_HOST
 2025-07-02 22:03:05,780 - demo_integracion - INFO - 
 Demostración completada. Revisa los resultados en el directorio de salida.
+2025-07-03 16:17:37,521 - test_espn_api - INFO - Iniciando prueba de integración con ESPN API...
+2025-07-03 16:17:37,521 - test_espn_api - INFO - ================================================================================
+2025-07-03 16:17:37,521 - test_espn_api - INFO - PRUEBA: Obtener ligas desde ESPN API
+2025-07-03 16:17:37,522 - test_espn_api - INFO - ================================================================================
+2025-07-03 16:17:38,448 - ESPNAPI - ERROR - Error en petición a ESPN API: 404
+2025-07-03 16:17:38,449 - ESPNAPI - WARNING - No se encontraron ligas en la respuesta de ESPN API
+2025-07-03 16:17:38,449 - test_espn_api - ERROR - No se pudieron obtener ligas desde ESPN API
+2025-07-03 16:17:38,449 - test_espn_api - INFO - ================================================================================
+2025-07-03 16:17:38,450 - test_espn_api - INFO - PRUEBA: Obtener equipos desde ESPN API
+2025-07-03 16:17:38,450 - test_espn_api - INFO - ================================================================================
+2025-07-03 16:17:38,450 - test_espn_api - INFO - Obteniendo equipos de LaLiga (PD)...
+2025-07-03 16:17:39,295 - ESPNAPI - WARNING - No se encontraron equipos para la liga esp.1
+2025-07-03 16:17:39,296 - test_espn_api - ERROR - No se pudieron obtener equipos de LaLiga
+2025-07-03 16:17:39,296 - test_espn_api - INFO - ================================================================================
+2025-07-03 16:17:39,296 - test_espn_api - INFO - PRUEBA: Obtener jugadores desde ESPN API
+2025-07-03 16:17:39,296 - test_espn_api - INFO - ================================================================================
+2025-07-03 16:17:39,297 - test_espn_api - INFO - Obteniendo equipos de LaLiga...
+2025-07-03 16:17:39,625 - ESPNAPI - WARNING - No se encontraron equipos para la liga esp.1
+2025-07-03 16:17:39,626 - test_espn_api - ERROR - No se pudieron obtener equipos de LaLiga
+2025-07-03 16:17:39,626 - test_espn_api - INFO - ================================================================================
+2025-07-03 16:17:39,626 - test_espn_api - INFO - PRUEBA: Obtener partidos desde ESPN API
+2025-07-03 16:17:39,627 - test_espn_api - INFO - ================================================================================
+2025-07-03 16:17:39,627 - test_espn_api - INFO - Obteniendo partidos de Premier League entre 2025-07-03 y 2025-08-02...
+2025-07-03 16:17:40,735 - test_espn_api - ERROR - No se pudieron obtener partidos de Premier League
+2025-07-03 16:17:40,735 - test_espn_api - INFO - ================================================================================
+2025-07-03 16:17:40,735 - test_espn_api - INFO - PRUEBA: Obtener clasificación desde ESPN API
+2025-07-03 16:17:40,735 - test_espn_api - INFO - ================================================================================
+2025-07-03 16:17:40,736 - test_espn_api - INFO - Obteniendo clasificación de LaLiga...
+2025-07-03 16:17:41,200 - ESPNAPI - WARNING - No se encontró clasificación para la liga esp.1
+2025-07-03 16:17:41,201 - test_espn_api - ERROR - No se pudo obtener la clasificación de LaLiga
+2025-07-03 16:17:41,201 - test_espn_api - INFO - 
+================================================================================
+2025-07-03 16:17:41,201 - test_espn_api - INFO - RESUMEN DE PRUEBAS
+2025-07-03 16:17:41,202 - test_espn_api - INFO - ================================================================================
+2025-07-03 16:17:41,240 - test_espn_api - INFO - Resultados de prueba guardados en data\test_espn_api\test_results.json
