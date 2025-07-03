@@ -25,3 +25,43 @@
 2025-07-03 13:51:51,554 - werkzeug - WARNING -  * Debugger is active!
 2025-07-03 13:51:51,562 - werkzeug - INFO -  * Debugger PIN: 357-294-912
 2025-07-03 13:52:19,977 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\run_debug.py', reloading
+2025-07-03 13:52:20,457 - werkzeug - INFO -  * Restarting with stat
+2025-07-03 13:52:21,264 - matplotlib - DEBUG - matplotlib data path: C:\Users\50240\fubol\.venv\Lib\site-packages\matplotlib\mpl-data
+2025-07-03 13:52:21,268 - matplotlib - DEBUG - CONFIGDIR=C:\Users\50240\.matplotlib
+2025-07-03 13:52:21,270 - matplotlib - DEBUG - interactive is False
+2025-07-03 13:52:21,270 - matplotlib - DEBUG - platform is win32
+2025-07-03 13:52:21,331 - matplotlib - DEBUG - CACHEDIR=C:\Users\50240\.matplotlib
+2025-07-03 13:52:21,334 - matplotlib.font_manager - DEBUG - Using fontManager instance from C:\Users\50240\.matplotlib\fontlist-v390.json
+2025-07-03 13:52:23,533 - database - INFO - Conectando a la base de datos: sqlite
+2025-07-03 13:52:23,543 - database - INFO - Conexión a la base de datos inicializada
+2025-07-03 13:52:23,600 - unified_data_adapter - INFO - Adaptador unificado inicializado con 4 fuentes activas
+2025-07-03 13:52:23,607 - unified_data_adapter - INFO - Adaptador unificado inicializado con 4 fuentes activas
+2025-07-03 13:52:23,924 - werkzeug - WARNING -  * Debugger is active!
+2025-07-03 13:52:23,928 - werkzeug - INFO -  * Debugger PIN: 357-294-912
+2025-07-03 13:52:30,109 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 13:52:30] "GET / HTTP/1.1" 200 -
+2025-07-03 13:52:31,737 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 13:52:31] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-03 13:52:31,740 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 13:52:31] "GET /api/stats/dashboard HTTP/1.1" 200 -
+2025-07-03 13:52:33,488 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 13:52:33] "GET /explorar-db HTTP/1.1" 200 -
+2025-07-03 13:52:39,209 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 13:52:39] "GET /explorar-db?tabla=equipos HTTP/1.1" 200 -
+2025-07-03 13:52:42,033 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 13:52:42] "GET /explorar-db?tabla=partidos HTTP/1.1" 200 -
+2025-07-03 13:52:42,751 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 13:52:42] "GET /explorar-db?tabla=sqlite_sequence HTTP/1.1" 200 -
+2025-07-03 13:52:43,592 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 13:52:43] "GET /explorar-db?tabla=equipos HTTP/1.1" 200 -
+2025-07-03 13:52:45,630 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 13:52:45] "GET /explorar-db?tabla=arbitros HTTP/1.1" 200 -
+2025-07-03 14:05:32,147 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 14:05:32] "GET /explorar-db?tabla=equipos HTTP/1.1" 200 -
+2025-07-03 14:05:33,207 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 14:05:33] "GET /explorar-db?tabla=jugadores HTTP/1.1" 200 -
+2025-07-03 14:05:34,291 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 14:05:34] "GET /explorar-db?tabla=partidos HTTP/1.1" 200 -
+2025-07-03 14:05:37,691 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 14:05:37] "GET /importar-datos-prueba HTTP/1.1" 200 -
+2025-07-03 14:05:42,423 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 14:05:42] "GET / HTTP/1.1" 200 -
+2025-07-03 14:05:43,242 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 14:05:43] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-03 14:05:43,246 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 14:05:43] "GET /api/stats/dashboard HTTP/1.1" 200 -
+2025-07-03 14:05:45,154 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 14:05:45] "GET /explorar-db HTTP/1.1" 200 -
+2025-07-03 14:05:49,481 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 14:05:49] "[32mPOST /ejecutar-consulta HTTP/1.1[0m" 302 -
+2025-07-03 14:05:49,496 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 14:05:49] "GET /explorar-db HTTP/1.1" 200 -
+2025-07-03 14:05:52,405 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 14:05:52] "GET /importar-datos-prueba HTTP/1.1" 200 -
+2025-07-03 14:05:53,519 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 14:05:53] "GET /explorar-db HTTP/1.1" 200 -
+2025-07-03 14:05:55,214 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 14:05:55] "GET /explorar-db?tabla=equipos HTTP/1.1" 200 -
+2025-07-03 14:05:57,351 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 14:05:57] "GET /explorar-db?tabla=arbitros HTTP/1.1" 200 -
+2025-07-03 14:06:11,427 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 14:06:11] "GET /explorar-db?tabla=equipos HTTP/1.1" 200 -
+2025-07-03 14:06:19,878 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 14:06:19] "GET /explorar-db?tabla=jugadores HTTP/1.1" 200 -
+2025-07-03 14:06:29,799 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 14:06:29] "GET /explorar-db?tabla=partidos HTTP/1.1" 200 -
+2025-07-03 14:06:56,239 - werkzeug - INFO - 127.0.0.1 - - [03/Jul/2025 14:06:56] "GET /explorar-db?tabla=sqlite_sequence HTTP/1.1" 200 -
