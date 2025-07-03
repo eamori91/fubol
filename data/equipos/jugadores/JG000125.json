@@ -1,0 +1,27 @@
+{
+  "id": "JG000125",
+  "nombre": "Nombre6 Apellido6",
+  "equipo": "Equipo 5",
+  "posicion": "delantero",
+  "edad": 29,
+  "nacionalidad": "País A",
+  "habilidades": {
+    "resistencia": 54,
+    "velocidad": 61,
+    "fuerza": 60,
+    "control": 71,
+    "remate": 85,
+    "definicion": 68,
+    "regate": 69,
+    "oportunismo": 71
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 11,
+    "minutos": 1413,
+    "goles": 14,
+    "asistencias": 7,
+    "tarjetas_amarillas": 7,
+    "tarjetas_rojas": 0
+  }
+}

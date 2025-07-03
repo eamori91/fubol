@@ -1,0 +1,15 @@
+2025-07-02 20:57:15,030 - setup_database - INFO - Conectando a la base de datos: sqlite:///data\database\football.db
+2025-07-02 20:57:15,048 - setup_database - INFO - Creando tablas...
+2025-07-02 20:57:15,273 - setup_database - INFO - Tablas creadas correctamente.
+2025-07-02 20:57:15,273 - setup_database - INFO - Insertando datos iniciales...
+2025-07-02 20:57:15,309 - setup_database - INFO - Se han insertado 5 ligas.
+2025-07-02 20:57:15,309 - setup_database - INFO - Configuración de la base de datos completada correctamente.
+2025-07-02 22:02:54,933 - setup_database - INFO - Conectando a la base de datos: sqlite:///data\database\football.db
+2025-07-02 22:02:54,960 - setup_database - INFO - Creando tablas...
+2025-07-02 22:02:54,965 - setup_database - INFO - Tablas creadas correctamente.
+2025-07-02 22:02:54,965 - setup_database - INFO - Insertando datos iniciales...
+2025-07-02 22:02:54,996 - setup_database - ERROR - Error al insertar datos iniciales: (sqlite3.IntegrityError) UNIQUE constraint failed: ligas.codigo
+[SQL: INSERT INTO ligas (codigo, nombre, pais, temporada_actual, fecha_actualizacion) VALUES (?, ?, ?, ?, ?) RETURNING id, fecha_creacion]
+[parameters: ('PD', 'Primera División', 'España', '2023-24', None)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-07-02 22:02:54,996 - setup_database - INFO - Configuración de la base de datos completada correctamente.

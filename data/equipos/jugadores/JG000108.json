@@ -1,0 +1,27 @@
+{
+  "id": "JG000108",
+  "nombre": "Nombre5 Apellido5",
+  "equipo": "Equipo 5",
+  "posicion": "defensa",
+  "edad": 21,
+  "nacionalidad": "País A",
+  "habilidades": {
+    "resistencia": 58,
+    "velocidad": 67,
+    "fuerza": 63,
+    "control": 70,
+    "marcaje": 72,
+    "entrada": 79,
+    "anticipacion": 74,
+    "cabeza": 76
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 22,
+    "minutos": 1895,
+    "goles": 6,
+    "asistencias": 3,
+    "tarjetas_amarillas": 3,
+    "tarjetas_rojas": 1
+  }
+}

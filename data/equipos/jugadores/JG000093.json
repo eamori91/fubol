@@ -1,0 +1,27 @@
+{
+  "id": "JG000093",
+  "nombre": "Nombre7 Apellido7",
+  "equipo": "Equipo 4",
+  "posicion": "centrocampista",
+  "edad": 25,
+  "nacionalidad": "País C",
+  "habilidades": {
+    "resistencia": 78,
+    "velocidad": 58,
+    "fuerza": 68,
+    "control": 79,
+    "pase": 79,
+    "vision": 72,
+    "tecnica": 81,
+    "creatividad": 69
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 15,
+    "minutos": 193,
+    "goles": 6,
+    "asistencias": 6,
+    "tarjetas_amarillas": 7,
+    "tarjetas_rojas": 0
+  }
+}

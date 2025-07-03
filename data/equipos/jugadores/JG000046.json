@@ -1,0 +1,27 @@
+{
+  "id": "JG000046",
+  "nombre": "Nombre2 Apellido2",
+  "equipo": "Equipo 2",
+  "posicion": "delantero",
+  "edad": 22,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 50,
+    "velocidad": 85,
+    "fuerza": 72,
+    "control": 71,
+    "remate": 92,
+    "definicion": 68,
+    "regate": 62,
+    "oportunismo": 92
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 9,
+    "minutos": 2293,
+    "goles": 12,
+    "asistencias": 0,
+    "tarjetas_amarillas": 2,
+    "tarjetas_rojas": 0
+  }
+}

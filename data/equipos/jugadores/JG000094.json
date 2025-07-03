@@ -1,0 +1,27 @@
+{
+  "id": "JG000094",
+  "nombre": "Nombre8 Apellido8",
+  "equipo": "Equipo 4",
+  "posicion": "centrocampista",
+  "edad": 30,
+  "nacionalidad": "País C",
+  "habilidades": {
+    "resistencia": 81,
+    "velocidad": 77,
+    "fuerza": 76,
+    "control": 73,
+    "pase": 81,
+    "vision": 88,
+    "tecnica": 82,
+    "creatividad": 81
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 14,
+    "minutos": 2230,
+    "goles": 8,
+    "asistencias": 4,
+    "tarjetas_amarillas": 7,
+    "tarjetas_rojas": 0
+  }
+}

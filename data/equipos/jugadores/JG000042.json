@@ -1,0 +1,27 @@
+{
+  "id": "JG000042",
+  "nombre": "Nombre6 Apellido6",
+  "equipo": "Equipo 2",
+  "posicion": "centrocampista",
+  "edad": 30,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 62,
+    "velocidad": 61,
+    "fuerza": 82,
+    "control": 74,
+    "pase": 86,
+    "vision": 86,
+    "tecnica": 81,
+    "creatividad": 92
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 24,
+    "minutos": 1348,
+    "goles": 8,
+    "asistencias": 0,
+    "tarjetas_amarillas": 5,
+    "tarjetas_rojas": 0
+  }
+}

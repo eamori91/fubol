@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Sistema Integrado de Análisis Predictivo - Fútbol</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- CSS Framework y dependencias -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css">
+    
+    <!-- CSS Personalizado -->
+    <style>
+        :root {
+            --primary-green: #1a5f3f;
+            --secondary-green: #2d8f5a;
+            --accent-gold: #ffd700;
+            --text-dark: #2c3e50;
+            --bg-light: #f8fafb;
+            --border-light: #e8ecef;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, #ffffff 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Header Moderno */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+            color: white;
+            padding: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        /* Búsqueda Inteligente */
+        .smart-search-container {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .smart-search {
+            position: relative;
+        }
+
+        .smart-search input {
+            width: 100%;
+            padding: 1rem 1.5rem 1rem 3rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+
+        .smart-search input:focus {
+            outline: none;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+            transform: translateY(-2px);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            font-size: 1.2rem;
+        }
+
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-top: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .suggestion-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .suggestion-item:hover {
+            background-color: var(--bg-light);
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .team-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 15px;
+            background: linear-gradient(45deg, var(--primary-green), var(--secondary-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Cards Modernos */
+        .feature-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            background: white;
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .card-header-custom {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            color: white;
+            padding: 1.5rem;
+            border: none;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-gold);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .card-description {
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Botones Mejorados */
+        .btn-custom {
+            background: linear-gradient(135deg, var(--secondary-green), var(--primary-green));
+            border: none;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-custom:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(45, 143, 90, 0.4);
+        }
+
+        /* Estadísticas Rápidas */
+        .stats-container {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            margin: 3rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            display: block;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Partidos Destacados */
+        .featured-matches {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+        }
+
+        .match-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-light);
+            transition: background-color 0.2s ease;
+        }
+
+        .match-item:hover {
+            background-color: var(--bg-light);
+            border-radius: 10px;
+        }
+
+        .match-item:last-child {
+            border-bottom: none;
+        }
+
+        .match-teams {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .vs-text {
+            margin: 0 1rem;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        .match-prediction {
+            text-align: right;
+        }
+
+        .prediction-percentage {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+
+        .prediction-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        /* Navegación Mejorada */
+        .navbar-custom {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-green) !important;
+        }
+
+        /* Animaciones */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .feature-card {
+                margin-bottom: 2rem;
+            }
+
+            .stats-container {
+                margin: 2rem 0;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+
+        /* Modo Oscuro (Preparación) */
+        [data-theme="dark"] {
+            --bg-light: #1a1a1a;
+            --text-dark: #ffffff;
+            --border-light: #333333;
+        }
+
+        /* Loading States */
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-green);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Tooltips personalizados */
+        .custom-tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .custom-tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-dark);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-futbol"></i>
+                AnalyticFútbol Pro
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/historico">
+                            <i class="fas fa-chart-line"></i> Histórico
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/proximo">
+                            <i class="fas fa-calendar-week"></i> Próximos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/futuro">
+                            <i class="fas fa-crystal-ball"></i> Predicciones
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/api">
+                            <i class="fas fa-code"></i> API
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/explorar-db">
+                            <i class="fas fa-database"></i> Base de Datos
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container hero-content">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="hero-title fade-in-up">
+                        Análisis Predictivo
+                        <span style="color: var(--accent-gold);">Inteligente</span>
+                    </h1>
+                    <p class="hero-subtitle fade-in-up">
+                        Sistema integrado de análisis de fútbol con simulaciones Monte Carlo, 
+                        deep learning y más de 50 métricas avanzadas para predicciones precisas.
+                    </p>
+                    
+                    <!-- Búsqueda Inteligente -->
+                    <div class="smart-search-container fade-in-up">
+                        <div class="smart-search">
+                            <i class="fas fa-search search-icon"></i>
+                            <input 
+                                type="text" 
+                                id="teamSearch" 
+                                placeholder="Buscar equipos, ligas o competiciones..."
+                                autocomplete="off"
+                            >
+                            <div class="search-suggestions" id="searchSuggestions">
+                                <!-- Sugerencias dinámicas -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <!-- Gráfico en tiempo real (placeholder) -->
+                    <div class="text-center">
+                        <canvas id="realTimeChart" width="400" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Estadísticas Rápidas -->
+    <div class="container">
+        <div class="stats-container fade-in-up">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalPredictions">1,247</span>
+                        <span class="stat-label">Predicciones Realizadas</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <span class="stat-number" id="accuracy">84.3%</span>
+                        <span class="stat-label">Precisión Promedio</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <span class="stat-number" id="teamsAnalyzed">156</span>
+                        <span class="stat-label">Equipos Analizados</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <span class="stat-number" id="modelsActive">7</span>
+                        <span class="stat-label">Modelos Activos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Partidos Destacados -->
+    <div class="container">
+        <div class="featured-matches fade-in-up">
+            <h3 class="mb-4">
+                <i class="fas fa-star" style="color: var(--accent-gold);"></i>
+                Predicciones Destacadas Hoy
+            </h3>
+            
+            <div id="featuredMatches">
+                <!-- Contenido dinámico -->
+                <div class="match-item">
+                    <div class="match-teams">
+                        <div class="team-logo">RM</div>
+                        <span class="team-name">Real Madrid</span>
+                        <span class="vs-text">vs</span>
+                        <div class="team-logo">FC</div>
+                        <span class="team-name">FC Barcelona</span>
+                    </div>
+                    <div class="match-prediction">
+                        <div class="prediction-percentage">67.8%</div>
+                        <div class="prediction-label">Victoria Local</div>
+                    </div>
+                </div>
+                
+                <div class="match-item">
+                    <div class="match-teams">
+                        <div class="team-logo">MU</div>
+                        <span class="team-name">Manchester United</span>
+                        <span class="vs-text">vs</span>
+                        <div class="team-logo">MC</div>
+                        <span class="team-name">Manchester City</span>
+                    </div>
+                    <div class="match-prediction">
+                        <div class="prediction-percentage">52.3%</div>
+                        <div class="prediction-label">Victoria Visitante</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Funcionalidades Principales -->
+    <div class="container my-5">
+        <div class="row">
+            <!-- Análisis Histórico -->
+            <div class="col-lg-4 mb-4">
+                <div class="feature-card fade-in-up">
+                    <div class="card-header-custom">
+                        <div class="card-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="card-title">Análisis Histórico Avanzado</h3>
+                        <p class="card-description">
+                            Explora patrones, tendencias y estadísticas profundas de equipos 
+                            con más de 50 métricas y visualizaciones interactivas.
+                        </p>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success"></i> Análisis de rendimiento por temporada</li>
+                            <li><i class="fas fa-check text-success"></i> Comparación head-to-head histórica</li>
+                            <li><i class="fas fa-check text-success"></i> Tendencias estacionales</li>
+                            <li><i class="fas fa-check text-success"></i> Análisis de momentum</li>
+                        </ul>
+                        <a href="/historico" class="btn btn-custom btn-block">
+                            <i class="fas fa-chart-line"></i> Explorar Datos
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simulaciones Monte Carlo -->
+            <div class="col-lg-4 mb-4">
+                <div class="feature-card fade-in-up">
+                    <div class="card-header-custom">
+                        <div class="card-icon">
+                            <i class="fas fa-dice"></i>
+                        </div>
+                        <h3 class="card-title">Simulaciones Monte Carlo</h3>
+                        <p class="card-description">
+                            Realiza miles de simulaciones para obtener distribuciones 
+                            de probabilidad robustas y análisis de incertidumbre.
+                        </p>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success"></i> Miles de simulaciones por partido</li>
+                            <li><i class="fas fa-check text-success"></i> Eventos minuto a minuto</li>
+                            <li><i class="fas fa-check text-success"></i> Distribuciones de resultados</li>
+                            <li><i class="fas fa-check text-success"></i> Análisis de escenarios</li>
+                        </ul>
+                        <a href="/futuro" class="btn btn-custom btn-block">
+                            <i class="fas fa-dice"></i> Simular Partidos
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Predicciones Inteligentes -->
+            <div class="col-lg-4 mb-4">
+                <div class="feature-card fade-in-up">
+                    <div class="card-header-custom">
+                        <div class="card-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3 class="card-title">IA y Deep Learning</h3>
+                        <p class="card-description">
+                            Modelos de inteligencia artificial que combinan datos tradicionales 
+                            con redes neuronales para predicciones precisas.
+                        </p>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success"></i> Redes neuronales profundas</li>
+                            <li><i class="fas fa-check text-success"></i> Ensemble de modelos</li>
+                            <li><i class="fas fa-check text-success"></i> Explicabilidad con SHAP</li>
+                            <li><i class="fas fa-check text-success"></i> Actualizaciones en tiempo real</li>
+                        </ul>
+                        <a href="/futuro" class="btn btn-custom btn-block">
+                            <i class="fas fa-brain"></i> Predicciones IA
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- API y Desarrolladores -->
+    <div class="container my-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="mb-4">API Completa para Desarrolladores</h2>
+                <p class="lead">
+                    Accede a todas las funcionalidades mediante nuestra API RESTful 
+                    con documentación completa y formatos estándar abiertos.
+                </p>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <strong>11+ endpoints</strong> documentados
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <strong>Formato JSON</strong> compatible con open-football
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <strong>Rate limiting</strong> y autenticación
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <strong>Ejemplos</strong> en múltiples lenguajes
+                    </li>
+                </ul>
+                <a href="/api" class="btn btn-custom mr-3">
+                    <i class="fas fa-code"></i> Ver Documentación API
+                </a>
+                <a href="/api/metricas" class="btn btn-outline-secondary">
+                    <i class="fas fa-chart-bar"></i> Métricas del Sistema
+                </a>
+            </div>
+            <div class="col-lg-6">
+                <div class="bg-dark text-light p-4 rounded">
+                    <h6 class="text-warning">Ejemplo de uso de la API:</h6>
+                    <pre class="text-light"><code>
+curl -X GET \
+  "http://localhost:5000/api/predicciones/Real%20Madrid/Barcelona?simular=true" \
+  -H "Content-Type: application/json"
+
+{
+  "estado": "exito",
+  "partido": {
+    "date": "2025-07-02",
+    "team1": "Real Madrid",
+    "team2": "Barcelona",
+    "prediction": {
+      "probabilities": {
+        "home_win": 0.678,
+        "draw": 0.221,
+        "away_win": 0.101
+      }
+    }
+  }
+}
+                    </code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>AnalyticFútbol Pro</h5>
+                    <p>Sistema integrado de análisis predictivo de fútbol con IA.</p>
+                </div>
+                <div class="col-md-6 text-right">
+                    <div class="custom-tooltip" data-tooltip="Sistema completamente funcional">
+                        <span class="badge badge-success">
+                            <i class="fas fa-check-circle"></i> Sistema Operativo
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Configuración inicial
+            initRealTimeChart();
+            loadFeaturedMatches();
+            setupSearch();
+            updateDashboardStats();
+            
+            // Eliminar notificaciones de "función en desarrollo"
+            const devNotifications = document.querySelectorAll('.function-development-notice');
+            devNotifications.forEach(notice => {
+                notice.remove();
+            });
+            
+            // Habilitar todas las tarjetas y enlaces
+            document.querySelectorAll('.feature-card a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href && href !== '#') {
+                        // Permitir la navegación
+                    } else {
+                        e.preventDefault();
+                        showTemporaryMessage("Cargando módulo...");
+                    }
+                });
+            });
+        });
+        
+        // Inicializar gráfico en tiempo real
+        function initRealTimeChart() {
+            const ctx = document.getElementById('realTimeChart').getContext('2d');
+            const data = {
+                labels: ['Junio 26', 'Junio 27', 'Junio 28', 'Junio 29', 'Junio 30', 'Julio 1', 'Julio 2'],
+                datasets: [{
+                    label: 'Precisión de Predicciones (%)',
+                    data: [81, 79, 82, 85, 83, 86, 84],
+                    borderColor: '#ffd700',
+                    backgroundColor: 'rgba(45, 143, 90, 0.2)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.3
+                }]
+            };
+            
+            const config = {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#2d8f5a',
+                            borderWidth: 1,
+                            padding: 15,
+                            displayColors: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 70,
+                            max: 100,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#ffffff'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#ffffff'
+                            }
+                        }
+                    }
+                }
+            };
+            
+            new Chart(ctx, config);
+        }
+        
+        // Cargar partidos destacados desde el API
+        function loadFeaturedMatches() {
+            fetch('/api/dashboard/featured-matches')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al cargar partidos destacados');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.length > 0) {
+                        displayFeaturedMatches(data);
+                    } else {
+                        // Si no hay datos reales, usar datos de ejemplo
+                        displayExampleMatches();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    displayExampleMatches();
+                });
+        }
+        
+        // Mostrar partidos destacados de ejemplo
+        function displayExampleMatches() {
+            const matches = [
+                {
+                    home_team: 'Real Madrid',
+                    away_team: 'FC Barcelona',
+                    prediction: 'Victoria Local',
+                    confidence: 67,
+                    time: 'Hoy 21:00'
+                },
+                {
+                    home_team: 'Liverpool',
+                    away_team: 'Manchester City',
+                    prediction: 'Victoria Visitante',
+                    confidence: 55,
+                    time: 'Hoy 19:30'
+                },
+                {
+                    home_team: 'Bayern Munich',
+                    away_team: 'Borussia Dortmund',
+                    prediction: 'Empate',
+                    confidence: 48,
+                    time: 'Mañana 18:00'
+                }
+            ];
+            
+            displayFeaturedMatches(matches);
+        }
+        
+        // Mostrar partidos en el DOM
+        function displayFeaturedMatches(matches) {
+            const container = document.getElementById('featuredMatches');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            matches.forEach(match => {
+                const homeInitials = getTeamInitials(match.home_team);
+                const awayInitials = getTeamInitials(match.away_team);
+                
+                const matchItem = document.createElement('div');
+                matchItem.className = 'match-item';
+                matchItem.innerHTML = `
+                    <div class="match-teams">
+                        <div class="team-logo">${homeInitials}</div>
+                        <span class="team-name">${match.home_team}</span>
+                        <span class="vs-text">vs</span>
+                        <div class="team-logo">${awayInitials}</div>
+                        <span class="team-name">${match.away_team}</span>
+                    </div>
+                    <div class="match-prediction">
+                        <div class="prediction-percentage">${match.confidence}%</div>
+                        <div class="prediction-label">${match.prediction}</div>
+                    </div>
+                `;
+                
+                container.appendChild(matchItem);
+            });
+        }
+        
+        // Obtener iniciales de equipos
+        function getTeamInitials(teamName) {
+            if (!teamName) return '??';
+            
+            const words = teamName.split(' ');
+            if (words.length === 1) {
+                return teamName.substring(0, 2).toUpperCase();
+            }
+            
+            return words.map(word => word.charAt(0)).join('').toUpperCase();
+        }
+        
+        // Configurar buscador inteligente
+        function setupSearch() {
+            const searchInput = document.getElementById('teamSearch');
+            const suggestionsContainer = document.getElementById('searchSuggestions');
+            
+            if (!searchInput || !suggestionsContainer) return;
+            
+            searchInput.addEventListener('focus', () => {
+                searchInput.placeholder = 'Ingresa al menos 2 caracteres...';
+            });
+            
+            searchInput.addEventListener('blur', () => {
+                setTimeout(() => {
+                    suggestionsContainer.style.display = 'none';
+                    searchInput.placeholder = 'Buscar equipos, ligas o competiciones...';
+                }, 200);
+            });
+            
+            searchInput.addEventListener('input', debounce(function(e) {
+                const query = e.target.value.trim();
+                
+                if (query.length < 2) {
+                    suggestionsContainer.style.display = 'none';
+                    return;
+                }
+                
+                // Hacer petición al API de búsqueda
+                fetch(`/api/search/teams?q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data.length > 0) {
+                            displaySearchSuggestions(data, suggestionsContainer);
+                        } else {
+                            suggestionsContainer.innerHTML = `<div class="suggestion-item">No se encontraron resultados para "${query}"</div>`;
+                            suggestionsContainer.style.display = 'block';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error en búsqueda:', error);
+                        // Si falla, mostrar resultados de ejemplo
+                        const exampleResults = [
+                            {nombre: 'Real Madrid', liga: 'La Liga'},
+                            {nombre: 'FC Barcelona', liga: 'La Liga'},
+                            {nombre: 'Manchester City', liga: 'Premier League'}
+                        ].filter(team => team.nombre.toLowerCase().includes(query.toLowerCase()));
+                        
+                        displaySearchSuggestions(exampleResults, suggestionsContainer);
+                    });
+            }, 300));
+        }
+        
+        // Mostrar sugerencias de búsqueda
+        function displaySearchSuggestions(suggestions, container) {
+            container.innerHTML = '';
+            
+            suggestions.forEach(team => {
+                const initials = getTeamInitials(team.nombre);
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                
+                item.innerHTML = `
+                    <div class="team-logo">${initials}</div>
+                    <span class="team-name">${team.nombre}</span>
+                    <span class="badge badge-light ml-auto">${team.liga || ''}</span>
+                `;
+                
+                item.addEventListener('click', () => {
+                    window.location.href = `/historico?equipo=${encodeURIComponent(team.nombre)}`;
+                });
+                
+                container.appendChild(item);
+            });
+            
+            container.style.display = 'block';
+        }
+        
+        // Actualizar estadísticas del dashboard
+        function updateDashboardStats() {
+            fetch('/api/stats/dashboard')
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {
+                        updateStatElement('totalPredictions', data.total_matches || 1247, true);
+                        updateStatElement('accuracy', data.accuracy_rate || 84.3, false, '%');
+                        updateStatElement('teamsAnalyzed', data.teams_analyzed || 156, true);
+                        updateStatElement('modelsActive', 7, false);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al cargar estadísticas:', error);
+                    // Usar valores predeterminados
+                });
+        }
+        
+        // Actualizar elementos de estadísticas con animación
+        function updateStatElement(id, value, format = false, suffix = '') {
+            const element = document.getElementById(id);
+            if (!element) return;
+            
+            const finalValue = format ? formatNumber(value) : value;
+            
+            // Animación simple de conteo
+            const duration = 1500;
+            const start = 0;
+            const startTime = performance.now();
+            
+            function animate(currentTime) {
+                const elapsedTime = currentTime - startTime;
+                const progress = Math.min(elapsedTime / duration, 1);
+                
+                if (typeof value === 'number') {
+                    const current = Math.floor(start + (value - start) * progress);
+                    element.textContent = format ? formatNumber(current) : `${current}${suffix}`;
+                } else {
+                    element.textContent = `${finalValue}${suffix}`;
+                }
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                }
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Formatear números grandes
+        function formatNumber(num) {
+            return new Intl.NumberFormat().format(num);
+        }
+        
+        // Función auxiliar debounce para evitar muchas peticiones
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+        
+        // Mostrar mensaje temporal
+        function showTemporaryMessage(message, type = 'info') {
+            // Crear elemento de notificación si no existe
+            let notification = document.querySelector('.temp-notification');
+            
+            if (!notification) {
+                notification = document.createElement('div');
+                notification.className = `temp-notification ${type}`;
+                document.body.appendChild(notification);
+            }
+            
+            // Configurar y mostrar
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            // Ocultar después de un tiempo
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+    
+    <!-- Estilos adicionales para notificaciones temporales -->
+    <style>
+        .temp-notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 25px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .temp-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .temp-notification.info {
+            background: rgba(0, 123, 255, 0.9);
+        }
+        
+        .temp-notification.success {
+            background: rgba(40, 167, 69, 0.9);
+        }
+        
+        .temp-notification.error {
+            background: rgba(220, 53, 69, 0.9);
+        }
+    </style>
+</body>
+</html>

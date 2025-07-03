@@ -1,0 +1,27 @@
+{
+  "id": "JG000110",
+  "nombre": "Nombre7 Apellido7",
+  "equipo": "Equipo 5",
+  "posicion": "defensa",
+  "edad": 34,
+  "nacionalidad": "País A",
+  "habilidades": {
+    "resistencia": 85,
+    "velocidad": 65,
+    "fuerza": 56,
+    "control": 72,
+    "marcaje": 75,
+    "entrada": 77,
+    "anticipacion": 79,
+    "cabeza": 88
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 28,
+    "minutos": 2608,
+    "goles": 10,
+    "asistencias": 0,
+    "tarjetas_amarillas": 4,
+    "tarjetas_rojas": 0
+  }
+}

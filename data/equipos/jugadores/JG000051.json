@@ -1,0 +1,27 @@
+{
+  "id": "JG000051",
+  "nombre": "Nombre1 Apellido1",
+  "equipo": "Equipo 3",
+  "posicion": "portero",
+  "edad": 27,
+  "nacionalidad": "País D",
+  "habilidades": {
+    "resistencia": 85,
+    "velocidad": 74,
+    "fuerza": 75,
+    "control": 54,
+    "reflejos": 69,
+    "posicionamiento": 81,
+    "salidas": 77,
+    "manos": 71
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 12,
+    "minutos": 1475,
+    "goles": 0,
+    "asistencias": 0,
+    "tarjetas_amarillas": 1,
+    "tarjetas_rojas": 0
+  }
+}

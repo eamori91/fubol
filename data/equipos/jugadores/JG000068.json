@@ -1,0 +1,27 @@
+{
+  "id": "JG000068",
+  "nombre": "Nombre7 Apellido7",
+  "equipo": "Equipo 3",
+  "posicion": "centrocampista",
+  "edad": 30,
+  "nacionalidad": "País D",
+  "habilidades": {
+    "resistencia": 50,
+    "velocidad": 78,
+    "fuerza": 56,
+    "control": 63,
+    "pase": 68,
+    "vision": 61,
+    "tecnica": 87,
+    "creatividad": 82
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 25,
+    "minutos": 1796,
+    "goles": 10,
+    "asistencias": 4,
+    "tarjetas_amarillas": 3,
+    "tarjetas_rojas": 0
+  }
+}

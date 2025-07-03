@@ -1,0 +1,27 @@
+{
+  "id": "JG000109",
+  "nombre": "Nombre6 Apellido6",
+  "equipo": "Equipo 5",
+  "posicion": "defensa",
+  "edad": 23,
+  "nacionalidad": "País A",
+  "habilidades": {
+    "resistencia": 83,
+    "velocidad": 70,
+    "fuerza": 62,
+    "control": 83,
+    "marcaje": 69,
+    "entrada": 78,
+    "anticipacion": 85,
+    "cabeza": 93
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 12,
+    "minutos": 2532,
+    "goles": 8,
+    "asistencias": 5,
+    "tarjetas_amarillas": 4,
+    "tarjetas_rojas": 0
+  }
+}

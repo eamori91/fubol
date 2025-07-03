@@ -1,0 +1,27 @@
+{
+  "id": "JG000040",
+  "nombre": "Nombre4 Apellido4",
+  "equipo": "Equipo 2",
+  "posicion": "centrocampista",
+  "edad": 26,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 51,
+    "velocidad": 80,
+    "fuerza": 77,
+    "control": 61,
+    "pase": 63,
+    "vision": 94,
+    "tecnica": 61,
+    "creatividad": 94
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 16,
+    "minutos": 392,
+    "goles": 10,
+    "asistencias": 3,
+    "tarjetas_amarillas": 5,
+    "tarjetas_rojas": 1
+  }
+}

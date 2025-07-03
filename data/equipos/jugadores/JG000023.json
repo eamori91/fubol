@@ -1,0 +1,27 @@
+{
+  "id": "JG000023",
+  "nombre": "Nombre4 Apellido4",
+  "equipo": "Equipo 1",
+  "posicion": "delantero",
+  "edad": 30,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 52,
+    "velocidad": 75,
+    "fuerza": 88,
+    "control": 64,
+    "remate": 73,
+    "definicion": 70,
+    "regate": 85,
+    "oportunismo": 89
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 17,
+    "minutos": 737,
+    "goles": 6,
+    "asistencias": 7,
+    "tarjetas_amarillas": 2,
+    "tarjetas_rojas": 1
+  }
+}

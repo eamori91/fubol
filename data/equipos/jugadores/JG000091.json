@@ -1,0 +1,27 @@
+{
+  "id": "JG000091",
+  "nombre": "Nombre5 Apellido5",
+  "equipo": "Equipo 4",
+  "posicion": "centrocampista",
+  "edad": 37,
+  "nacionalidad": "País C",
+  "habilidades": {
+    "resistencia": 70,
+    "velocidad": 69,
+    "fuerza": 83,
+    "control": 75,
+    "pase": 69,
+    "vision": 93,
+    "tecnica": 92,
+    "creatividad": 74
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 5,
+    "minutos": 2287,
+    "goles": 4,
+    "asistencias": 3,
+    "tarjetas_amarillas": 5,
+    "tarjetas_rojas": 0
+  }
+}

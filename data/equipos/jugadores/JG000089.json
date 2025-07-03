@@ -1,0 +1,27 @@
+{
+  "id": "JG000089",
+  "nombre": "Nombre3 Apellido3",
+  "equipo": "Equipo 4",
+  "posicion": "centrocampista",
+  "edad": 34,
+  "nacionalidad": "País C",
+  "habilidades": {
+    "resistencia": 80,
+    "velocidad": 71,
+    "fuerza": 70,
+    "control": 75,
+    "pase": 79,
+    "vision": 83,
+    "tecnica": 80,
+    "creatividad": 83
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 24,
+    "minutos": 1550,
+    "goles": 5,
+    "asistencias": 6,
+    "tarjetas_amarillas": 2,
+    "tarjetas_rojas": 1
+  }
+}

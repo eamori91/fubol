@@ -1,0 +1,27 @@
+{
+  "id": "JG000012",
+  "nombre": "Nombre1 Apellido1",
+  "equipo": "Equipo 1",
+  "posicion": "centrocampista",
+  "edad": 21,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 68,
+    "velocidad": 71,
+    "fuerza": 80,
+    "control": 79,
+    "pase": 91,
+    "vision": 80,
+    "tecnica": 75,
+    "creatividad": 74
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 24,
+    "minutos": 235,
+    "goles": 8,
+    "asistencias": 9,
+    "tarjetas_amarillas": 4,
+    "tarjetas_rojas": 1
+  }
+}

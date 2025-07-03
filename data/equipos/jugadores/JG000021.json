@@ -1,0 +1,27 @@
+{
+  "id": "JG000021",
+  "nombre": "Nombre2 Apellido2",
+  "equipo": "Equipo 1",
+  "posicion": "delantero",
+  "edad": 26,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 50,
+    "velocidad": 64,
+    "fuerza": 89,
+    "control": 62,
+    "remate": 90,
+    "definicion": 85,
+    "regate": 87,
+    "oportunismo": 78
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 14,
+    "minutos": 2047,
+    "goles": 4,
+    "asistencias": 8,
+    "tarjetas_amarillas": 4,
+    "tarjetas_rojas": 1
+  }
+}

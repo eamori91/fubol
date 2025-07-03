@@ -1,0 +1,27 @@
+{
+  "id": "JG000044",
+  "nombre": "Nombre8 Apellido8",
+  "equipo": "Equipo 2",
+  "posicion": "centrocampista",
+  "edad": 26,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 68,
+    "velocidad": 65,
+    "fuerza": 76,
+    "control": 69,
+    "pase": 91,
+    "vision": 73,
+    "tecnica": 87,
+    "creatividad": 67
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 23,
+    "minutos": 71,
+    "goles": 11,
+    "asistencias": 5,
+    "tarjetas_amarillas": 7,
+    "tarjetas_rojas": 1
+  }
+}

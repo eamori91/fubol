@@ -1,0 +1,27 @@
+{
+  "id": "JG000066",
+  "nombre": "Nombre5 Apellido5",
+  "equipo": "Equipo 3",
+  "posicion": "centrocampista",
+  "edad": 20,
+  "nacionalidad": "País D",
+  "habilidades": {
+    "resistencia": 61,
+    "velocidad": 63,
+    "fuerza": 65,
+    "control": 76,
+    "pase": 72,
+    "vision": 66,
+    "tecnica": 92,
+    "creatividad": 62
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 29,
+    "minutos": 150,
+    "goles": 8,
+    "asistencias": 7,
+    "tarjetas_amarillas": 6,
+    "tarjetas_rojas": 0
+  }
+}

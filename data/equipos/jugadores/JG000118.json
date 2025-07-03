@@ -1,0 +1,27 @@
+{
+  "id": "JG000118",
+  "nombre": "Nombre7 Apellido7",
+  "equipo": "Equipo 5",
+  "posicion": "centrocampista",
+  "edad": 36,
+  "nacionalidad": "País A",
+  "habilidades": {
+    "resistencia": 78,
+    "velocidad": 78,
+    "fuerza": 78,
+    "control": 50,
+    "pase": 63,
+    "vision": 76,
+    "tecnica": 62,
+    "creatividad": 91
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 19,
+    "minutos": 1342,
+    "goles": 12,
+    "asistencias": 0,
+    "tarjetas_amarillas": 0,
+    "tarjetas_rojas": 0
+  }
+}

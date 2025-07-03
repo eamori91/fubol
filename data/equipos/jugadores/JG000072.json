@@ -1,0 +1,27 @@
+{
+  "id": "JG000072",
+  "nombre": "Nombre3 Apellido3",
+  "equipo": "Equipo 3",
+  "posicion": "delantero",
+  "edad": 29,
+  "nacionalidad": "País D",
+  "habilidades": {
+    "resistencia": 52,
+    "velocidad": 88,
+    "fuerza": 56,
+    "control": 55,
+    "remate": 65,
+    "definicion": 75,
+    "regate": 67,
+    "oportunismo": 93
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 28,
+    "minutos": 2649,
+    "goles": 11,
+    "asistencias": 0,
+    "tarjetas_amarillas": 1,
+    "tarjetas_rojas": 0
+  }
+}

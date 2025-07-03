@@ -1,0 +1,54 @@
+pandas>=1.5.0
+numpy>=1.21.0
+scikit-learn>=1.0.0
+matplotlib>=3.5.0
+seaborn>=0.11.0
+flask>=2.0.0
+requests>=2.25.0
+python-dotenv>=0.19.0
+xgboost>=1.5.0
+optuna>=3.0.0
+shap>=0.40.0
+joblib>=1.1.0
+
+# Dependencias para deep learning (opcionales)
+tensorflow>=2.8.0;python_version>="3.8"
+keras>=2.8.0;python_version>="3.8"
+
+# Dependencias para análisis avanzado
+plotly>=5.0.0
+dash>=2.0.0
+
+# Dependencias para el adaptador unificado
+tabulate>=0.9.0
+colorama>=0.4.6
+scipy>=1.7.0
+statsmodels>=0.13.0
+
+# Dependencias para datos externos
+beautifulsoup4>=4.10.0
+lxml>=4.6.0
+html5lib>=1.1
+
+# Dependencias para base de datos
+sqlalchemy>=2.0.0
+alembic>=1.7.0
+pymysql>=1.0.0
+psycopg2-binary>=2.9.0
+redis>=4.0.0
+
+# Dependencias para cache y tareas programadas
+celery>=5.2.0
+apscheduler>=3.9.0
+schedule>=1.0.0
+
+# Dependencias para API REST
+pydantic>=1.8.0
+fastapi>=0.70.0
+uvicorn>=0.15.0
+
+# Dependencias para testing
+pytest>=7.0.0
+pytest-cov>=4.0.0
+pytest-mock>=3.6.0
+responses>=0.13.0

@@ -1,0 +1,27 @@
+{
+  "id": "JG000060",
+  "nombre": "Nombre7 Apellido7",
+  "equipo": "Equipo 3",
+  "posicion": "defensa",
+  "edad": 36,
+  "nacionalidad": "País D",
+  "habilidades": {
+    "resistencia": 53,
+    "velocidad": 71,
+    "fuerza": 74,
+    "control": 59,
+    "marcaje": 72,
+    "entrada": 88,
+    "anticipacion": 66,
+    "cabeza": 73
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 1,
+    "minutos": 1685,
+    "goles": 8,
+    "asistencias": 7,
+    "tarjetas_amarillas": 0,
+    "tarjetas_rojas": 0
+  }
+}

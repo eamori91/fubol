@@ -1,0 +1,27 @@
+{
+  "id": "JG000065",
+  "nombre": "Nombre4 Apellido4",
+  "equipo": "Equipo 3",
+  "posicion": "centrocampista",
+  "edad": 24,
+  "nacionalidad": "País D",
+  "habilidades": {
+    "resistencia": 89,
+    "velocidad": 81,
+    "fuerza": 86,
+    "control": 66,
+    "pase": 81,
+    "vision": 92,
+    "tecnica": 93,
+    "creatividad": 68
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 5,
+    "minutos": 642,
+    "goles": 14,
+    "asistencias": 1,
+    "tarjetas_amarillas": 3,
+    "tarjetas_rojas": 1
+  }
+}

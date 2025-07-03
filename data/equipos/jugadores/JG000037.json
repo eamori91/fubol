@@ -1,0 +1,27 @@
+{
+  "id": "JG000037",
+  "nombre": "Nombre1 Apellido1",
+  "equipo": "Equipo 2",
+  "posicion": "centrocampista",
+  "edad": 32,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 55,
+    "velocidad": 53,
+    "fuerza": 87,
+    "control": 50,
+    "pase": 66,
+    "vision": 90,
+    "tecnica": 60,
+    "creatividad": 91
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 5,
+    "minutos": 1033,
+    "goles": 13,
+    "asistencias": 8,
+    "tarjetas_amarillas": 1,
+    "tarjetas_rojas": 1
+  }
+}

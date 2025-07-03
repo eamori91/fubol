@@ -1,0 +1,27 @@
+{
+  "id": "JG000054",
+  "nombre": "Nombre1 Apellido1",
+  "equipo": "Equipo 3",
+  "posicion": "defensa",
+  "edad": 29,
+  "nacionalidad": "País D",
+  "habilidades": {
+    "resistencia": 65,
+    "velocidad": 71,
+    "fuerza": 84,
+    "control": 69,
+    "marcaje": 86,
+    "entrada": 65,
+    "anticipacion": 60,
+    "cabeza": 91
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 3,
+    "minutos": 703,
+    "goles": 8,
+    "asistencias": 9,
+    "tarjetas_amarillas": 3,
+    "tarjetas_rojas": 0
+  }
+}

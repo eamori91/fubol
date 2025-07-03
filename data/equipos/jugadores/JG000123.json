@@ -1,0 +1,27 @@
+{
+  "id": "JG000123",
+  "nombre": "Nombre4 Apellido4",
+  "equipo": "Equipo 5",
+  "posicion": "delantero",
+  "edad": 22,
+  "nacionalidad": "País A",
+  "habilidades": {
+    "resistencia": 78,
+    "velocidad": 89,
+    "fuerza": 85,
+    "control": 74,
+    "remate": 90,
+    "definicion": 81,
+    "regate": 83,
+    "oportunismo": 93
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 13,
+    "minutos": 1482,
+    "goles": 3,
+    "asistencias": 2,
+    "tarjetas_amarillas": 3,
+    "tarjetas_rojas": 0
+  }
+}

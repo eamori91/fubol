@@ -1,0 +1,27 @@
+{
+  "id": "JG000073",
+  "nombre": "Nombre4 Apellido4",
+  "equipo": "Equipo 3",
+  "posicion": "delantero",
+  "edad": 37,
+  "nacionalidad": "País D",
+  "habilidades": {
+    "resistencia": 50,
+    "velocidad": 80,
+    "fuerza": 74,
+    "control": 56,
+    "remate": 79,
+    "definicion": 88,
+    "regate": 83,
+    "oportunismo": 82
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 3,
+    "minutos": 1140,
+    "goles": 7,
+    "asistencias": 9,
+    "tarjetas_amarillas": 6,
+    "tarjetas_rojas": 1
+  }
+}

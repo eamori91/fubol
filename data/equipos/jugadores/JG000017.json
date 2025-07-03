@@ -1,0 +1,27 @@
+{
+  "id": "JG000017",
+  "nombre": "Nombre6 Apellido6",
+  "equipo": "Equipo 1",
+  "posicion": "centrocampista",
+  "edad": 34,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 80,
+    "velocidad": 53,
+    "fuerza": 76,
+    "control": 74,
+    "pase": 70,
+    "vision": 68,
+    "tecnica": 86,
+    "creatividad": 66
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 22,
+    "minutos": 1027,
+    "goles": 12,
+    "asistencias": 5,
+    "tarjetas_amarillas": 0,
+    "tarjetas_rojas": 0
+  }
+}

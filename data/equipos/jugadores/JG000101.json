@@ -1,0 +1,27 @@
+{
+  "id": "JG000101",
+  "nombre": "Nombre1 Apellido1",
+  "equipo": "Equipo 5",
+  "posicion": "portero",
+  "edad": 36,
+  "nacionalidad": "País A",
+  "habilidades": {
+    "resistencia": 89,
+    "velocidad": 60,
+    "fuerza": 56,
+    "control": 70,
+    "reflejos": 72,
+    "posicionamiento": 71,
+    "salidas": 94,
+    "manos": 72
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 14,
+    "minutos": 932,
+    "goles": 0,
+    "asistencias": 0,
+    "tarjetas_amarillas": 2,
+    "tarjetas_rojas": 1
+  }
+}

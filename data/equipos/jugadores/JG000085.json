@@ -1,0 +1,27 @@
+{
+  "id": "JG000085",
+  "nombre": "Nombre7 Apellido7",
+  "equipo": "Equipo 4",
+  "posicion": "defensa",
+  "edad": 34,
+  "nacionalidad": "País C",
+  "habilidades": {
+    "resistencia": 88,
+    "velocidad": 79,
+    "fuerza": 69,
+    "control": 72,
+    "marcaje": 70,
+    "entrada": 70,
+    "anticipacion": 77,
+    "cabeza": 73
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 19,
+    "minutos": 2129,
+    "goles": 8,
+    "asistencias": 6,
+    "tarjetas_amarillas": 7,
+    "tarjetas_rojas": 0
+  }
+}

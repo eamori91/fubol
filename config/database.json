@@ -1,0 +1,26 @@
+{
+    "type": "sqlite",
+    "sqlite": {
+        "db_path": "data/database/football.db"
+    },
+    "postgresql": {
+        "host": "localhost",
+        "port": 5432,
+        "user": "postgres",
+        "password": "your_password_here",
+        "database": "football_analytics"
+    },
+    "mysql": {
+        "host": "localhost",
+        "port": 3306,
+        "user": "root",
+        "password": "your_password_here",
+        "database": "football_analytics"
+    },
+    "options": {
+        "pool_size": 10,
+        "max_overflow": 20,
+        "pool_timeout": 30,
+        "echo": false
+    }
+}

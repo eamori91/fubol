@@ -1,0 +1,27 @@
+{
+  "id": "JG000009",
+  "nombre": "Nombre6 Apellido6",
+  "equipo": "Equipo 1",
+  "posicion": "defensa",
+  "edad": 35,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 87,
+    "velocidad": 61,
+    "fuerza": 84,
+    "control": 59,
+    "marcaje": 77,
+    "entrada": 84,
+    "anticipacion": 76,
+    "cabeza": 87
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 9,
+    "minutos": 2011,
+    "goles": 3,
+    "asistencias": 5,
+    "tarjetas_amarillas": 2,
+    "tarjetas_rojas": 1
+  }
+}

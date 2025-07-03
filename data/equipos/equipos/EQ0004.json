@@ -1,0 +1,724 @@
+{
+  "id": "EQ0004",
+  "nombre": "Equipo 4",
+  "liga": "Liga A",
+  "pais": "País C",
+  "estilo_juego": {
+    "posesion": 71,
+    "presion": 75,
+    "defensa_alta": 81,
+    "juego_directo": 53,
+    "contraataque": 49,
+    "agresividad": 51
+  },
+  "titulares": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "estadisticas": {
+    "temporada_actual": {},
+    "historico": {},
+    "actual": {
+      "partidos": 10,
+      "victorias": 3,
+      "puntos": 11,
+      "goles_favor": 14,
+      "goles_contra": 22,
+      "partidos_local": 5,
+      "victorias_local": 1,
+      "derrotas": 5,
+      "partidos_visitante": 5,
+      "derrotas_visitante": 3,
+      "derrotas_local": 2,
+      "victorias_visitante": 2,
+      "empates": 2,
+      "empates_local": 2
+    }
+  },
+  "jugadores": [
+    {
+      "id": "JG000076",
+      "nombre": "Nombre1 Apellido1",
+      "equipo": "Equipo 4",
+      "posicion": "portero",
+      "edad": 19,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 68,
+        "velocidad": 88,
+        "fuerza": 83,
+        "control": 64,
+        "reflejos": 67,
+        "posicionamiento": 74,
+        "salidas": 71,
+        "manos": 66
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 1,
+        "minutos": 1080,
+        "goles": 0,
+        "asistencias": 0,
+        "tarjetas_amarillas": 3,
+        "tarjetas_rojas": 0
+      }
+    },
+    {
+      "id": "JG000077",
+      "nombre": "Nombre2 Apellido2",
+      "equipo": "Equipo 4",
+      "posicion": "portero",
+      "edad": 36,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 80,
+        "velocidad": 76,
+        "fuerza": 78,
+        "control": 62,
+        "reflejos": 63,
+        "posicionamiento": 74,
+        "salidas": 93,
+        "manos": 93
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 14,
+        "minutos": 2012,
+        "goles": 0,
+        "asistencias": 0,
+        "tarjetas_amarillas": 7,
+        "tarjetas_rojas": 1
+      }
+    },
+    {
+      "id": "JG000078",
+      "nombre": "Nombre3 Apellido3",
+      "equipo": "Equipo 4",
+      "posicion": "portero",
+      "edad": 28,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 52,
+        "velocidad": 53,
+        "fuerza": 53,
+        "control": 86,
+        "reflejos": 65,
+        "posicionamiento": 74,
+        "salidas": 60,
+        "manos": 73
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 2,
+        "minutos": 574,
+        "goles": 0,
+        "asistencias": 0,
+        "tarjetas_amarillas": 4,
+        "tarjetas_rojas": 1
+      }
+    },
+    {
+      "id": "JG000079",
+      "nombre": "Nombre1 Apellido1",
+      "equipo": "Equipo 4",
+      "posicion": "defensa",
+      "edad": 33,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 67,
+        "velocidad": 65,
+        "fuerza": 84,
+        "control": 61,
+        "marcaje": 94,
+        "entrada": 61,
+        "anticipacion": 91,
+        "cabeza": 68
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 2,
+        "minutos": 1799,
+        "goles": 1,
+        "asistencias": 4,
+        "tarjetas_amarillas": 5,
+        "tarjetas_rojas": 1
+      }
+    },
+    {
+      "id": "JG000080",
+      "nombre": "Nombre2 Apellido2",
+      "equipo": "Equipo 4",
+      "posicion": "defensa",
+      "edad": 23,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 56,
+        "velocidad": 89,
+        "fuerza": 89,
+        "control": 77,
+        "marcaje": 66,
+        "entrada": 65,
+        "anticipacion": 61,
+        "cabeza": 77
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 21,
+        "minutos": 989,
+        "goles": 0,
+        "asistencias": 7,
+        "tarjetas_amarillas": 4,
+        "tarjetas_rojas": 0
+      }
+    },
+    {
+      "id": "JG000081",
+      "nombre": "Nombre3 Apellido3",
+      "equipo": "Equipo 4",
+      "posicion": "defensa",
+      "edad": 28,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 66,
+        "velocidad": 77,
+        "fuerza": 56,
+        "control": 77,
+        "marcaje": 79,
+        "entrada": 70,
+        "anticipacion": 80,
+        "cabeza": 79
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 27,
+        "minutos": 2133,
+        "goles": 0,
+        "asistencias": 9,
+        "tarjetas_amarillas": 3,
+        "tarjetas_rojas": 1
+      }
+    },
+    {
+      "id": "JG000082",
+      "nombre": "Nombre4 Apellido4",
+      "equipo": "Equipo 4",
+      "posicion": "defensa",
+      "edad": 22,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 68,
+        "velocidad": 68,
+        "fuerza": 62,
+        "control": 76,
+        "marcaje": 82,
+        "entrada": 86,
+        "anticipacion": 84,
+        "cabeza": 94
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 27,
+        "minutos": 174,
+        "goles": 6,
+        "asistencias": 1,
+        "tarjetas_amarillas": 4,
+        "tarjetas_rojas": 1
+      }
+    },
+    {
+      "id": "JG000083",
+      "nombre": "Nombre5 Apellido5",
+      "equipo": "Equipo 4",
+      "posicion": "defensa",
+      "edad": 34,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 65,
+        "velocidad": 81,
+        "fuerza": 72,
+        "control": 73,
+        "marcaje": 76,
+        "entrada": 79,
+        "anticipacion": 85,
+        "cabeza": 62
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 0,
+        "minutos": 440,
+        "goles": 13,
+        "asistencias": 3,
+        "tarjetas_amarillas": 7,
+        "tarjetas_rojas": 1
+      }
+    },
+    {
+      "id": "JG000084",
+      "nombre": "Nombre6 Apellido6",
+      "equipo": "Equipo 4",
+      "posicion": "defensa",
+      "edad": 36,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 71,
+        "velocidad": 59,
+        "fuerza": 54,
+        "control": 55,
+        "marcaje": 87,
+        "entrada": 70,
+        "anticipacion": 71,
+        "cabeza": 88
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 16,
+        "minutos": 1796,
+        "goles": 6,
+        "asistencias": 1,
+        "tarjetas_amarillas": 2,
+        "tarjetas_rojas": 0
+      }
+    },
+    {
+      "id": "JG000085",
+      "nombre": "Nombre7 Apellido7",
+      "equipo": "Equipo 4",
+      "posicion": "defensa",
+      "edad": 34,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 88,
+        "velocidad": 79,
+        "fuerza": 69,
+        "control": 72,
+        "marcaje": 70,
+        "entrada": 70,
+        "anticipacion": 77,
+        "cabeza": 73
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 19,
+        "minutos": 2129,
+        "goles": 8,
+        "asistencias": 6,
+        "tarjetas_amarillas": 7,
+        "tarjetas_rojas": 0
+      }
+    },
+    {
+      "id": "JG000086",
+      "nombre": "Nombre8 Apellido8",
+      "equipo": "Equipo 4",
+      "posicion": "defensa",
+      "edad": 35,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 57,
+        "velocidad": 75,
+        "fuerza": 56,
+        "control": 85,
+        "marcaje": 84,
+        "entrada": 84,
+        "anticipacion": 90,
+        "cabeza": 72
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 14,
+        "minutos": 1793,
+        "goles": 4,
+        "asistencias": 1,
+        "tarjetas_amarillas": 5,
+        "tarjetas_rojas": 0
+      }
+    },
+    {
+      "id": "JG000087",
+      "nombre": "Nombre1 Apellido1",
+      "equipo": "Equipo 4",
+      "posicion": "centrocampista",
+      "edad": 30,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 54,
+        "velocidad": 87,
+        "fuerza": 60,
+        "control": 75,
+        "pase": 75,
+        "vision": 88,
+        "tecnica": 82,
+        "creatividad": 90
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 14,
+        "minutos": 2111,
+        "goles": 9,
+        "asistencias": 3,
+        "tarjetas_amarillas": 4,
+        "tarjetas_rojas": 1
+      }
+    },
+    {
+      "id": "JG000088",
+      "nombre": "Nombre2 Apellido2",
+      "equipo": "Equipo 4",
+      "posicion": "centrocampista",
+      "edad": 30,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 62,
+        "velocidad": 84,
+        "fuerza": 71,
+        "control": 54,
+        "pase": 77,
+        "vision": 75,
+        "tecnica": 79,
+        "creatividad": 70
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 0,
+        "minutos": 1608,
+        "goles": 2,
+        "asistencias": 1,
+        "tarjetas_amarillas": 0,
+        "tarjetas_rojas": 1
+      }
+    },
+    {
+      "id": "JG000089",
+      "nombre": "Nombre3 Apellido3",
+      "equipo": "Equipo 4",
+      "posicion": "centrocampista",
+      "edad": 34,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 80,
+        "velocidad": 71,
+        "fuerza": 70,
+        "control": 75,
+        "pase": 79,
+        "vision": 83,
+        "tecnica": 80,
+        "creatividad": 83
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 24,
+        "minutos": 1550,
+        "goles": 5,
+        "asistencias": 6,
+        "tarjetas_amarillas": 2,
+        "tarjetas_rojas": 1
+      }
+    },
+    {
+      "id": "JG000090",
+      "nombre": "Nombre4 Apellido4",
+      "equipo": "Equipo 4",
+      "posicion": "centrocampista",
+      "edad": 32,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 80,
+        "velocidad": 79,
+        "fuerza": 81,
+        "control": 89,
+        "pase": 71,
+        "vision": 76,
+        "tecnica": 66,
+        "creatividad": 80
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 19,
+        "minutos": 939,
+        "goles": 9,
+        "asistencias": 7,
+        "tarjetas_amarillas": 4,
+        "tarjetas_rojas": 0
+      }
+    },
+    {
+      "id": "JG000091",
+      "nombre": "Nombre5 Apellido5",
+      "equipo": "Equipo 4",
+      "posicion": "centrocampista",
+      "edad": 37,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 70,
+        "velocidad": 69,
+        "fuerza": 83,
+        "control": 75,
+        "pase": 69,
+        "vision": 93,
+        "tecnica": 92,
+        "creatividad": 74
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 5,
+        "minutos": 2287,
+        "goles": 4,
+        "asistencias": 3,
+        "tarjetas_amarillas": 5,
+        "tarjetas_rojas": 0
+      }
+    },
+    {
+      "id": "JG000092",
+      "nombre": "Nombre6 Apellido6",
+      "equipo": "Equipo 4",
+      "posicion": "centrocampista",
+      "edad": 24,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 70,
+        "velocidad": 61,
+        "fuerza": 52,
+        "control": 59,
+        "pase": 88,
+        "vision": 67,
+        "tecnica": 93,
+        "creatividad": 89
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 21,
+        "minutos": 784,
+        "goles": 0,
+        "asistencias": 9,
+        "tarjetas_amarillas": 3,
+        "tarjetas_rojas": 0
+      }
+    },
+    {
+      "id": "JG000093",
+      "nombre": "Nombre7 Apellido7",
+      "equipo": "Equipo 4",
+      "posicion": "centrocampista",
+      "edad": 25,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 78,
+        "velocidad": 58,
+        "fuerza": 68,
+        "control": 79,
+        "pase": 79,
+        "vision": 72,
+        "tecnica": 81,
+        "creatividad": 69
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 15,
+        "minutos": 193,
+        "goles": 6,
+        "asistencias": 6,
+        "tarjetas_amarillas": 7,
+        "tarjetas_rojas": 0
+      }
+    },
+    {
+      "id": "JG000094",
+      "nombre": "Nombre8 Apellido8",
+      "equipo": "Equipo 4",
+      "posicion": "centrocampista",
+      "edad": 30,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 81,
+        "velocidad": 77,
+        "fuerza": 76,
+        "control": 73,
+        "pase": 81,
+        "vision": 88,
+        "tecnica": 82,
+        "creatividad": 81
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 14,
+        "minutos": 2230,
+        "goles": 8,
+        "asistencias": 4,
+        "tarjetas_amarillas": 7,
+        "tarjetas_rojas": 0
+      }
+    },
+    {
+      "id": "JG000095",
+      "nombre": "Nombre1 Apellido1",
+      "equipo": "Equipo 4",
+      "posicion": "delantero",
+      "edad": 21,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 69,
+        "velocidad": 87,
+        "fuerza": 82,
+        "control": 71,
+        "remate": 78,
+        "definicion": 92,
+        "regate": 89,
+        "oportunismo": 86
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 1,
+        "minutos": 1077,
+        "goles": 6,
+        "asistencias": 6,
+        "tarjetas_amarillas": 3,
+        "tarjetas_rojas": 1
+      }
+    },
+    {
+      "id": "JG000096",
+      "nombre": "Nombre2 Apellido2",
+      "equipo": "Equipo 4",
+      "posicion": "delantero",
+      "edad": 37,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 85,
+        "velocidad": 86,
+        "fuerza": 67,
+        "control": 80,
+        "remate": 64,
+        "definicion": 89,
+        "regate": 66,
+        "oportunismo": 93
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 29,
+        "minutos": 1424,
+        "goles": 6,
+        "asistencias": 2,
+        "tarjetas_amarillas": 6,
+        "tarjetas_rojas": 0
+      }
+    },
+    {
+      "id": "JG000097",
+      "nombre": "Nombre3 Apellido3",
+      "equipo": "Equipo 4",
+      "posicion": "delantero",
+      "edad": 34,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 77,
+        "velocidad": 64,
+        "fuerza": 68,
+        "control": 86,
+        "remate": 68,
+        "definicion": 93,
+        "regate": 94,
+        "oportunismo": 73
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 24,
+        "minutos": 151,
+        "goles": 0,
+        "asistencias": 0,
+        "tarjetas_amarillas": 4,
+        "tarjetas_rojas": 0
+      }
+    },
+    {
+      "id": "JG000098",
+      "nombre": "Nombre4 Apellido4",
+      "equipo": "Equipo 4",
+      "posicion": "delantero",
+      "edad": 22,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 65,
+        "velocidad": 79,
+        "fuerza": 53,
+        "control": 50,
+        "remate": 83,
+        "definicion": 90,
+        "regate": 87,
+        "oportunismo": 89
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 2,
+        "minutos": 2106,
+        "goles": 9,
+        "asistencias": 5,
+        "tarjetas_amarillas": 6,
+        "tarjetas_rojas": 0
+      }
+    },
+    {
+      "id": "JG000099",
+      "nombre": "Nombre5 Apellido5",
+      "equipo": "Equipo 4",
+      "posicion": "delantero",
+      "edad": 31,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 50,
+        "velocidad": 83,
+        "fuerza": 67,
+        "control": 53,
+        "remate": 65,
+        "definicion": 64,
+        "regate": 63,
+        "oportunismo": 89
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 0,
+        "minutos": 296,
+        "goles": 6,
+        "asistencias": 5,
+        "tarjetas_amarillas": 3,
+        "tarjetas_rojas": 1
+      }
+    },
+    {
+      "id": "JG000100",
+      "nombre": "Nombre6 Apellido6",
+      "equipo": "Equipo 4",
+      "posicion": "delantero",
+      "edad": 30,
+      "nacionalidad": "País C",
+      "habilidades": {
+        "resistencia": 70,
+        "velocidad": 60,
+        "fuerza": 79,
+        "control": 72,
+        "remate": 69,
+        "definicion": 75,
+        "regate": 69,
+        "oportunismo": 75
+      },
+      "estado_fisico": 100,
+      "estadisticas": {
+        "partidos": 19,
+        "minutos": 251,
+        "goles": 1,
+        "asistencias": 8,
+        "tarjetas_amarillas": 1,
+        "tarjetas_rojas": 1
+      }
+    }
+  ]
+}

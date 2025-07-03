@@ -1,0 +1,27 @@
+{
+  "id": "JG000045",
+  "nombre": "Nombre1 Apellido1",
+  "equipo": "Equipo 2",
+  "posicion": "delantero",
+  "edad": 19,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 56,
+    "velocidad": 72,
+    "fuerza": 57,
+    "control": 82,
+    "remate": 89,
+    "definicion": 79,
+    "regate": 94,
+    "oportunismo": 86
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 26,
+    "minutos": 2504,
+    "goles": 9,
+    "asistencias": 6,
+    "tarjetas_amarillas": 3,
+    "tarjetas_rojas": 1
+  }
+}

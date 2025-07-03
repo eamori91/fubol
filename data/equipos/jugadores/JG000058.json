@@ -1,0 +1,27 @@
+{
+  "id": "JG000058",
+  "nombre": "Nombre5 Apellido5",
+  "equipo": "Equipo 3",
+  "posicion": "defensa",
+  "edad": 24,
+  "nacionalidad": "País D",
+  "habilidades": {
+    "resistencia": 80,
+    "velocidad": 82,
+    "fuerza": 76,
+    "control": 87,
+    "marcaje": 83,
+    "entrada": 92,
+    "anticipacion": 61,
+    "cabeza": 79
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 25,
+    "minutos": 236,
+    "goles": 10,
+    "asistencias": 8,
+    "tarjetas_amarillas": 4,
+    "tarjetas_rojas": 1
+  }
+}

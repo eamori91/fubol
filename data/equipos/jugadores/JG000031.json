@@ -1,0 +1,27 @@
+{
+  "id": "JG000031",
+  "nombre": "Nombre3 Apellido3",
+  "equipo": "Equipo 2",
+  "posicion": "defensa",
+  "edad": 30,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 85,
+    "velocidad": 74,
+    "fuerza": 59,
+    "control": 86,
+    "marcaje": 84,
+    "entrada": 71,
+    "anticipacion": 75,
+    "cabeza": 92
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 21,
+    "minutos": 546,
+    "goles": 0,
+    "asistencias": 8,
+    "tarjetas_amarillas": 1,
+    "tarjetas_rojas": 1
+  }
+}

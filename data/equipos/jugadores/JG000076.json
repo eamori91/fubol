@@ -1,0 +1,27 @@
+{
+  "id": "JG000076",
+  "nombre": "Nombre1 Apellido1",
+  "equipo": "Equipo 4",
+  "posicion": "portero",
+  "edad": 19,
+  "nacionalidad": "País C",
+  "habilidades": {
+    "resistencia": 68,
+    "velocidad": 88,
+    "fuerza": 83,
+    "control": 64,
+    "reflejos": 67,
+    "posicionamiento": 74,
+    "salidas": 71,
+    "manos": 66
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 1,
+    "minutos": 1080,
+    "goles": 0,
+    "asistencias": 0,
+    "tarjetas_amarillas": 3,
+    "tarjetas_rojas": 0
+  }
+}

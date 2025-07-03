@@ -1,0 +1,27 @@
+{
+  "EQ0001": {
+    "nombre": "Equipo 1",
+    "liga": "Liga A",
+    "pais": "País B"
+  },
+  "EQ0002": {
+    "nombre": "Equipo 2",
+    "liga": "Liga C",
+    "pais": "País B"
+  },
+  "EQ0003": {
+    "nombre": "Equipo 3",
+    "liga": "Liga C",
+    "pais": "País D"
+  },
+  "EQ0004": {
+    "nombre": "Equipo 4",
+    "liga": "Liga A",
+    "pais": "País C"
+  },
+  "EQ0005": {
+    "nombre": "Equipo 5",
+    "liga": "Liga C",
+    "pais": "País A"
+  }
+}

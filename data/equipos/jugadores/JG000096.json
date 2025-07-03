@@ -1,0 +1,27 @@
+{
+  "id": "JG000096",
+  "nombre": "Nombre2 Apellido2",
+  "equipo": "Equipo 4",
+  "posicion": "delantero",
+  "edad": 37,
+  "nacionalidad": "País C",
+  "habilidades": {
+    "resistencia": 85,
+    "velocidad": 86,
+    "fuerza": 67,
+    "control": 80,
+    "remate": 64,
+    "definicion": 89,
+    "regate": 66,
+    "oportunismo": 93
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 29,
+    "minutos": 1424,
+    "goles": 6,
+    "asistencias": 2,
+    "tarjetas_amarillas": 6,
+    "tarjetas_rojas": 0
+  }
+}

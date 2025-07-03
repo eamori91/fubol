@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Predicción de Partidos Futuros - Analizador Deportivo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 2rem;
+        }
+        .prediction-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .factor-item {
+            background-color: #f8f9fa;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Predicción de Partidos Futuros</li>
+            </ol>
+        </nav>
+
+        <header class="text-center mb-4">
+            <h1>Predicción de Partidos Futuros</h1>
+            <p class="lead">Anticipa resultados de partidos a más de dos semanas de distancia</p>
+        </header>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                Selecciona los equipos y la fecha
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="equipo_local">Equipo Local</label>
+                            <select class="form-control" id="equipo_local" name="equipo_local" required>
+                                <option value="" selected disabled>Selecciona un equipo local...</option>
+                                <option value="FC Barcelona">FC Barcelona</option>
+                                <option value="Real Madrid">Real Madrid</option>
+                                <option value="Atlético Madrid">Atlético Madrid</option>
+                                <!-- Más equipos se cargarían dinámicamente -->
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="equipo_visitante">Equipo Visitante</label>
+                            <select class="form-control" id="equipo_visitante" name="equipo_visitante" required>
+                                <option value="" selected disabled>Selecciona un equipo visitante...</option>
+                                <option value="FC Barcelona">FC Barcelona</option>
+                                <option value="Real Madrid">Real Madrid</option>
+                                <option value="Atlético Madrid">Atlético Madrid</option>
+                                <!-- Más equipos se cargarían dinámicamente -->
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="fecha">Fecha del partido</label>
+                            <input type="date" class="form-control" id="fecha" name="fecha" required min="{{ today }}">
+                        </div>
+                        <div class="form-group col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Predecir</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if equipo_local and equipo_visitante and fecha %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Predicción: {{ equipo_local }} vs {{ equipo_visitante }} ({{ fecha }})</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="alert alert-primary">
+                            <h6 class="mb-2">Resultado más probable</h6>
+                            <div class="prediction-value">{{ prediccion.resultado_predicho }}</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h6>Probabilidades</h6>
+                            <div class="progress mb-2" style="height: 25px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: {{ prediccion.probabilidades.victoria_local*100 }}%">
+                                    {{ equipo_local }} ({{ prediccion.probabilidades.victoria_local*100 }}%)
+                                </div>
+                            </div>
+                            <div class="progress mb-2" style="height: 25px;">
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: {{ prediccion.probabilidades.empate*100 }}%">
+                                    Empate ({{ prediccion.probabilidades.empate*100 }}%)
+                                </div>
+                            </div>
+                            <div class="progress mb-2" style="height: 25px;">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: {{ prediccion.probabilidades.victoria_visitante*100 }}%">
+                                    {{ equipo_visitante }} ({{ prediccion.probabilidades.victoria_visitante*100 }}%)
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h6>Goles predichos</h6>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <div class="text-center px-3">
+                                    <div class="badge badge-light p-2 mb-2">{{ equipo_local }}</div>
+                                    <div class="display-4">{{ prediccion.goles_predichos.local }}</div>
+                                </div>
+                                <div class="px-2">-</div>
+                                <div class="text-center px-3">
+                                    <div class="badge badge-light p-2 mb-2">{{ equipo_visitante }}</div>
+                                    <div class="display-4">{{ prediccion.goles_predichos.visitante }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h6>Factores clave para la predicción</h6>
+                        <div class="factors-list">
+                            {% for factor in prediccion.factores_clave %}
+                                <div class="factor-item">
+                                    <i class="fas fa-check-circle text-success mr-2"></i>
+                                    {{ factor }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="alert alert-info">
+            <h5>¿Cómo funciona la predicción?</h5>
+            <p>Nuestro modelo de predicción se basa en:</p>
+            <ul>
+                <li>Historial de partidos entre ambos equipos</li>
+                <li>Forma reciente de cada equipo</li>
+                <li>Tendencias a largo plazo en la temporada</li>
+                <li>Factores estadísticos como posesión, tiros a puerta, etc.</li>
+                <li>Análisis de jugadores clave y su rendimiento</li>
+            </ul>
+        </div>
+
+        <footer class="mt-5 text-center">
+            <p>Analizador Deportivo de Fútbol &copy; 2025</p>
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</body>
+</html>

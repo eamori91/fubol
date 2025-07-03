@@ -1,0 +1,27 @@
+{
+  "id": "JG000080",
+  "nombre": "Nombre2 Apellido2",
+  "equipo": "Equipo 4",
+  "posicion": "defensa",
+  "edad": 23,
+  "nacionalidad": "País C",
+  "habilidades": {
+    "resistencia": 56,
+    "velocidad": 89,
+    "fuerza": 89,
+    "control": 77,
+    "marcaje": 66,
+    "entrada": 65,
+    "anticipacion": 61,
+    "cabeza": 77
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 21,
+    "minutos": 989,
+    "goles": 0,
+    "asistencias": 7,
+    "tarjetas_amarillas": 4,
+    "tarjetas_rojas": 0
+  }
+}

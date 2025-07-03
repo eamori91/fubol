@@ -1,0 +1,27 @@
+{
+  "id": "JG000063",
+  "nombre": "Nombre2 Apellido2",
+  "equipo": "Equipo 3",
+  "posicion": "centrocampista",
+  "edad": 30,
+  "nacionalidad": "País D",
+  "habilidades": {
+    "resistencia": 79,
+    "velocidad": 55,
+    "fuerza": 87,
+    "control": 61,
+    "pase": 90,
+    "vision": 68,
+    "tecnica": 77,
+    "creatividad": 92
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 0,
+    "minutos": 1920,
+    "goles": 2,
+    "asistencias": 6,
+    "tarjetas_amarillas": 1,
+    "tarjetas_rojas": 0
+  }
+}

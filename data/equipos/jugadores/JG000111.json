@@ -1,0 +1,27 @@
+{
+  "id": "JG000111",
+  "nombre": "Nombre8 Apellido8",
+  "equipo": "Equipo 5",
+  "posicion": "defensa",
+  "edad": 28,
+  "nacionalidad": "País A",
+  "habilidades": {
+    "resistencia": 63,
+    "velocidad": 77,
+    "fuerza": 54,
+    "control": 54,
+    "marcaje": 72,
+    "entrada": 68,
+    "anticipacion": 67,
+    "cabeza": 75
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 27,
+    "minutos": 932,
+    "goles": 14,
+    "asistencias": 7,
+    "tarjetas_amarillas": 1,
+    "tarjetas_rojas": 1
+  }
+}

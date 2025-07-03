@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analizador Deportivo de Fútbol - Dashboard</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="FootballAI">
+    <link rel="apple-touch-icon" href="/static/img/icon-192.png">
+    
+    <!-- CSS Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/themes.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/interactive.css') }}" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-green: #28a745;
+            --primary-dark: #1e7e34;
+            --grass-green: #4CAF50;
+            --field-green: #2E7D32;
+            --white-clean: #ffffff;
+            --gray-light: #f8f9fa;
+            --gray-medium: #6c757d;
+            --shadow-soft: 0 2px 10px rgba(0,0,0,0.1);
+            --shadow-hover: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--gray-light) 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+
+        /* Header Mejorado */
+        .header-modern {
+            background: linear-gradient(135deg, var(--grass-green) 0%, var(--field-green) 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Search Bar Global */
+        .search-global {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            box-shadow: var(--shadow-hover);
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-medium);
+        }
+
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow-hover);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .suggestion-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background 0.2s ease;
+        }
+
+        .suggestion-item:hover {
+            background: var(--gray-light);
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .team-logo {
+            width: 30px;
+            height: 30px;
+            margin-right: 1rem;
+            border-radius: 50%;
+        }
+
+        /* Widget System */
+        .widget-container {
+            margin-bottom: 2rem;
+        }
+
+        .widget {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--gray-light);
+        }
+
+        .widget-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--field-green);
+            margin: 0;
+        }
+
+        .widget-icon {
+            color: var(--grass-green);
+            font-size: 1.2rem;
+        }
+
+        /* Cards de Partidos */
+        .match-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+        }
+
+        .match-card:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .teams-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .team {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .team-home {
+            justify-content: flex-start;
+        }
+
+        .team-away {
+            justify-content: flex-end;
+        }
+
+        .vs-separator {
+            margin: 0 1rem;
+            font-weight: bold;
+            color: var(--gray-medium);
+        }
+
+        .prediction-badge {
+            background: var(--grass-green);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .confidence-bar {
+            height: 4px;
+            background: #eee;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--grass-green), var(--field-green));
+            transition: width 0.8s ease;
+        }
+
+        /* Progress Rings para Probabilidades */
+        .probability-ring {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .ring-background {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(var(--grass-green) 0deg, #eee 0deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ring-inner {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: var(--field-green);
+        }
+
+        /* Tema Oscuro */
+        .dark-theme {
+            --gray-light: #2c3e50;
+            --white-clean: #34495e;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+        }
+
+        .dark-theme .widget {
+            background: #34495e;
+            color: white;
+        }
+
+        .dark-theme .match-card {
+            background: #34495e;
+            color: white;
+        }
+
+        /* Loading States */
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--grass-green);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 1rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-stats {
+                flex-direction: column;
+            }
+            
+            .stat-item {
+                margin-bottom: 1rem;
+            }
+            
+            .teams-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .vs-separator {
+                margin: 0.5rem 0;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--grass-green);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            background: var(--field-green);
+            transform: scale(1.1);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .quick-action {
+            background: white;
+            border: none;
+            border-radius: 25px;
+            padding: 0.8rem 1.5rem;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quick-action:hover {
+            background: var(--grass-green);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Sección de Favoritos Mejorada */
+        .favorites-container {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+        }
+
+        .favorites-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .favorites-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--field-green);
+            margin: 0;
+        }
+
+        .favorites-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .refresh-favorites {
+            background: var(--grass-green);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+        }
+
+        .refresh-favorites:hover {
+            background: var(--field-green);
+        }
+
+        .favorites-list {
+            max-height: 300px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .no-favorites {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray-medium);
+        }
+
+        /* Comparador de Equipos Mejorado */
+        .team-comparator {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+        }
+
+        .team-comparator-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--field-green);
+            margin-bottom: 1rem;
+        }
+
+        .team-selection {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .team-selector {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .team-selector:hover {
+            background: #e2e6ea;
+        }
+
+        .team-selection-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .vs-badge {
+            background: var(--grass-green);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            position: absolute;
+        }
+
+        .compare-btn {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            background: var(--grass-green);
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .compare-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .comparison-stats {
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .comparison-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Widget adicional para Estados de Carga */
+        .with-loading {
+            position: relative;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            z-index: 1;
+        }
+
+        .loading-text {
+            font-size: 0.9rem;
+            color: var(--gray-medium);
+            margin-top: 0.5rem;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--grass-green);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            background: var(--field-green);
+            transform: scale(1.1);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .quick-action {
+            background: white;
+            border: none;
+            border-radius: 25px;
+            padding: 0.8rem 1.5rem;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quick-action:hover {
+            background: var(--grass-green);
+            color: white;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <div class="theme-toggle">
+        <i class="fas fa-sun"></i>
+        <i class="fas fa-moon"></i>
+    </div>
+
+    <!-- Notifications Container -->
+    <div class="notifications-container"></div>
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+
+    <!-- Header Moderno -->
+    <header class="header-modern">
+        <div class="container">
+            <div class="text-center">
+                <h1 class="display-4 mb-3">
+                    <i class="fas fa-futbol me-3"></i>
+                    Analizador Deportivo de Fútbol
+                </h1>
+                <p class="lead">Análisis inteligente con IA para predicciones precisas</p>
+                
+                <!-- Hero Stats -->
+                <div class="hero-stats">
+                    <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+                        <span class="stat-number" id="predictions-today">0</span>
+                        <span class="stat-label">Predicciones Hoy</span>
+                    </div>
+                    <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+                        <span class="stat-number" id="accuracy-rate">0</span>
+                        <span class="stat-label">% Precisión</span>
+                    </div>
+                    <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
+                        <span class="stat-number" id="total-matches">0</span>
+                        <span class="stat-label">Partidos Analizados</span>
+                    </div>
+                    <div class="stat-item" data-aos="fade-up" data-aos-delay="400">
+                        <span class="stat-number" id="active-users">0</span>
+                        <span class="stat-label">Usuarios Activos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Búsqueda Global -->
+        <div class="search-global" data-aos="fade-up">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" id="global-search" 
+                   placeholder="Buscar equipos, partidos, ligas..." 
+                   autocomplete="off">
+            <div class="search-suggestions" id="search-suggestions">
+                <!-- Sugerencias dinámicas -->
+            </div>
+        </div>
+
+        <!-- Acciones Rápidas -->
+        <div class="quick-actions" data-aos="fade-up" data-aos-delay="100">
+            <div class="quick-action-card quick-action" data-action="analyze-team">
+                <div class="quick-action-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="quick-action-title">Análisis Histórico</div>
+                <div class="quick-action-description">Análisis completo de rendimiento</div>
+            </div>
+            
+            <div class="quick-action-card quick-action" data-action="predict-match">
+                <div class="quick-action-icon">
+                    <i class="fas fa-crystal-ball"></i>
+                </div>
+                <div class="quick-action-title">Predicción Rápida</div>
+                <div class="quick-action-description">Predecir resultado de partido</div>
+            </div>
+            
+            <div class="quick-action-card quick-action" data-action="compare-teams">
+                <div class="quick-action-icon">
+                    <i class="fas fa-balance-scale"></i>
+                </div>
+                <div class="quick-action-title">Comparar Equipos</div>
+                <div class="quick-action-description">Comparación lado a lado</div>
+            </div>
+            
+            <div class="quick-action-card quick-action" data-action="export-data">
+                <div class="quick-action-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="quick-action-title">Mis Favoritos</div>
+                <div class="quick-action-description">Equipos y análisis guardados</div>
+            </div>
+        </div>
+
+        <!-- Widgets Dashboard -->
+        <div class="row widget-container">
+            <!-- Widget: Partidos Destacados del Día -->
+            <div class="col-lg-8 col-md-12" data-aos="fade-right">
+                <div class="widget-card" data-widget="predictions">
+                    <div class="widget-header">
+                        <h3 class="widget-title">
+                            <i class="fas fa-fire widget-icon me-2"></i>
+                            Partidos Destacados del Día
+                        </h3>
+                        <button class="btn btn-sm btn-outline-success" onclick="refreshMatches()">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div id="featured-matches" class="featured-matches">
+                        <!-- Cargando partidos... -->
+                        <div class="loading-widget">
+                            <div class="loading-spinner-large"></div>
+                            <div class="loading-text">Cargando partidos destacados...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Widget: Métricas del Sistema -->
+            <div class="col-lg-4 col-md-12" data-aos="fade-left">
+                <div class="widget-card" data-widget="analytics">
+                    <div class="widget-header">
+                        <h3 class="widget-title">
+                            <i class="fas fa-tachometer-alt widget-icon me-2"></i>
+                            Estado del Sistema
+                        </h3>
+                    </div>
+                    <div class="text-center">
+                        <div class="widget-value" id="system-accuracy">87.3%</div>
+                        <div class="widget-description">Precisión de la Semana</div>
+                        <div class="widget-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> +2.5% vs semana anterior
+                        </div>
+                        <div class="row text-center mt-3">
+                            <div class="col-6">
+                                <small class="text-muted">Último Update</small>
+                                <div id="last-update">Hace 5 min</div>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Partidos Hoy</small>
+                                <div id="matches-today">12</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row widget-container">
+            <!-- Widget: Equipos Más Buscados -->
+            <div class="col-lg-6 col-md-12" data-aos="fade-up" data-aos-delay="200">
+                <div class="widget">
+                    <div class="widget-header">
+                        <h3 class="widget-title">
+                            <i class="fas fa-trending-up widget-icon me-2"></i>
+                            Equipos Más Buscados
+                        </h3>
+                    </div>
+                    <div id="trending-teams">
+                        <!-- Lista de equipos trending -->
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="d-flex align-items-center">
+                                <img src="https://via.placeholder.com/25" class="team-logo me-2" alt="Real Madrid">
+                                <span>Real Madrid</span>
+                            </div>
+                            <span class="badge bg-success">+15%</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="d-flex align-items-center">
+                                <img src="https://via.placeholder.com/25" class="team-logo me-2" alt="Barcelona">
+                                <span>FC Barcelona</span>
+                            </div>
+                            <span class="badge bg-success">+12%</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="d-flex align-items-center">
+                                <img src="https://via.placeholder.com/25" class="team-logo me-2" alt="Manchester City">
+                                <span>Manchester City</span>
+                            </div>
+                            <span class="badge bg-success">+8%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Widget: Últimas Noticias -->
+            <div class="col-lg-6 col-md-12" data-aos="fade-up" data-aos-delay="300">
+                <div class="widget">
+                    <div class="widget-header">
+                        <h3 class="widget-title">
+                            <i class="fas fa-newspaper widget-icon me-2"></i>
+                            Alertas y Noticias
+                        </h3>
+                    </div>
+                    <div id="news-alerts">
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Modelo actualizado:</strong> Precisión mejorada en un 3.2%
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Lesión importante:</strong> Mbappé fuera 2 semanas
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accesos Directos a Secciones -->
+        <div class="row widget-container">
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
+                <div class="widget text-center">
+                    <i class="fas fa-history fa-3x text-success mb-3"></i>
+                    <h4>Análisis Histórico</h4>
+                    <p class="text-muted">Explora patrones y tendencias de equipos a lo largo de temporadas</p>
+                    <a href="/historico" class="btn btn-outline-success">Explorar</a>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
+                <div class="widget text-center">
+                    <i class="fas fa-calendar-day fa-3x text-primary mb-3"></i>
+                    <h4>Partidos Próximos</h4>
+                    <p class="text-muted">Analiza los enfrentamientos de la próxima semana</p>
+                    <a href="/proximo" class="btn btn-outline-primary">Analizar</a>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="300">
+                <div class="widget text-center">
+                    <i class="fas fa-crystal-ball fa-3x text-warning mb-3"></i>
+                    <h4>Predicciones Futuras</h4>
+                    <p class="text-muted">Utiliza IA para predecir resultados de partidos futuros</p>
+                    <a href="/futuro" class="btn btn-outline-warning">Predecir</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Favoritos Mejorada -->
+        <section class="dashboard-section">
+            <div class="container">
+                <div class="favorites-container">
+                    <div class="favorites-header">
+                        <h2 class="favorites-title">
+                            <i class="fas fa-star text-warning"></i> Tus Equipos Favoritos
+                        </h2>
+                        <div class="favorites-actions">
+                            <button class="btn btn-sm btn-outline-success refresh-favorites">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="favorites-list" data-loading="true">
+                        <!-- Favoritos se cargarán aquí con JS -->
+                        <div class="content-to-load">
+                            <div class="no-favorites">
+                                <i class="fas fa-star"></i>
+                                <p>No tienes equipos favoritos aún</p>
+                                <small>Agrega equipos a tus favoritos para acceso rápido</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparador de Equipos Mejorado -->
+        <section class="dashboard-section">
+            <div class="container">
+                <div class="team-comparator">
+                    <h2 class="team-comparator-title">Comparador de Equipos</h2>
+                    
+                    <div class="team-selection">
+                        <div class="team-selector" data-position="team1">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Seleccionar Equipo 1</span>
+                        </div>
+                        
+                        <div class="team-selection-divider">
+                            <div class="vs-badge">VS</div>
+                        </div>
+                        
+                        <div class="team-selector" data-position="team2">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Seleccionar Equipo 2</span>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button class="btn btn-lg btn-primary compare-btn" disabled>
+                            Selecciona dos equipos
+                        </button>
+                    </div>
+                    
+                    <div class="comparison-stats" data-loading="true">
+                        <!-- Resultados de comparación se cargarán aquí con JS -->
+                    </div>
+                    
+                    <div class="comparison-actions">
+                        <!-- Botones para exportar/compartir se cargarán aquí con JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Widget adicional para Estados de Carga -->
+        <section class="dashboard-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="dashboard-card with-loading" data-loading="true">
+                            <div class="card-header">
+                                <h3>Widget con Estado de Carga</h3>
+                            </div>
+                            <div class="card-body content-to-load">
+                                <div class="alert alert-info">
+                                    <p><strong>Nuevo:</strong> Se han implementado estados de carga en la aplicación</p>
+                                    <p>Prueba a navegar entre secciones y observa el feedback visual mientras cargan los datos.</p>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <button class="btn btn-info test-loading-btn" onclick="testLoading(this)">
+                                        <i class="fas fa-spinner"></i> Probar Estados de Carga
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>Acciones Disponibles</h3>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <i class="fas fa-star text-warning"></i> Añadir equipos a favoritos
+                                    </li>
+                                    <li class="list-group-item">
+                                        <i class="fas fa-exchange-alt text-primary"></i> Comparar equipos lado a lado
+                                    </li>
+                                    <li class="list-group-item">
+                                        <i class="fas fa-file-export text-success"></i> Exportar análisis a PDF/Excel
+                                    </li>
+                                    <li class="list-group-item">
+                                        <i class="fas fa-share-alt text-info"></i> Compartir resultados
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 mt-5" style="background: var(--field-green); color: white;">
+        <div class="container">
+            <p>&copy; 2025 Analizador Deportivo de Fútbol - Powered by AI</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script>
+        // Inicializar AOS (Animate On Scroll)
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        // Variables globales
+        let isDarkTheme = false;
+        let searchTimeout;
+
+        // Toggle tema oscuro/claro
+        function toggleTheme() {
+            isDarkTheme = !isDarkTheme;
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            
+            if (isDarkTheme) {
+                body.classList.add('dark-theme');
+                icon.className = 'fas fa-sun';
+            } else {
+                body.classList.remove('dark-theme');
+                icon.className = 'fas fa-moon';
+            }
+            
+            localStorage.setItem('darkTheme', isDarkTheme);
+        }
+
+        // Cargar tema guardado
+        function loadSavedTheme() {
+            const savedTheme = localStorage.getItem('darkTheme');
+            if (savedTheme === 'true') {
+                toggleTheme();
+            }
+        }
+
+        // Búsqueda inteligente
+        document.getElementById('global-search').addEventListener('input', function(e) {
+            clearTimeout(searchTimeout);
+            const query = e.target.value.trim();
+            
+            if (query.length < 2) {
+                hideSuggestions();
+                return;
+            }
+            
+            searchTimeout = setTimeout(() => {
+                searchTeams(query);
+            }, 300);
+        });
+
+        async function searchTeams(query) {
+            try {
+                const response = await fetch(`/api/search/teams?q=${encodeURIComponent(query)}`);
+                const suggestions = await response.json();
+                showSuggestions(suggestions);
+            } catch (error) {
+                console.error('Error en búsqueda:', error);
+                // Fallback a datos predefinidos
+                const fallbackSuggestions = [
+                    { name: 'Real Madrid', league: 'La Liga', country: 'España' },
+                    { name: 'FC Barcelona', league: 'La Liga', country: 'España' },
+                    { name: 'Manchester City', league: 'Premier League', country: 'Inglaterra' }
+                ].filter(team => team.name.toLowerCase().includes(query.toLowerCase()));
+                showSuggestions(fallbackSuggestions);
+            }
+        }
+
+        function showSuggestions(suggestions) {
+            const container = document.getElementById('search-suggestions');
+            container.innerHTML = '';
+            
+            suggestions.forEach(suggestion => {
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                item.innerHTML = `
+                    <img src="${suggestion.logo}" alt="${suggestion.name}" class="team-logo">
+                    <div>
+                        <div class="fw-bold">${suggestion.name}</div>
+                        <small class="text-muted">${suggestion.league}</small>
+                    </div>
+                `;
+                item.onclick = () => selectTeam(suggestion);
+                container.appendChild(item);
+            });
+            
+            container.style.display = suggestions.length > 0 ? 'block' : 'none';
+        }
+
+        function hideSuggestions() {
+            document.getElementById('search-suggestions').style.display = 'none';
+        }
+
+        function selectTeam(team) {
+            document.getElementById('global-search').value = team.name;
+            hideSuggestions();
+            // Aquí iría la lógica para mostrar información del equipo
+            console.log('Equipo seleccionado:', team);
+        }
+
+        // Acciones rápidas
+        function quickAnalysis(type) {
+            switch(type) {
+                case 'historical':
+                    window.location.href = '/historico';
+                    break;
+                case 'prediction':
+                    window.location.href = '/futuro';
+                    break;
+                case 'comparison':
+                    // Implementar comparador rápido
+                    alert('Comparador de equipos - Funcionalidad en desarrollo');
+                    break;
+            }
+        }
+
+        function showFavorites() {
+            // Implementar sistema de favoritos
+            alert('Sistema de favoritos - Funcionalidad en desarrollo');
+        }
+
+        // Cargar partidos destacados
+        async function loadFeaturedMatches() {
+            const container = document.getElementById('featured-matches');
+            
+            try {
+                const response = await fetch('/api/dashboard/featured-matches');
+                const matches = await response.json();
+                
+                container.innerHTML = matches.map(match => `
+                    <div class="match-card">
+                        <div class="teams-container">
+                            <div class="team team-home">
+                                <img src="${match.home_logo || 'https://via.placeholder.com/30'}" class="team-logo me-2" alt="${match.home_team}">
+                                <span class="fw-bold">${match.home_team}</span>
+                            </div>
+                            <div class="vs-separator">VS</div>
+                            <div class="team team-away">
+                                <span class="fw-bold">${match.away_team}</span>
+                                <img src="${match.away_logo || 'https://via.placeholder.com/30'}" class="team-logo ms-2" alt="${match.away_team}">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">${match.time}</small>
+                            <span class="prediction-badge">${match.prediction} ${match.confidence}%</span>
+                        </div>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: ${match.confidence}%"></div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error cargando partidos:', error);
+                // Fallback a datos estáticos
+                container.innerHTML = `
+                    <div class="match-card">
+                        <div class="teams-container">
+                            <div class="team team-home">
+                                <img src="https://via.placeholder.com/30" class="team-logo me-2" alt="Real Madrid">
+                                <span class="fw-bold">Real Madrid</span>
+                            </div>
+                            <div class="vs-separator">VS</div>
+                            <div class="team team-away">
+                                <span class="fw-bold">FC Barcelona</span>
+                                <img src="https://via.placeholder.com/30" class="team-logo ms-2" alt="Barcelona">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">Hoy 21:00</small>
+                            <span class="prediction-badge">Victoria Local 67%</span>
+                        </div>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: 67%"></div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Actualizar estadísticas en tiempo real
+        async function updateRealTimeStats() {
+            try {
+                const response = await fetch('/api/dashboard/stats');
+                const stats = await response.json();
+                
+                document.getElementById('total-predictions').textContent = stats.total_predictions.toLocaleString();
+                document.getElementById('accuracy-rate').textContent = stats.accuracy_rate + '%';
+                document.getElementById('teams-analyzed').textContent = stats.teams_analyzed + '+';
+                document.getElementById('leagues-covered').textContent = stats.leagues_covered;
+                document.getElementById('last-update').textContent = stats.last_update;
+                document.getElementById('matches-today').textContent = stats.matches_today;
+            } catch (error) {
+                console.error('Error actualizando estadísticas:', error);
+                // Mantener valores predeterminados
+            }
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedTheme();
+            loadFeaturedMatches();
+            
+            // Actualizar stats cada 30 segundos
+            setInterval(updateRealTimeStats, 30000);
+            
+            // Cerrar sugerencias al hacer click fuera
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.search-global')) {
+                    hideSuggestions();
+                }
+            });
+        });
+
+        // Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => console.log('SW registered'))
+                .catch(error => console.log('SW registration failed'));
+        }
+
+        // Script para prueba de carga
+        function testLoading(btn) {
+            // Obtener la instancia de la aplicación
+            const app = window.footballApp;
+            
+            // Guardar texto original
+            const originalText = btn.innerHTML;
+            
+            // Cambiar texto del botón
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Probando...';
+            btn.disabled = true;
+            
+            // Mostrar loading global
+            app.showLoading('Probando estados de carga...');
+            
+            // Esperar 2 segundos y ocultar
+            setTimeout(() => {
+                app.hideLoading();
+                
+                // Restaurar botón
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                
+                // Mostrar notificación
+                app.showNotification('¡Estados de carga probados exitosamente!', 'success');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

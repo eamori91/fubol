@@ -1,0 +1,27 @@
+{
+  "id": "JG000124",
+  "nombre": "Nombre5 Apellido5",
+  "equipo": "Equipo 5",
+  "posicion": "delantero",
+  "edad": 23,
+  "nacionalidad": "País A",
+  "habilidades": {
+    "resistencia": 60,
+    "velocidad": 89,
+    "fuerza": 75,
+    "control": 85,
+    "remate": 72,
+    "definicion": 86,
+    "regate": 80,
+    "oportunismo": 74
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 10,
+    "minutos": 1954,
+    "goles": 12,
+    "asistencias": 7,
+    "tarjetas_amarillas": 1,
+    "tarjetas_rojas": 1
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "JG000061",
+  "nombre": "Nombre8 Apellido8",
+  "equipo": "Equipo 3",
+  "posicion": "defensa",
+  "edad": 35,
+  "nacionalidad": "País D",
+  "habilidades": {
+    "resistencia": 73,
+    "velocidad": 65,
+    "fuerza": 80,
+    "control": 55,
+    "marcaje": 78,
+    "entrada": 94,
+    "anticipacion": 87,
+    "cabeza": 81
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 7,
+    "minutos": 1449,
+    "goles": 12,
+    "asistencias": 4,
+    "tarjetas_amarillas": 3,
+    "tarjetas_rojas": 1
+  }
+}

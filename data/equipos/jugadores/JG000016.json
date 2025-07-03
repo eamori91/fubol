@@ -1,0 +1,27 @@
+{
+  "id": "JG000016",
+  "nombre": "Nombre5 Apellido5",
+  "equipo": "Equipo 1",
+  "posicion": "centrocampista",
+  "edad": 23,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 81,
+    "velocidad": 72,
+    "fuerza": 52,
+    "control": 52,
+    "pase": 62,
+    "vision": 79,
+    "tecnica": 70,
+    "creatividad": 90
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 17,
+    "minutos": 1742,
+    "goles": 8,
+    "asistencias": 6,
+    "tarjetas_amarillas": 2,
+    "tarjetas_rojas": 0
+  }
+}

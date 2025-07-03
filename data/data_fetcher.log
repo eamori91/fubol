@@ -1,0 +1,1224 @@
+2025-07-02 11:44:48,392 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-07-02 11:44:48,393 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-07-02 11:44:48,396 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 11:44:51,942 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 11:44:51,948 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 12:00:19,152 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\api\\endpoints.py', reloading
+2025-07-02 12:00:19,701 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 12:00:23,825 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 12:00:23,834 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 12:00:32,539 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:00:32] "GET / HTTP/1.1" 200 -
+2025-07-02 12:00:33,237 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:00:33] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-07-02 12:00:36,799 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:00:36] "GET /proximo HTTP/1.1" 200 -
+2025-07-02 12:00:41,454 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:00:41] "POST /proximo HTTP/1.1" 200 -
+2025-07-02 12:00:46,517 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:00:46] "GET / HTTP/1.1" 200 -
+2025-07-02 12:00:48,517 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:00:48] "GET /futuro HTTP/1.1" 200 -
+2025-07-02 12:01:00,972 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:01:00] "POST /futuro HTTP/1.1" 200 -
+2025-07-02 12:27:48,297 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 12:27:48,729 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 12:27:52,539 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 12:27:52,543 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 12:30:40,172 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 12:30:40,532 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 12:30:43,647 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 12:30:43,654 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 12:33:03,641 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 12:33:04,007 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 12:33:07,191 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 12:33:07,198 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 12:33:24,144 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 12:33:24,522 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 12:33:27,539 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 12:33:27,545 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 12:35:10,201 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-07-02 12:35:10,202 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-07-02 12:35:10,203 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 12:35:13,537 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 12:35:13,545 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 12:35:21,126 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:21] "GET /?id=518234b2-9b0b-4f02-8f42-7faa07e207d7&vscodeBrowserReqId=1751481321069 HTTP/1.1" 200 -
+2025-07-02 12:35:23,949 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:23] "GET / HTTP/1.1" 200 -
+2025-07-02 12:35:25,232 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 12:35:25,285 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "[33mGET /static/img/real_madrid.png HTTP/1.1[0m" 404 -
+2025-07-02 12:35:25,286 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "[33mGET /static/img/barcelona.png HTTP/1.1[0m" 404 -
+2025-07-02 12:35:25,288 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "[33mGET /static/img/man_city.png HTTP/1.1[0m" 404 -
+2025-07-02 12:35:25,290 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "[33mGET /static/img/bayern.png HTTP/1.1[0m" 404 -
+2025-07-02 12:35:25,294 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "[33mGET /static/img/liverpool.png HTTP/1.1[0m" 404 -
+2025-07-02 12:35:25,298 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "[33mGET /static/img/dortmund.png HTTP/1.1[0m" 404 -
+2025-07-02 12:35:25,338 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "GET /sw.js HTTP/1.1" 200 -
+2025-07-02 12:35:25,425 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "[33mGET /static/img/icon-192.png HTTP/1.1[0m" 404 -
+2025-07-02 12:35:25,461 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "GET / HTTP/1.1" 200 -
+2025-07-02 12:35:25,462 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "[33mGET /static/js/dashboard.js HTTP/1.1[0m" 404 -
+2025-07-02 12:35:25,463 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "GET /dashboard HTTP/1.1" 200 -
+2025-07-02 12:35:25,467 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "[33mGET /static/css/style.css HTTP/1.1[0m" 404 -
+2025-07-02 12:35:25,651 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 12:35:25,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "[33mGET /static/img/real_madrid.png HTTP/1.1[0m" 404 -
+2025-07-02 12:35:25,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "[33mGET /static/img/barcelona.png HTTP/1.1[0m" 404 -
+2025-07-02 12:35:25,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "[33mGET /static/img/man_city.png HTTP/1.1[0m" 404 -
+2025-07-02 12:35:25,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "[33mGET /static/img/liverpool.png HTTP/1.1[0m" 404 -
+2025-07-02 12:35:25,667 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "[33mGET /static/img/bayern.png HTTP/1.1[0m" 404 -
+2025-07-02 12:35:25,669 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "[33mGET /static/img/dortmund.png HTTP/1.1[0m" 404 -
+2025-07-02 12:35:25,675 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "GET /sw.js HTTP/1.1" 200 -
+2025-07-02 12:35:25,700 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "GET / HTTP/1.1" 200 -
+2025-07-02 12:35:25,701 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "GET /dashboard HTTP/1.1" 200 -
+2025-07-02 12:35:25,702 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "[33mGET /static/css/style.css HTTP/1.1[0m" 404 -
+2025-07-02 12:35:25,711 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:25] "[33mGET /static/js/dashboard.js HTTP/1.1[0m" 404 -
+2025-07-02 12:35:45,348 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:45] "GET /historico HTTP/1.1" 200 -
+2025-07-02 12:35:55,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:35:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:36:07,764 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:07] "GET / HTTP/1.1" 200 -
+2025-07-02 12:36:07,984 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:07] "GET /sw.js HTTP/1.1" 200 -
+2025-07-02 12:36:07,985 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:07] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 12:36:08,036 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:08] "[33mGET /static/img/real_madrid.png HTTP/1.1[0m" 404 -
+2025-07-02 12:36:08,037 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:08] "[33mGET /static/img/barcelona.png HTTP/1.1[0m" 404 -
+2025-07-02 12:36:08,039 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:08] "[33mGET /static/img/bayern.png HTTP/1.1[0m" 404 -
+2025-07-02 12:36:08,043 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:08] "[33mGET /static/img/liverpool.png HTTP/1.1[0m" 404 -
+2025-07-02 12:36:08,045 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:08] "[33mGET /static/img/man_city.png HTTP/1.1[0m" 404 -
+2025-07-02 12:36:08,049 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:08] "[33mGET /static/img/dortmund.png HTTP/1.1[0m" 404 -
+2025-07-02 12:36:08,054 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:08] "GET / HTTP/1.1" 200 -
+2025-07-02 12:36:08,055 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:08] "[33mGET /static/js/dashboard.js HTTP/1.1[0m" 404 -
+2025-07-02 12:36:08,057 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:08] "[33mGET /static/css/style.css HTTP/1.1[0m" 404 -
+2025-07-02 12:36:08,062 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:08] "GET /dashboard HTTP/1.1" 200 -
+2025-07-02 12:36:23,735 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:23] "GET /futuro HTTP/1.1" 200 -
+2025-07-02 12:36:25,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:36:49,193 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:49] "GET / HTTP/1.1" 200 -
+2025-07-02 12:36:49,434 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:49] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 12:36:49,434 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:49] "GET /sw.js HTTP/1.1" 200 -
+2025-07-02 12:36:49,484 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:49] "[33mGET /static/img/real_madrid.png HTTP/1.1[0m" 404 -
+2025-07-02 12:36:49,485 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:49] "[33mGET /static/img/barcelona.png HTTP/1.1[0m" 404 -
+2025-07-02 12:36:49,486 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:49] "[33mGET /static/img/bayern.png HTTP/1.1[0m" 404 -
+2025-07-02 12:36:49,492 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:49] "[33mGET /static/img/liverpool.png HTTP/1.1[0m" 404 -
+2025-07-02 12:36:49,494 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:49] "[33mGET /static/img/man_city.png HTTP/1.1[0m" 404 -
+2025-07-02 12:36:49,495 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:49] "[33mGET /static/img/dortmund.png HTTP/1.1[0m" 404 -
+2025-07-02 12:36:49,543 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:49] "GET / HTTP/1.1" 200 -
+2025-07-02 12:36:49,545 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:49] "[33mGET /static/js/dashboard.js HTTP/1.1[0m" 404 -
+2025-07-02 12:36:49,548 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:49] "GET /dashboard HTTP/1.1" 200 -
+2025-07-02 12:36:49,550 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:49] "[33mGET /static/css/style.css HTTP/1.1[0m" 404 -
+2025-07-02 12:36:55,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:36:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:37:19,738 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:37:19] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:37:25,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:37:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:37:49,609 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:37:49] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:37:55,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:37:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:38:20,214 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:38:20] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:38:25,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:38:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:38:50,555 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:38:50] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:38:55,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:38:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:39:20,828 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:39:20] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:39:25,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:39:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:39:51,766 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:39:51] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:39:55,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:39:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:40:21,857 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:40:21] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:40:25,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:40:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:40:52,371 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:40:52] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:40:55,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:40:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:41:22,634 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:41:22] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:41:25,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:41:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:41:53,437 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:41:53] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:41:55,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:41:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:42:23,671 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:42:23] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:42:25,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:42:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:42:54,001 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:42:54] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:42:55,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:42:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:43:24,467 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:43:24] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:43:25,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:43:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:43:54,763 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:43:54] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:43:55,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:43:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:44:25,069 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:44:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:44:25,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:44:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:44:55,394 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:44:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:44:55,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:44:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:45:25,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:45:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:45:25,695 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:45:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:45:55,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:45:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:45:56,285 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:45:56] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:46:25,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:46:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:46:26,549 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:46:26] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:46:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:46:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:46:56,835 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:46:56] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:47:25,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:47:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:47:27,278 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:47:27] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:47:55,667 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:47:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:47:57,528 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:47:57] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:48:25,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:48:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:48:27,842 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:48:27] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:48:55,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:48:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:48:58,429 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:48:58] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:49:03,897 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 12:49:04,008 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 12:49:04,331 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 12:49:04,456 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 12:49:07,788 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 12:49:07,794 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 12:49:07,841 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 12:49:07,846 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 12:49:25,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:49:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:49:28,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:49:28] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:49:55,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:49:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:49:58,966 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:49:58] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:50:25,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:50:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:50:29,452 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:50:29] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:50:55,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:50:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:50:59,736 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:50:59] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:51:25,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:51:29,987 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:29] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:51:54,286 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:54] "GET / HTTP/1.1" 200 -
+2025-07-02 12:51:54,454 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:54] "GET /static/css/interactive.css HTTP/1.1" 200 -
+2025-07-02 12:51:54,455 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:54] "GET /static/css/themes.css HTTP/1.1" 200 -
+2025-07-02 12:51:54,466 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:54] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-07-02 12:51:54,550 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:54] "GET /sw.js HTTP/1.1" 200 -
+2025-07-02 12:51:54,557 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:54] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 12:51:54,638 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:54] "[33mGET /static/img/real_madrid.png HTTP/1.1[0m" 404 -
+2025-07-02 12:51:54,643 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:54] "[33mGET /static/img/barcelona.png HTTP/1.1[0m" 404 -
+2025-07-02 12:51:54,644 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:54] "[33mGET /static/img/man_city.png HTTP/1.1[0m" 404 -
+2025-07-02 12:51:54,645 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:54] "[33mGET /static/img/liverpool.png HTTP/1.1[0m" 404 -
+2025-07-02 12:51:54,646 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:54] "[33mGET /static/img/bayern.png HTTP/1.1[0m" 404 -
+2025-07-02 12:51:54,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:54] "[33mGET /static/img/dortmund.png HTTP/1.1[0m" 404 -
+2025-07-02 12:51:54,698 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:54] "GET / HTTP/1.1" 200 -
+2025-07-02 12:51:54,718 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:54] "GET /dashboard HTTP/1.1" 200 -
+2025-07-02 12:51:54,718 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:54] "[33mGET /static/css/style.css HTTP/1.1[0m" 404 -
+2025-07-02 12:51:54,724 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:54] "[33mGET /static/js/dashboard.js HTTP/1.1[0m" 404 -
+2025-07-02 12:51:55,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:51:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:52:16,992 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:52:16] "GET /futuro HTTP/1.1" 200 -
+2025-07-02 12:52:17,055 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:52:17] "[36mGET /static/css/themes.css HTTP/1.1[0m" 304 -
+2025-07-02 12:52:17,056 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:52:17] "[36mGET /static/css/interactive.css HTTP/1.1[0m" 304 -
+2025-07-02 12:52:25,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:52:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:52:55,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:52:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:53:25,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:53:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:53:55,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:53:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:54:25,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:54:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:54:27,919 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\analisis\\tactico.py', reloading
+2025-07-02 12:54:27,921 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\analisis\\tactico.py', reloading
+2025-07-02 12:54:28,410 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 12:54:28,424 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 12:54:31,946 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 12:54:31,951 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 12:54:32,036 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 12:54:32,040 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 12:54:55,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:54:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:55:25,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:55:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:55:55,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:55:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:56:25,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:56:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:56:38,625 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\analisis\\posiciones.py', reloading
+2025-07-02 12:56:38,717 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\analisis\\posiciones.py', reloading
+2025-07-02 12:56:39,060 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 12:56:39,171 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 12:56:42,705 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 12:56:42,712 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 12:56:42,805 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 12:56:42,810 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 12:56:55,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:56:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:57:25,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:57:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:57:55,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:57:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:58:25,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:58:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:58:55,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:58:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:59:25,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:59:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 12:59:55,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 12:59:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:00:19,622 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 13:00:20,030 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 13:00:20,047 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 13:00:20,503 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 13:00:23,858 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 13:00:23,864 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 13:00:24,274 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 13:00:24,279 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 13:00:25,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:00:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:00:55,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:00:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:01:00,212 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 13:01:00,662 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 13:01:01,072 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 13:01:01,588 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 13:01:04,593 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 13:01:04,601 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 13:01:05,583 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 13:01:05,589 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 13:01:07,318 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:07] "GET /futuro HTTP/1.1" 200 -
+2025-07-02 13:01:07,502 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:07] "GET /static/css/themes.css HTTP/1.1" 200 -
+2025-07-02 13:01:07,504 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:07] "[36mGET /static/css/interactive.css HTTP/1.1[0m" 304 -
+2025-07-02 13:01:07,506 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:07] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-02 13:01:10,163 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:10] "GET / HTTP/1.1" 200 -
+2025-07-02 13:01:10,223 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:10] "[36mGET /static/css/themes.css HTTP/1.1[0m" 304 -
+2025-07-02 13:01:10,224 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:10] "[36mGET /static/css/interactive.css HTTP/1.1[0m" 304 -
+2025-07-02 13:01:10,377 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:10] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-02 13:01:10,409 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:10] "GET /sw.js HTTP/1.1" 200 -
+2025-07-02 13:01:10,417 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:10] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 13:01:10,477 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:10] "[33mGET /static/img/real_madrid.png HTTP/1.1[0m" 404 -
+2025-07-02 13:01:10,481 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:10] "[33mGET /static/img/barcelona.png HTTP/1.1[0m" 404 -
+2025-07-02 13:01:10,481 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:10] "[33mGET /static/img/man_city.png HTTP/1.1[0m" 404 -
+2025-07-02 13:01:10,484 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:10] "[33mGET /static/img/bayern.png HTTP/1.1[0m" 404 -
+2025-07-02 13:01:10,486 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:10] "[33mGET /static/img/liverpool.png HTTP/1.1[0m" 404 -
+2025-07-02 13:01:10,487 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:10] "[33mGET /static/img/dortmund.png HTTP/1.1[0m" 404 -
+2025-07-02 13:01:10,517 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:10] "GET / HTTP/1.1" 200 -
+2025-07-02 13:01:10,520 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:10] "[33mGET /static/css/style.css HTTP/1.1[0m" 404 -
+2025-07-02 13:01:10,521 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:10] "GET /dashboard HTTP/1.1" 200 -
+2025-07-02 13:01:10,529 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:10] "[33mGET /static/js/dashboard.js HTTP/1.1[0m" 404 -
+2025-07-02 13:01:25,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:01:40,622 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:01:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:01:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:02:10,421 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:02:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:02:25,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:02:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:02:40,496 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:02:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:02:55,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:02:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:03:10,443 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:03:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:03:25,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:03:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:03:40,710 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:03:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:03:55,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:03:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:04:10,460 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:04:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:04:25,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:04:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:04:40,541 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:04:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:04:55,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:04:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:05:10,483 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:05:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:05:25,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:05:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:05:40,495 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:05:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:05:55,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:05:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:06:10,510 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:06:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:06:25,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:06:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:06:40,523 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:06:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:06:55,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:06:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:07:10,521 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:07:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:07:25,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:07:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:07:40,542 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:07:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:07:55,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:07:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:08:10,538 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:08:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:08:25,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:08:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:08:40,546 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:08:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:08:55,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:08:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:09:10,568 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:09:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:09:25,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:09:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:09:40,745 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:09:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:09:55,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:09:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:10:10,564 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:10:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:10:25,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:10:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:10:40,622 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:10:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:10:55,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:10:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:11:10,588 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:11:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:11:25,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:11:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:11:40,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:11:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:11:55,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:11:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:12:10,610 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:12:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:12:25,651 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:12:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:12:40,641 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:12:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:12:55,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:12:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:13:10,627 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:13:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:13:25,651 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:13:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:13:40,624 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:13:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:13:55,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:13:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:14:10,646 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:14:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:14:25,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:14:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:14:40,638 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:14:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:14:55,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:14:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:15:10,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:15:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:15:25,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:15:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:15:40,643 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:15:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:15:55,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:15:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:16:10,722 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:16:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:16:25,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:16:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:16:40,725 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:16:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:16:55,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:16:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:17:10,678 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:17:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:17:25,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:17:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:17:40,691 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:17:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:17:55,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:17:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:18:10,698 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:18:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:18:25,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:18:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:18:40,769 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:18:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:18:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:18:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:19:10,711 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:19:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:19:25,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:19:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:19:40,718 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:19:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:19:55,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:19:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:20:10,725 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:20:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:20:25,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:20:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:20:40,727 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:20:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:20:55,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:20:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:21:10,735 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:21:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:21:25,667 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:21:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:21:40,744 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:21:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:21:55,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:21:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:22:10,756 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:22:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:22:25,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:22:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:22:40,838 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:22:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:22:55,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:22:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:23:10,778 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:23:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:23:25,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:23:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:23:40,870 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:23:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:23:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:23:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:24:10,795 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:24:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:24:25,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:24:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:24:40,866 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:24:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:24:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:24:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:25:10,814 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:25:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:25:25,651 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:25:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:25:40,895 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:25:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:25:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:25:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:26:10,834 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:26:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:26:25,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:26:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:26:40,928 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:26:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:26:55,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:26:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:27:10,888 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:27:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:27:25,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:27:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:27:40,830 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:27:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:27:55,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:27:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:28:10,843 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:28:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:28:25,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:28:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:28:40,844 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:28:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:28:55,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:28:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:29:10,892 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:29:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:29:25,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:29:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:29:40,914 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:29:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:29:55,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:29:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:30:10,865 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:30:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:30:25,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:30:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:30:40,881 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:30:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:30:55,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:30:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:31:10,880 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:31:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:31:25,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:31:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:31:40,899 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:31:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:31:55,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:31:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:32:10,888 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:32:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:32:25,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:32:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:32:40,910 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:32:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:32:55,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:32:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:33:10,903 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:33:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:33:25,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:33:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:33:40,918 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:33:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:33:55,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:33:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:34:10,908 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:34:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:34:25,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:34:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:34:40,926 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:34:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:34:55,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:34:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:35:10,929 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:35:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:35:25,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:35:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:35:40,927 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:35:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:35:55,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:35:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:36:10,956 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:36:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:36:25,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:36:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:36:40,956 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:36:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:36:55,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:36:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:37:10,946 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:37:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:37:25,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:37:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:37:40,946 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:37:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:37:55,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:37:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:38:11,211 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:38:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:38:25,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:38:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:38:40,952 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:38:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:38:55,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:38:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:39:11,222 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:39:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:39:25,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:39:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:39:40,969 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:39:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:39:55,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:39:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:40:10,991 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:40:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:40:25,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:40:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:40:40,985 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:40:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:40:55,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:40:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:41:11,002 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:41:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:41:25,667 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:41:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:41:41,003 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:41:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:41:55,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:41:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:42:11,016 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:42:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:42:25,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:42:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:42:41,006 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:42:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:42:55,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:42:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:43:11,086 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:43:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:43:25,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:43:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:43:41,029 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:43:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:43:55,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:43:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:44:11,044 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:44:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:44:25,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:44:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:44:41,045 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:44:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:44:55,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:44:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:45:11,135 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:45:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:45:25,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:45:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:45:41,066 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:45:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:45:55,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:45:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:46:11,143 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:46:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:46:25,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:46:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:46:41,085 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:46:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:46:55,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:46:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:47:11,170 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:47:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:47:25,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:47:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:47:41,110 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:47:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:47:55,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:47:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:48:11,194 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:48:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:48:25,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:48:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:48:41,120 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:48:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:48:55,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:48:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:49:11,208 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:49:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:49:25,651 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:49:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:49:41,139 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:49:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:49:55,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:49:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:50:11,178 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:50:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:50:25,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:50:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:50:41,153 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:50:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:50:55,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:50:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:51:11,152 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:51:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:51:25,667 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:51:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:51:41,165 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:51:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:51:55,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:51:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:52:11,179 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:52:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:52:25,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:52:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:52:41,167 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:52:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:52:55,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:52:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:53:11,179 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:53:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:53:25,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:53:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:53:41,188 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:53:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:53:55,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:53:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:54:11,193 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:54:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:54:25,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:54:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:54:41,198 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:54:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:54:55,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:54:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:55:11,260 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:55:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:55:25,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:55:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:55:41,209 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:55:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:55:55,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:55:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:56:11,475 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:56:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:56:25,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:56:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:56:41,219 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:56:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:56:55,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:56:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:57:11,490 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:57:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:57:25,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:57:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:57:41,237 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:57:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:57:55,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:57:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:58:11,253 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:58:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:58:25,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:58:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:58:41,323 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:58:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:58:55,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:58:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:59:11,277 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:59:25,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 13:59:28,549 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:28] "GET / HTTP/1.1" 200 -
+2025-07-02 13:59:28,641 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:28] "GET /static/css/themes.css HTTP/1.1" 200 -
+2025-07-02 13:59:28,642 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:28] "GET /static/css/interactive.css HTTP/1.1" 200 -
+2025-07-02 13:59:28,642 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:28] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-02 13:59:28,816 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:28] "GET /sw.js HTTP/1.1" 200 -
+2025-07-02 13:59:28,825 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:28] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 13:59:28,918 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:28] "[33mGET /static/img/real_madrid.png HTTP/1.1[0m" 404 -
+2025-07-02 13:59:28,920 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:28] "[33mGET /static/img/barcelona.png HTTP/1.1[0m" 404 -
+2025-07-02 13:59:28,920 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:28] "[33mGET /static/img/dortmund.png HTTP/1.1[0m" 404 -
+2025-07-02 13:59:28,921 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:28] "[33mGET /static/img/liverpool.png HTTP/1.1[0m" 404 -
+2025-07-02 13:59:28,921 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:28] "[33mGET /static/img/man_city.png HTTP/1.1[0m" 404 -
+2025-07-02 13:59:28,921 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:28] "[33mGET /static/img/bayern.png HTTP/1.1[0m" 404 -
+2025-07-02 13:59:28,935 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:28] "GET / HTTP/1.1" 200 -
+2025-07-02 13:59:28,945 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:28] "GET /dashboard HTTP/1.1" 200 -
+2025-07-02 13:59:28,945 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:28] "[33mGET /static/css/style.css HTTP/1.1[0m" 404 -
+2025-07-02 13:59:28,945 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:28] "[33mGET /static/js/dashboard.js HTTP/1.1[0m" 404 -
+2025-07-02 13:59:34,111 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:34] "GET /proximo HTTP/1.1" 200 -
+2025-07-02 13:59:36,773 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 13:59:37,233 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 13:59:37,289 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 13:59:37,694 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 13:59:41,836 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 13:59:41,843 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 13:59:41,900 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 13:59:41,905 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 13:59:42,155 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:42] "POST /proximo HTTP/1.1" 200 -
+2025-07-02 13:59:55,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 13:59:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:00:25,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:00:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:00:55,667 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:00:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:01:25,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:01:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:01:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:01:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:02:25,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:02:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:02:55,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:02:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:03:25,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:03:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:03:55,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:03:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:04:25,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:04:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:04:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:04:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:05:25,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:05:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:05:55,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:05:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:06:25,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:06:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:06:55,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:06:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:07:15,400 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:07:15] "POST /proximo HTTP/1.1" 200 -
+2025-07-02 14:07:25,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:07:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:07:55,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:07:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:08:25,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:08:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:08:55,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:08:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:09:25,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:09:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:09:34,020 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 14:09:34,403 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 14:09:34,607 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 14:09:35,015 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 14:09:37,809 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 14:09:37,816 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 14:09:38,360 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 14:09:38,365 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 14:09:55,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:09:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:10:10,821 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 14:10:11,193 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 14:10:11,386 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 14:10:11,769 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 14:10:14,422 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 14:10:14,426 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 14:10:14,990 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 14:10:14,996 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 14:10:25,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:10:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:10:55,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:10:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:11:25,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:11:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:11:55,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:11:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:12:25,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:12:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:12:55,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:12:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:13:25,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:13:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:13:55,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:13:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:14:25,667 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:14:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:14:55,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:14:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:15:25,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:15:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:15:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:15:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:16:25,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:16:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:16:55,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:16:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:17:25,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:17:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:17:55,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:17:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:18:25,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:18:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:18:55,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:18:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:19:25,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:19:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:19:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:19:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:20:25,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:20:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:20:55,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:20:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:21:25,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:21:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:21:55,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:21:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:22:25,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:22:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:22:55,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:22:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:23:25,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:23:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:23:55,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:23:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:24:25,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:24:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:24:55,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:24:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:25:25,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:25:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:25:55,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:25:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:26:25,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:26:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:26:55,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:26:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:27:25,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:27:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:27:55,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:27:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:28:25,651 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:28:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:28:55,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:28:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:29:25,667 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:29:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:29:55,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:29:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:30:25,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:30:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:30:55,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:30:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:31:25,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:31:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:31:55,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:31:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:32:25,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:32:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:32:55,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:32:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:33:25,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:33:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:33:55,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:33:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:34:25,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:34:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:34:55,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:34:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:35:25,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:35:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:35:55,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:35:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:36:25,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:36:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:36:55,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:36:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:37:25,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:37:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:37:55,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:37:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:38:25,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:38:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:38:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:38:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:39:25,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:39:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:39:55,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:39:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:40:25,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:40:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:40:55,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:40:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:41:25,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:41:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:41:55,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:41:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:42:25,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:42:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:42:55,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:42:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:43:25,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:43:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:43:55,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:43:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:44:25,651 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:44:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:44:55,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:44:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:45:25,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:45:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:45:55,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:45:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:46:25,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:46:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:46:55,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:46:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:47:25,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:47:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:47:55,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:47:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:48:25,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:48:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:48:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:48:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:49:25,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:49:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:49:55,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:49:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:50:25,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:50:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:50:55,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:50:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:51:25,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:51:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:51:55,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:51:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:52:25,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:52:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:52:55,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:52:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:53:25,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:53:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:53:55,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:53:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:54:25,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:54:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:54:55,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:54:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:55:25,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:55:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:55:55,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:55:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:56:25,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:56:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:56:55,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:56:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:57:25,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:57:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:57:55,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:57:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:58:25,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:58:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:58:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:58:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:59:25,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:59:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 14:59:55,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 14:59:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:00:25,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:00:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:00:55,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:00:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:01:25,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:01:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:01:55,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:01:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:02:25,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:02:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:02:55,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:02:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:03:25,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:03:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:03:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:03:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:04:25,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:04:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:04:55,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:04:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:05:25,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:05:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:05:55,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:05:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:06:25,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:06:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:06:55,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:06:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:07:25,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:07:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:07:55,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:07:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:08:25,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:08:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:08:55,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:08:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:09:25,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:09:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:09:55,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:09:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:10:25,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:10:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:10:55,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:10:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:11:25,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:11:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:11:55,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:11:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:12:25,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:12:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:12:55,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:12:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:13:25,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:13:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:13:55,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:13:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:14:25,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:14:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:14:55,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:14:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:15:25,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:15:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:15:55,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:15:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:16:25,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:16:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:16:55,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:16:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:17:25,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:17:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:17:55,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:17:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:18:25,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:18:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:18:55,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:18:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:19:25,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:19:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:19:55,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:19:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:20:25,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:20:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:20:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:20:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:21:25,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:21:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:21:55,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:21:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:22:25,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:22:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:22:55,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:22:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:23:25,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:23:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:23:55,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:23:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:24:25,667 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:24:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:24:55,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:24:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:25:25,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:25:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:25:55,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:25:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:26:25,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:26:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:26:55,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:26:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:27:25,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:27:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:27:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:27:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:28:25,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:28:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:28:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:28:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:29:25,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:29:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:29:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:29:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:30:25,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:30:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:30:55,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:30:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:31:25,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:31:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:31:55,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:31:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:32:17,806 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-07-02 15:32:17,806 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-07-02 15:32:17,808 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 15:32:21,706 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 15:32:21,711 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 15:32:25,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:32:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:32:55,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:32:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:33:25,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:33:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:33:55,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:33:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:34:25,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:34:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:34:55,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:34:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:35:25,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:35:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:35:55,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:35:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:36:25,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:36:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:36:55,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:36:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:37:25,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:37:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:37:55,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:37:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:38:25,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:38:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:38:55,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:38:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:39:25,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:39:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:39:55,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:39:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:40:25,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:40:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:40:55,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:40:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:41:25,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:41:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:41:55,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:41:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:42:25,651 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:42:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:42:55,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:42:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:43:25,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:43:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:43:55,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:43:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:44:25,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:44:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:44:55,662 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:44:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:45:25,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:45:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:45:55,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:45:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:46:25,667 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:46:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:46:55,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:46:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:47:25,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:47:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:47:55,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:47:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:48:25,658 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:48:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:48:55,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:48:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:49:25,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:49:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:49:55,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:49:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:50:25,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:50:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:50:55,651 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:50:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:51:25,661 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:51:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:51:55,651 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:51:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:52:25,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:52:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:52:55,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:52:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:53:25,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:53:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:53:55,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:53:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:54:25,653 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:54:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:54:55,667 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:54:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:55:25,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:55:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:55:55,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:55:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:56:25,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:56:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:56:55,654 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:56:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:57:25,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:57:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:57:55,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:57:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:58:25,652 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:58:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:58:55,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:58:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:59:25,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:59:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 15:59:55,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 15:59:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:00:25,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:00:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:00:55,651 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:00:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:01:25,656 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:01:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:01:55,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:01:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:02:25,659 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:02:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:02:55,657 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:02:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:03:25,665 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:03:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:03:55,666 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:03:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:04:25,660 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:04:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:04:55,655 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:04:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:05:25,664 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:05:35,496 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:05:35,978 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:05:36,021 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:05:36,279 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\analisis\\posiciones.py', reloading
+2025-07-02 16:05:36,500 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:05:36,766 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:05:39,969 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:05:39,974 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:05:40,383 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:05:40,388 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:05:40,683 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:05:40,688 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:05:47,525 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:47] "GET / HTTP/1.1" 200 -
+2025-07-02 16:05:47,723 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:47] "GET /static/css/interactive.css HTTP/1.1" 200 -
+2025-07-02 16:05:47,728 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:47] "GET /static/css/themes.css HTTP/1.1" 200 -
+2025-07-02 16:05:47,739 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:47] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-07-02 16:05:47,815 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:47] "GET /sw.js HTTP/1.1" 200 -
+2025-07-02 16:05:47,817 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:47] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 16:05:47,920 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:47] "[33mGET /static/css/style.css HTTP/1.1[0m" 404 -
+2025-07-02 16:05:47,920 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:47] "GET / HTTP/1.1" 200 -
+2025-07-02 16:05:47,921 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:47] "GET /dashboard HTTP/1.1" 200 -
+2025-07-02 16:05:47,926 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:47] "[33mGET /static/js/dashboard.js HTTP/1.1[0m" 404 -
+2025-07-02 16:05:48,348 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:48] "[33mGET /static/img/real_madrid.png HTTP/1.1[0m" 404 -
+2025-07-02 16:05:48,349 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:48] "[33mGET /static/img/barcelona.png HTTP/1.1[0m" 404 -
+2025-07-02 16:05:48,350 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:48] "[33mGET /static/img/man_city.png HTTP/1.1[0m" 404 -
+2025-07-02 16:05:48,352 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:48] "[33mGET /static/img/liverpool.png HTTP/1.1[0m" 404 -
+2025-07-02 16:05:48,360 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:48] "[33mGET /static/img/dortmund.png HTTP/1.1[0m" 404 -
+2025-07-02 16:05:48,361 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:48] "[33mGET /static/img/bayern.png HTTP/1.1[0m" 404 -
+2025-07-02 16:05:55,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:55] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:05:57,832 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:57] "GET / HTTP/1.1" 200 -
+2025-07-02 16:05:57,891 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:57] "[36mGET /static/css/themes.css HTTP/1.1[0m" 304 -
+2025-07-02 16:05:57,893 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:57] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-02 16:05:57,895 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:57] "[36mGET /static/css/interactive.css HTTP/1.1[0m" 304 -
+2025-07-02 16:05:58,079 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:58] "GET /sw.js HTTP/1.1" 200 -
+2025-07-02 16:05:58,095 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:58] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 16:05:58,153 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:58] "GET / HTTP/1.1" 200 -
+2025-07-02 16:05:58,154 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:58] "[33mGET /static/js/dashboard.js HTTP/1.1[0m" 404 -
+2025-07-02 16:05:58,156 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:58] "GET /dashboard HTTP/1.1" 200 -
+2025-07-02 16:05:58,160 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:58] "[33mGET /static/css/style.css HTTP/1.1[0m" 404 -
+2025-07-02 16:05:58,734 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:58] "[33mGET /static/img/real_madrid.png HTTP/1.1[0m" 404 -
+2025-07-02 16:05:58,736 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:58] "[33mGET /static/img/barcelona.png HTTP/1.1[0m" 404 -
+2025-07-02 16:05:58,738 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:58] "[33mGET /static/img/man_city.png HTTP/1.1[0m" 404 -
+2025-07-02 16:05:58,745 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:58] "[33mGET /static/img/dortmund.png HTTP/1.1[0m" 404 -
+2025-07-02 16:05:58,746 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:58] "[33mGET /static/img/bayern.png HTTP/1.1[0m" 404 -
+2025-07-02 16:05:58,750 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:05:58] "[33mGET /static/img/liverpool.png HTTP/1.1[0m" 404 -
+2025-07-02 16:06:25,667 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:06:25] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:06:28,723 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:06:28] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:06:59,319 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:06:59] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:07:29,544 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:07:29] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:07:59,774 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:07:59] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:08:08,855 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:08:09,052 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:08:09,248 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:08:09,432 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:08:09,476 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:08:09,881 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:08:12,880 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:08:12,886 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:08:13,064 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:08:13,070 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:08:13,492 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:08:13,497 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:08:30,036 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:08:30] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:09:00,381 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:09:00] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:09:30,597 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:09:30] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:10:00,602 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:10:00] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:10:02,222 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:10:02] "GET / HTTP/1.1" 200 -
+2025-07-02 16:10:02,366 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:10:02] "[36mGET /static/css/interactive.css HTTP/1.1[0m" 304 -
+2025-07-02 16:10:02,373 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:10:02] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-02 16:10:02,374 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:10:02] "[36mGET /static/css/themes.css HTTP/1.1[0m" 304 -
+2025-07-02 16:10:02,470 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:10:02] "GET /sw.js HTTP/1.1" 200 -
+2025-07-02 16:10:02,507 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:10:02] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 16:10:02,548 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:10:02] "GET / HTTP/1.1" 200 -
+2025-07-02 16:10:02,552 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:10:02] "[33mGET /static/js/dashboard.js HTTP/1.1[0m" 404 -
+2025-07-02 16:10:02,555 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:10:02] "GET /dashboard HTTP/1.1" 200 -
+2025-07-02 16:10:02,558 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:10:02] "[33mGET /static/css/style.css HTTP/1.1[0m" 404 -
+2025-07-02 16:10:03,091 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:10:03] "[33mGET /static/img/real_madrid.png HTTP/1.1[0m" 404 -
+2025-07-02 16:10:03,092 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:10:03] "[33mGET /static/img/barcelona.png HTTP/1.1[0m" 404 -
+2025-07-02 16:10:03,093 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:10:03] "[33mGET /static/img/bayern.png HTTP/1.1[0m" 404 -
+2025-07-02 16:10:03,094 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:10:03] "[33mGET /static/img/liverpool.png HTTP/1.1[0m" 404 -
+2025-07-02 16:10:03,096 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:10:03] "[33mGET /static/img/man_city.png HTTP/1.1[0m" 404 -
+2025-07-02 16:10:03,100 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:10:03] "[33mGET /static/img/dortmund.png HTTP/1.1[0m" 404 -
+2025-07-02 16:10:33,382 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:10:33] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:10:55,079 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:10:55,525 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:10:55,567 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:10:55,589 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:10:56,072 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:10:56,095 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:10:59,111 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:10:59,116 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:10:59,801 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:10:59,806 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:10:59,811 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:10:59,816 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:11:03,715 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:11:03] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:11:34,138 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:11:34] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:12:04,538 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:12:04] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:12:34,777 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:12:34] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:12:43,476 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:12:43,507 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:12:43,549 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:12:44,005 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:12:44,032 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:12:44,054 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:12:47,902 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:12:47,902 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:12:47,902 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:12:47,907 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:12:47,907 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:13:05,373 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:13:05] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:13:35,692 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:13:35] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:13:40,665 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:13:40,695 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:13:41,132 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:13:41,166 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:13:41,346 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:13:41,874 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:13:44,872 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:13:44,873 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:13:44,878 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:13:44,878 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:13:45,381 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:13:45,387 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:14:06,779 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:14:06] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:14:36,697 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:14:36] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:15:07,250 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:15:07] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:15:37,594 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:15:37] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:16:08,260 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:16:08] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:16:38,599 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:16:38] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:17:08,922 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:17:08] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:17:39,455 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:17:39] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:18:09,765 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:18:09] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:18:40,332 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:18:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:19:10,596 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:19:10] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:19:40,860 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:19:40] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:20:11,448 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:20:11] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:20:41,739 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:20:41] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:21:12,263 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:21:12] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:21:42,548 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:21:42] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:22:12,828 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:22:12] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:22:43,126 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:22:43] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:23:13,467 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:23:13] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:23:43,779 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:23:43] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:24:14,326 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:24:14] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:24:44,634 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:24:44] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:25:14,886 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:25:14] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:25:45,456 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:25:45] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:25:52,738 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:25:52,739 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:25:53,229 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:25:53,242 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:25:53,340 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:25:53,838 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:25:57,100 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:25:57,107 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:25:57,189 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:25:57,194 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:25:57,482 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:25:57,487 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:26:15,757 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:26:15] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:26:34,535 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:26:34,743 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:26:34,842 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:26:34,980 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:26:35,282 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:26:35,381 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:26:38,699 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:26:38,705 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:26:38,957 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:26:38,964 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:26:39,067 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:26:39,072 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:26:45,982 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:26:45] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:27:16,503 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:27:16] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:27:20,284 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:27:20] "GET / HTTP/1.1" 200 -
+2025-07-02 16:27:20,445 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:27:20] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-02 16:27:20,448 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:27:20] "[36mGET /static/css/interactive.css HTTP/1.1[0m" 304 -
+2025-07-02 16:27:20,449 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:27:20] "[36mGET /static/css/themes.css HTTP/1.1[0m" 304 -
+2025-07-02 16:27:20,541 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:27:20] "GET /sw.js HTTP/1.1" 200 -
+2025-07-02 16:27:20,546 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:27:20] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 16:27:20,600 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:27:20] "GET / HTTP/1.1" 200 -
+2025-07-02 16:27:20,602 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:27:20] "GET /dashboard HTTP/1.1" 200 -
+2025-07-02 16:27:20,606 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:27:20] "[33mGET /static/js/dashboard.js HTTP/1.1[0m" 404 -
+2025-07-02 16:27:20,609 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:27:20] "[33mGET /static/css/style.css HTTP/1.1[0m" 404 -
+2025-07-02 16:27:21,075 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:27:21] "[33mGET /static/img/real_madrid.png HTTP/1.1[0m" 404 -
+2025-07-02 16:27:21,077 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:27:21] "[33mGET /static/img/man_city.png HTTP/1.1[0m" 404 -
+2025-07-02 16:27:21,079 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:27:21] "[33mGET /static/img/barcelona.png HTTP/1.1[0m" 404 -
+2025-07-02 16:27:21,081 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:27:21] "[33mGET /static/img/liverpool.png HTTP/1.1[0m" 404 -
+2025-07-02 16:27:21,087 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:27:21] "[33mGET /static/img/dortmund.png HTTP/1.1[0m" 404 -
+2025-07-02 16:27:21,088 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:27:21] "[33mGET /static/img/bayern.png HTTP/1.1[0m" 404 -
+2025-07-02 16:27:51,723 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:27:51] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:28:21,931 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:28:21] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:28:52,386 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:28:52] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:29:22,663 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:29:22] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:29:53,265 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:29:53] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:30:23,682 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:23] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:30:43,673 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:43] "GET / HTTP/1.1" 200 -
+2025-07-02 16:30:43,739 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:43] "[36mGET /static/css/themes.css HTTP/1.1[0m" 304 -
+2025-07-02 16:30:43,740 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:43] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-02 16:30:43,742 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:43] "[36mGET /static/css/interactive.css HTTP/1.1[0m" 304 -
+2025-07-02 16:30:43,899 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:43] "GET /sw.js HTTP/1.1" 200 -
+2025-07-02 16:30:43,902 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:43] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 16:30:43,953 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:43] "GET / HTTP/1.1" 200 -
+2025-07-02 16:30:43,955 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:43] "[33mGET /static/js/dashboard.js HTTP/1.1[0m" 404 -
+2025-07-02 16:30:43,956 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:43] "GET /dashboard HTTP/1.1" 200 -
+2025-07-02 16:30:43,958 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:43] "[33mGET /static/css/style.css HTTP/1.1[0m" 404 -
+2025-07-02 16:30:44,438 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:44] "[33mGET /static/img/real_madrid.png HTTP/1.1[0m" 404 -
+2025-07-02 16:30:44,440 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:44] "[33mGET /static/img/barcelona.png HTTP/1.1[0m" 404 -
+2025-07-02 16:30:44,441 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:44] "[33mGET /static/img/man_city.png HTTP/1.1[0m" 404 -
+2025-07-02 16:30:44,443 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:44] "[33mGET /static/img/liverpool.png HTTP/1.1[0m" 404 -
+2025-07-02 16:30:44,447 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:44] "[33mGET /static/img/dortmund.png HTTP/1.1[0m" 404 -
+2025-07-02 16:30:44,448 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:44] "[33mGET /static/img/bayern.png HTTP/1.1[0m" 404 -
+2025-07-02 16:30:48,640 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:48] "GET /futuro HTTP/1.1" 200 -
+2025-07-02 16:30:48,702 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:48] "[36mGET /static/css/themes.css HTTP/1.1[0m" 304 -
+2025-07-02 16:30:48,703 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:48] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-02 16:30:48,706 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:30:48] "[36mGET /static/css/interactive.css HTTP/1.1[0m" 304 -
+2025-07-02 16:34:15,418 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:34:15,685 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:34:15,731 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:34:15,810 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:34:16,145 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:34:16,185 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:34:19,642 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:34:19,646 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:34:19,838 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:19] "GET /futuro HTTP/1.1" 200 -
+2025-07-02 16:34:19,988 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:19] "[36mGET /static/css/themes.css HTTP/1.1[0m" 304 -
+2025-07-02 16:34:20,016 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:20] "[36mGET /static/css/interactive.css HTTP/1.1[0m" 304 -
+2025-07-02 16:34:20,038 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:20] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-02 16:34:20,117 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:34:20,124 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:34:20,168 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:34:20,175 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:34:22,539 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:22] "GET / HTTP/1.1" 200 -
+2025-07-02 16:34:22,595 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:22] "[36mGET /static/css/themes.css HTTP/1.1[0m" 304 -
+2025-07-02 16:34:22,598 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:22] "[36mGET /static/css/interactive.css HTTP/1.1[0m" 304 -
+2025-07-02 16:34:22,599 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:22] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-02 16:34:22,760 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:22] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 16:34:22,760 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:22] "GET /sw.js HTTP/1.1" 200 -
+2025-07-02 16:34:22,828 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:22] "[33mGET /static/css/style.css HTTP/1.1[0m" 404 -
+2025-07-02 16:34:22,829 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:22] "GET / HTTP/1.1" 200 -
+2025-07-02 16:34:22,830 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:22] "GET /dashboard HTTP/1.1" 200 -
+2025-07-02 16:34:22,832 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:22] "[33mGET /static/js/dashboard.js HTTP/1.1[0m" 404 -
+2025-07-02 16:34:23,183 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:23] "[33mGET /static/img/real_madrid.png HTTP/1.1[0m" 404 -
+2025-07-02 16:34:23,184 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:23] "[33mGET /static/img/barcelona.png HTTP/1.1[0m" 404 -
+2025-07-02 16:34:23,185 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:23] "[33mGET /static/img/man_city.png HTTP/1.1[0m" 404 -
+2025-07-02 16:34:23,188 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:23] "[33mGET /static/img/bayern.png HTTP/1.1[0m" 404 -
+2025-07-02 16:34:23,192 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:23] "[33mGET /static/img/liverpool.png HTTP/1.1[0m" 404 -
+2025-07-02 16:34:23,195 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:23] "[33mGET /static/img/dortmund.png HTTP/1.1[0m" 404 -
+2025-07-02 16:34:52,914 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:34:52] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:35:23,761 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:35:23] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:35:53,858 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:35:53] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:36:24,507 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:36:24] "GET /api/dashboard/stats HTTP/1.1" 200 -
+2025-07-02 16:41:55,411 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:41:55,689 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:41:55,795 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:41:55,976 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:41:56,121 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:41:56,408 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:41:59,408 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:41:59,413 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:41:59,732 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:41:59,737 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:42:00,052 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:42:00,056 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:43:57,543 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:43:57] "GET / HTTP/1.1" 200 -
+2025-07-02 16:44:00,078 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:44:00] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 16:44:00,080 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:44:00] "GET /api/stats/dashboard HTTP/1.1" 200 -
+2025-07-02 16:44:00,124 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:44:00] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-07-02 16:44:16,543 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:44:16] "GET /historico HTTP/1.1" 200 -
+2025-07-02 16:44:16,687 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:44:16] "GET /static/css/themes.css HTTP/1.1" 200 -
+2025-07-02 16:44:16,688 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:44:16] "GET /static/css/interactive.css HTTP/1.1" 200 -
+2025-07-02 16:44:16,804 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:44:16] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-07-02 16:44:37,189 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:44:37] "GET / HTTP/1.1" 200 -
+2025-07-02 16:44:37,472 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:44:37] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 16:44:37,473 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:44:37] "GET /api/stats/dashboard HTTP/1.1" 200 -
+2025-07-02 16:44:46,550 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:44:46] "GET /api/search/teams?q=ju HTTP/1.1" 200 -
+2025-07-02 16:44:58,458 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:44:58] "GET /proximo HTTP/1.1" 200 -
+2025-07-02 16:46:00,660 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:46:00,718 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:46:00,743 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:46:01,222 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:46:01,289 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:46:01,305 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:46:05,258 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:46:05,264 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:46:05,270 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:46:05,272 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:46:05,274 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:46:05,277 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:50:15,375 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:50:15,378 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 16:50:15,863 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\update_data.py', reloading
+2025-07-02 16:50:15,966 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:50:15,979 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:50:16,339 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:50:21,024 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:50:21,024 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:50:21,024 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:50:21,030 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:50:21,030 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:50:22,726 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-07-02 16:50:22,727 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-07-02 16:50:22,729 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 16:50:25,892 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 16:50:25,896 - werkzeug - INFO -  * Debugger PIN: 759-823-711
+2025-07-02 16:50:27,604 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:50:27] "GET / HTTP/1.1" 200 -
+2025-07-02 16:50:28,974 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:50:28] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 16:50:28,976 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:50:28] "GET /api/stats/dashboard HTTP/1.1" 200 -
+2025-07-02 16:50:34,329 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:50:34] "GET /historico HTTP/1.1" 200 -
+2025-07-02 16:50:34,482 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:50:34] "[36mGET /static/css/interactive.css HTTP/1.1[0m" 304 -
+2025-07-02 16:50:34,486 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:50:34] "[36mGET /static/css/themes.css HTTP/1.1[0m" 304 -
+2025-07-02 16:50:34,514 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:50:34] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-07-02 16:52:29,781 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:52:29] "GET /historico HTTP/1.1" 200 -
+2025-07-02 16:52:29,829 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:52:29] "[36mGET /static/css/themes.css HTTP/1.1[0m" 304 -
+2025-07-02 16:52:29,831 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:52:29] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-02 16:52:29,832 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:52:29] "[36mGET /static/css/interactive.css HTTP/1.1[0m" 304 -
+2025-07-02 16:52:33,213 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:52:33] "GET / HTTP/1.1" 200 -
+2025-07-02 16:52:33,464 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:52:33] "GET /api/stats/dashboard HTTP/1.1" 200 -
+2025-07-02 16:52:33,465 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:52:33] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 16:52:45,019 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:52:45] "GET /api/metricas HTTP/1.1" 200 -
+2025-07-02 16:52:45,083 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:52:45] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-07-02 16:52:48,184 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:52:48] "[32mGET /api HTTP/1.1[0m" 308 -
+2025-07-02 16:52:48,195 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:52:48] "GET /api/ HTTP/1.1" 200 -
+2025-07-02 16:52:48,239 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 16:52:48] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-07-02 17:03:28,725 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 17:03:28] "GET / HTTP/1.1" 200 -
+2025-07-02 17:03:29,779 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 17:03:29] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 17:03:29,780 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 17:03:29] "GET /api/stats/dashboard HTTP/1.1" 200 -
+2025-07-02 17:03:33,449 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 17:03:33] "GET /futuro HTTP/1.1" 200 -
+2025-07-02 17:03:33,508 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 17:03:33] "[36mGET /static/css/themes.css HTTP/1.1[0m" 304 -
+2025-07-02 17:03:33,511 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 17:03:33] "[36mGET /static/css/interactive.css HTTP/1.1[0m" 304 -
+2025-07-02 17:03:33,513 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 17:03:33] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-02 18:53:52,605 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-07-02 18:53:52,606 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-07-02 18:53:52,608 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 18:53:55,547 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 18:53:55,555 - werkzeug - INFO -  * Debugger PIN: 543-369-228
+2025-07-02 18:58:29,543 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 18:58:29,902 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 18:58:32,938 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 18:58:32,942 - werkzeug - INFO -  * Debugger PIN: 543-369-228
+2025-07-02 18:59:20,206 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 18:59:20,549 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 18:59:23,540 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 18:59:23,546 - werkzeug - INFO -  * Debugger PIN: 543-369-228
+2025-07-02 19:56:02,903 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-07-02 19:56:02,903 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-07-02 19:56:02,906 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 19:56:05,932 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 19:56:05,938 - werkzeug - INFO -  * Debugger PIN: 543-369-228
+2025-07-02 19:56:49,413 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 19:56:49] "GET / HTTP/1.1" 200 -
+2025-07-02 19:56:59,726 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 19:56:59] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-07-02 19:57:05,682 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 19:57:05] "GET /api/metricas HTTP/1.1" 200 -
+2025-07-02 19:57:05,912 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 19:57:05] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-07-02 19:57:13,692 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 19:57:13] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 19:57:13,694 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 19:57:13] "GET /api/stats/dashboard HTTP/1.1" 200 -
+2025-07-02 19:57:17,284 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 19:57:17] "GET /futuro HTTP/1.1" 200 -
+2025-07-02 19:57:17,463 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 19:57:17] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-07-02 19:57:17,467 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 19:57:17] "GET /static/css/themes.css HTTP/1.1" 200 -
+2025-07-02 19:57:17,468 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 19:57:17] "GET /static/css/interactive.css HTTP/1.1" 200 -
+2025-07-02 19:57:19,262 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 19:57:19] "GET / HTTP/1.1" 200 -
+2025-07-02 19:57:19,552 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 19:57:19] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 19:57:19,554 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 19:57:19] "GET /api/stats/dashboard HTTP/1.1" 200 -
+2025-07-02 19:57:23,017 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 19:57:23] "GET /futuro HTTP/1.1" 200 -
+2025-07-02 19:57:23,080 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 19:57:23] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-02 19:57:23,081 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 19:57:23] "GET /static/css/themes.css HTTP/1.1" 200 -
+2025-07-02 19:57:23,084 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 19:57:23] "GET /static/css/interactive.css HTTP/1.1" 200 -
+2025-07-02 19:58:51,645 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 19:58:52,045 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 19:58:55,130 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 19:58:55,134 - werkzeug - INFO -  * Debugger PIN: 543-369-228
+2025-07-02 19:59:36,060 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\app.py', reloading
+2025-07-02 19:59:36,534 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 20:06:29,090 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-07-02 20:06:29,090 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-07-02 20:06:29,091 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 20:06:32,323 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 20:06:32,329 - werkzeug - INFO -  * Debugger PIN: 543-369-228
+2025-07-02 20:06:34,511 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 20:06:34] "GET / HTTP/1.1" 200 -
+2025-07-02 20:06:36,834 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 20:06:36] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 20:06:36,837 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 20:06:36] "GET /api/stats/dashboard HTTP/1.1" 200 -
+2025-07-02 20:06:47,454 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 20:06:47] "GET /historico HTTP/1.1" 200 -
+2025-07-02 20:06:47,630 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 20:06:47] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-02 20:06:47,631 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 20:06:47] "[36mGET /static/css/themes.css HTTP/1.1[0m" 304 -
+2025-07-02 20:06:47,633 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 20:06:47] "[36mGET /static/css/interactive.css HTTP/1.1[0m" 304 -
+2025-07-02 20:09:43,981 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 20:09:43] "GET / HTTP/1.1" 200 -
+2025-07-02 20:09:44,710 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 20:09:44] "GET /api/dashboard/featured-matches HTTP/1.1" 200 -
+2025-07-02 20:09:44,712 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 20:09:44] "GET /api/stats/dashboard HTTP/1.1" 200 -
+2025-07-02 20:09:50,213 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 20:09:50] "GET /futuro HTTP/1.1" 200 -
+2025-07-02 20:09:50,278 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 20:09:50] "GET /static/css/themes.css HTTP/1.1" 200 -
+2025-07-02 20:09:50,278 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 20:09:50] "GET /static/css/interactive.css HTTP/1.1" 200 -
+2025-07-02 20:09:50,281 - werkzeug - INFO - 127.0.0.1 - - [02/Jul/2025 20:09:50] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-07-02 20:09:57,781 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\api\\simulacion.py', reloading
+2025-07-02 20:09:58,170 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 20:10:01,592 - werkzeug - WARNING -  * Debugger is active!
+2025-07-02 20:10:01,596 - werkzeug - INFO -  * Debugger PIN: 543-369-228
+2025-07-02 20:11:57,733 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\utils\\data_fetcher.py', reloading
+2025-07-02 20:11:58,104 - werkzeug - INFO -  * Restarting with stat
+2025-07-02 22:02:30,361 - sistema_integrado - INFO - Configuración validada correctamente
+2025-07-02 22:02:30,365 - demo_integracion - INFO - Iniciando demostración de integración con datos reales
+2025-07-02 22:02:30,366 - demo_integracion - INFO - Los resultados se guardarán en: C:\Users\50240\fubol\demo_output
+2025-07-02 22:02:30,366 - demo_integracion - INFO - 
+================================================================================
+2025-07-02 22:02:30,366 - demo_integracion - INFO - PRUEBA DE FOOTBALL-DATA.ORG API
+2025-07-02 22:02:30,366 - demo_integracion - INFO - ================================================================================
+2025-07-02 22:02:30,366 - demo_integracion - WARNING - No se encontró la API key para Football-Data.org
+2025-07-02 22:02:30,366 - demo_integracion - WARNING - Por favor, configura la variable de entorno FOOTBALL_DATA_API_KEY
+2025-07-02 22:02:30,367 - demo_integracion - INFO - 
+Demostración completada. Revisa los resultados en el directorio de salida.
+2025-07-02 22:02:57,092 - database - INFO - Conectando a la base de datos: sqlite
+2025-07-02 22:02:57,113 - database - INFO - Conexión a la base de datos inicializada
+2025-07-02 22:02:57,124 - sistema_integrado - INFO - Configuración validada correctamente
+2025-07-02 22:02:57,127 - update_database - INFO - Iniciando actualización de base de datos
+2025-07-02 22:02:57,128 - update_database - WARNING - No se encontró API key para Football-Data.org
+2025-07-02 22:02:57,128 - update_database - WARNING - No se encontraron credenciales para API-Football
+2025-07-02 22:02:57,128 - update_database - ERROR - No se pudo inicializar ninguna API. Verifica las credenciales.
+2025-07-02 22:03:03,775 - sistema_integrado - INFO - Configuración validada correctamente
+2025-07-02 22:03:03,777 - demo_integracion - INFO - Iniciando demostración de integración con datos reales
+2025-07-02 22:03:03,777 - demo_integracion - INFO - Los resultados se guardarán en: C:\Users\50240\fubol\demo_output
+2025-07-02 22:03:03,777 - demo_integracion - INFO - 
+================================================================================
+2025-07-02 22:03:03,777 - demo_integracion - INFO - PRUEBA DE FOOTBALL-DATA.ORG API
+2025-07-02 22:03:03,778 - demo_integracion - INFO - ================================================================================
+2025-07-02 22:03:03,778 - demo_integracion - WARNING - No se encontró la API key para Football-Data.org
+2025-07-02 22:03:03,778 - demo_integracion - WARNING - Por favor, configura la variable de entorno FOOTBALL_DATA_API_KEY
+2025-07-02 22:03:05,779 - demo_integracion - INFO - 
+================================================================================
+2025-07-02 22:03:05,779 - demo_integracion - INFO - PRUEBA DE API-FOOTBALL
+2025-07-02 22:03:05,779 - demo_integracion - INFO - ================================================================================
+2025-07-02 22:03:05,779 - demo_integracion - WARNING - No se encontraron las credenciales para API-Football
+2025-07-02 22:03:05,780 - demo_integracion - WARNING - Por favor, configura las variables de entorno API_FOOTBALL_KEY y API_FOOTBALL_HOST
+2025-07-02 22:03:05,780 - demo_integracion - INFO - 
+Demostración completada. Revisa los resultados en el directorio de salida.

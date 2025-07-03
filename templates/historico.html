@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Análisis Histórico - Analizador Deportivo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 2rem;
+        }
+        .chart-container {
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Análisis Histórico</li>
+            </ol>
+        </nav>
+
+        <header class="text-center mb-4">
+            <h1>Análisis Histórico</h1>
+            <p class="lead">Analiza estadísticas completas y patrones de equipos en temporadas pasadas</p>
+        </header>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                Selecciona un equipo y temporada
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="form-row">
+                        <div class="form-group col-md-5">
+                            <label for="equipo">Equipo</label>
+                            <select class="form-control" id="equipo" name="equipo" required>
+                                <option value="" selected disabled>Selecciona un equipo...</option>
+                                <option value="FC Barcelona">FC Barcelona</option>
+                                <option value="Real Madrid">Real Madrid</option>
+                                <option value="Atlético Madrid">Atlético Madrid</option>
+                                <option value="Manchester City">Manchester City</option>
+                                <option value="Liverpool">Liverpool</option>
+                                <!-- Más equipos se cargarían dinámicamente -->
+                            </select>
+                        </div>
+                        <div class="form-group col-md-5">
+                            <label for="temporada">Temporada</label>
+                            <select class="form-control" id="temporada" name="temporada">
+                                <option value="">Todas</option>
+                                <option value="2024-2025">2024-2025</option>
+                                <option value="2023-2024">2023-2024</option>
+                                <option value="2022-2023">2022-2023</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Analizar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if error %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if resultados %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Resultados para {{ equipo }} {% if temporada %}({{ temporada }}){% endif %}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Resumen de rendimiento</h6>
+                        <table class="table table-striped">
+                            <tr>
+                                <td>Partidos jugados:</td>
+                                <td>{{ resultados.partidos_jugados }}</td>
+                            </tr>
+                            <tr>
+                                <td>Victorias:</td>
+                                <td>{{ resultados.victorias }}</td>
+                            </tr>
+                            <tr>
+                                <td>Empates:</td>
+                                <td>{{ resultados.empates }}</td>
+                            </tr>
+                            <tr>
+                                <td>Derrotas:</td>
+                                <td>{{ resultados.derrotas }}</td>
+                            </tr>
+                            <tr>
+                                <td>Goles a favor:</td>
+                                <td>{{ resultados.goles_favor }}</td>
+                            </tr>
+                            <tr>
+                                <td>Goles en contra:</td>
+                                <td>{{ resultados.goles_contra }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Estadísticas adicionales</h6>
+                        <!-- Aquí irían más estadísticas del análisis -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if img_grafico %}
+        <div class="chart-container">
+            <h5 class="mb-3">Evolución del rendimiento</h5>
+            <img src="data:image/png;base64,{{ img_grafico }}" class="img-fluid" alt="Gráfico de rendimiento">
+        </div>
+        {% endif %}
+        {% endif %}
+
+        <footer class="mt-5 text-center">
+            <p>Analizador Deportivo de Fútbol &copy; 2025</p>
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

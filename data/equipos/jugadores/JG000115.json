@@ -1,0 +1,27 @@
+{
+  "id": "JG000115",
+  "nombre": "Nombre4 Apellido4",
+  "equipo": "Equipo 5",
+  "posicion": "centrocampista",
+  "edad": 21,
+  "nacionalidad": "País A",
+  "habilidades": {
+    "resistencia": 82,
+    "velocidad": 68,
+    "fuerza": 52,
+    "control": 62,
+    "pase": 70,
+    "vision": 86,
+    "tecnica": 84,
+    "creatividad": 88
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 16,
+    "minutos": 1362,
+    "goles": 6,
+    "asistencias": 7,
+    "tarjetas_amarillas": 7,
+    "tarjetas_rojas": 0
+  }
+}

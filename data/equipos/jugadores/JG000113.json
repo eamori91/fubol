@@ -1,0 +1,27 @@
+{
+  "id": "JG000113",
+  "nombre": "Nombre2 Apellido2",
+  "equipo": "Equipo 5",
+  "posicion": "centrocampista",
+  "edad": 24,
+  "nacionalidad": "País A",
+  "habilidades": {
+    "resistencia": 69,
+    "velocidad": 73,
+    "fuerza": 78,
+    "control": 88,
+    "pase": 60,
+    "vision": 65,
+    "tecnica": 93,
+    "creatividad": 73
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 26,
+    "minutos": 883,
+    "goles": 11,
+    "asistencias": 2,
+    "tarjetas_amarillas": 7,
+    "tarjetas_rojas": 0
+  }
+}

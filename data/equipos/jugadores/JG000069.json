@@ -1,0 +1,27 @@
+{
+  "id": "JG000069",
+  "nombre": "Nombre8 Apellido8",
+  "equipo": "Equipo 3",
+  "posicion": "centrocampista",
+  "edad": 28,
+  "nacionalidad": "País D",
+  "habilidades": {
+    "resistencia": 72,
+    "velocidad": 54,
+    "fuerza": 54,
+    "control": 75,
+    "pase": 61,
+    "vision": 72,
+    "tecnica": 90,
+    "creatividad": 70
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 6,
+    "minutos": 380,
+    "goles": 5,
+    "asistencias": 8,
+    "tarjetas_amarillas": 1,
+    "tarjetas_rojas": 1
+  }
+}

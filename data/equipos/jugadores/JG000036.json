@@ -1,0 +1,27 @@
+{
+  "id": "JG000036",
+  "nombre": "Nombre8 Apellido8",
+  "equipo": "Equipo 2",
+  "posicion": "defensa",
+  "edad": 24,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 76,
+    "velocidad": 61,
+    "fuerza": 75,
+    "control": 52,
+    "marcaje": 91,
+    "entrada": 89,
+    "anticipacion": 69,
+    "cabeza": 65
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 11,
+    "minutos": 1918,
+    "goles": 8,
+    "asistencias": 0,
+    "tarjetas_amarillas": 7,
+    "tarjetas_rojas": 1
+  }
+}

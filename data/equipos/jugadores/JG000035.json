@@ -1,0 +1,27 @@
+{
+  "id": "JG000035",
+  "nombre": "Nombre7 Apellido7",
+  "equipo": "Equipo 2",
+  "posicion": "defensa",
+  "edad": 25,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 87,
+    "velocidad": 71,
+    "fuerza": 57,
+    "control": 53,
+    "marcaje": 68,
+    "entrada": 77,
+    "anticipacion": 75,
+    "cabeza": 81
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 2,
+    "minutos": 310,
+    "goles": 7,
+    "asistencias": 0,
+    "tarjetas_amarillas": 6,
+    "tarjetas_rojas": 1
+  }
+}

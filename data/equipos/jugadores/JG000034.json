@@ -1,0 +1,27 @@
+{
+  "id": "JG000034",
+  "nombre": "Nombre6 Apellido6",
+  "equipo": "Equipo 2",
+  "posicion": "defensa",
+  "edad": 35,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 73,
+    "velocidad": 78,
+    "fuerza": 55,
+    "control": 60,
+    "marcaje": 68,
+    "entrada": 93,
+    "anticipacion": 72,
+    "cabeza": 84
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 29,
+    "minutos": 1719,
+    "goles": 9,
+    "asistencias": 7,
+    "tarjetas_amarillas": 3,
+    "tarjetas_rojas": 1
+  }
+}

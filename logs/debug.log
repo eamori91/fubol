@@ -1,0 +1,27 @@
+2025-07-03 13:51:43,725 - matplotlib - DEBUG - matplotlib data path: C:\Users\50240\fubol\.venv\Lib\site-packages\matplotlib\mpl-data
+2025-07-03 13:51:43,730 - matplotlib - DEBUG - CONFIGDIR=C:\Users\50240\.matplotlib
+2025-07-03 13:51:43,732 - matplotlib - DEBUG - interactive is False
+2025-07-03 13:51:43,732 - matplotlib - DEBUG - platform is win32
+2025-07-03 13:51:43,798 - matplotlib - DEBUG - CACHEDIR=C:\Users\50240\.matplotlib
+2025-07-03 13:51:43,801 - matplotlib.font_manager - DEBUG - Using fontManager instance from C:\Users\50240\.matplotlib\fontlist-v390.json
+2025-07-03 13:51:47,157 - database - INFO - Conectando a la base de datos: sqlite
+2025-07-03 13:51:47,170 - database - INFO - Conexión a la base de datos inicializada
+2025-07-03 13:51:47,244 - unified_data_adapter - INFO - Adaptador unificado inicializado con 4 fuentes activas
+2025-07-03 13:51:47,252 - unified_data_adapter - INFO - Adaptador unificado inicializado con 4 fuentes activas
+2025-07-03 13:51:47,665 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-07-03 13:51:47,665 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-07-03 13:51:47,667 - werkzeug - INFO -  * Restarting with stat
+2025-07-03 13:51:48,418 - matplotlib - DEBUG - matplotlib data path: C:\Users\50240\fubol\.venv\Lib\site-packages\matplotlib\mpl-data
+2025-07-03 13:51:48,422 - matplotlib - DEBUG - CONFIGDIR=C:\Users\50240\.matplotlib
+2025-07-03 13:51:48,423 - matplotlib - DEBUG - interactive is False
+2025-07-03 13:51:48,424 - matplotlib - DEBUG - platform is win32
+2025-07-03 13:51:48,483 - matplotlib - DEBUG - CACHEDIR=C:\Users\50240\.matplotlib
+2025-07-03 13:51:48,486 - matplotlib.font_manager - DEBUG - Using fontManager instance from C:\Users\50240\.matplotlib\fontlist-v390.json
+2025-07-03 13:51:51,043 - database - INFO - Conectando a la base de datos: sqlite
+2025-07-03 13:51:51,056 - database - INFO - Conexión a la base de datos inicializada
+2025-07-03 13:51:51,123 - unified_data_adapter - INFO - Adaptador unificado inicializado con 4 fuentes activas
+2025-07-03 13:51:51,132 - unified_data_adapter - INFO - Adaptador unificado inicializado con 4 fuentes activas
+2025-07-03 13:51:51,554 - werkzeug - WARNING -  * Debugger is active!
+2025-07-03 13:51:51,562 - werkzeug - INFO -  * Debugger PIN: 357-294-912
+2025-07-03 13:52:19,977 - werkzeug - INFO -  * Detected change in 'C:\\Users\\50240\\fubol\\run_debug.py', reloading

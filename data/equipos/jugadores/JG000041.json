@@ -1,0 +1,27 @@
+{
+  "id": "JG000041",
+  "nombre": "Nombre5 Apellido5",
+  "equipo": "Equipo 2",
+  "posicion": "centrocampista",
+  "edad": 24,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 85,
+    "velocidad": 67,
+    "fuerza": 50,
+    "control": 71,
+    "pase": 63,
+    "vision": 65,
+    "tecnica": 60,
+    "creatividad": 85
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 11,
+    "minutos": 2315,
+    "goles": 5,
+    "asistencias": 8,
+    "tarjetas_amarillas": 6,
+    "tarjetas_rojas": 1
+  }
+}

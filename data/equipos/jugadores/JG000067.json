@@ -1,0 +1,27 @@
+{
+  "id": "JG000067",
+  "nombre": "Nombre6 Apellido6",
+  "equipo": "Equipo 3",
+  "posicion": "centrocampista",
+  "edad": 24,
+  "nacionalidad": "País D",
+  "habilidades": {
+    "resistencia": 69,
+    "velocidad": 70,
+    "fuerza": 82,
+    "control": 80,
+    "pase": 85,
+    "vision": 78,
+    "tecnica": 82,
+    "creatividad": 80
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 20,
+    "minutos": 823,
+    "goles": 7,
+    "asistencias": 6,
+    "tarjetas_amarillas": 6,
+    "tarjetas_rojas": 1
+  }
+}

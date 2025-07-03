@@ -1,0 +1,27 @@
+{
+  "id": "JG000077",
+  "nombre": "Nombre2 Apellido2",
+  "equipo": "Equipo 4",
+  "posicion": "portero",
+  "edad": 36,
+  "nacionalidad": "País C",
+  "habilidades": {
+    "resistencia": 80,
+    "velocidad": 76,
+    "fuerza": 78,
+    "control": 62,
+    "reflejos": 63,
+    "posicionamiento": 74,
+    "salidas": 93,
+    "manos": 93
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 14,
+    "minutos": 2012,
+    "goles": 0,
+    "asistencias": 0,
+    "tarjetas_amarillas": 7,
+    "tarjetas_rojas": 1
+  }
+}

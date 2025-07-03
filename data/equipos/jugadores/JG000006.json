@@ -1,0 +1,27 @@
+{
+  "id": "JG000006",
+  "nombre": "Nombre3 Apellido3",
+  "equipo": "Equipo 1",
+  "posicion": "defensa",
+  "edad": 26,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 85,
+    "velocidad": 85,
+    "fuerza": 50,
+    "control": 60,
+    "marcaje": 70,
+    "entrada": 66,
+    "anticipacion": 87,
+    "cabeza": 66
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 16,
+    "minutos": 1646,
+    "goles": 2,
+    "asistencias": 6,
+    "tarjetas_amarillas": 7,
+    "tarjetas_rojas": 1
+  }
+}

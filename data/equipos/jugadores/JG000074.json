@@ -1,0 +1,27 @@
+{
+  "id": "JG000074",
+  "nombre": "Nombre5 Apellido5",
+  "equipo": "Equipo 3",
+  "posicion": "delantero",
+  "edad": 31,
+  "nacionalidad": "País D",
+  "habilidades": {
+    "resistencia": 85,
+    "velocidad": 59,
+    "fuerza": 67,
+    "control": 57,
+    "remate": 73,
+    "definicion": 76,
+    "regate": 83,
+    "oportunismo": 90
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 6,
+    "minutos": 2363,
+    "goles": 9,
+    "asistencias": 4,
+    "tarjetas_amarillas": 5,
+    "tarjetas_rojas": 1
+  }
+}

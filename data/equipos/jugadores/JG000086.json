@@ -1,0 +1,27 @@
+{
+  "id": "JG000086",
+  "nombre": "Nombre8 Apellido8",
+  "equipo": "Equipo 4",
+  "posicion": "defensa",
+  "edad": 35,
+  "nacionalidad": "País C",
+  "habilidades": {
+    "resistencia": 57,
+    "velocidad": 75,
+    "fuerza": 56,
+    "control": 85,
+    "marcaje": 84,
+    "entrada": 84,
+    "anticipacion": 90,
+    "cabeza": 72
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 14,
+    "minutos": 1793,
+    "goles": 4,
+    "asistencias": 1,
+    "tarjetas_amarillas": 5,
+    "tarjetas_rojas": 0
+  }
+}

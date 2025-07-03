@@ -1,0 +1,27 @@
+{
+  "id": "JG000099",
+  "nombre": "Nombre5 Apellido5",
+  "equipo": "Equipo 4",
+  "posicion": "delantero",
+  "edad": 31,
+  "nacionalidad": "País C",
+  "habilidades": {
+    "resistencia": 50,
+    "velocidad": 83,
+    "fuerza": 67,
+    "control": 53,
+    "remate": 65,
+    "definicion": 64,
+    "regate": 63,
+    "oportunismo": 89
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 0,
+    "minutos": 296,
+    "goles": 6,
+    "asistencias": 5,
+    "tarjetas_amarillas": 3,
+    "tarjetas_rojas": 1
+  }
+}

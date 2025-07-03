@@ -1,0 +1,27 @@
+{
+  "id": "JG000050",
+  "nombre": "Nombre6 Apellido6",
+  "equipo": "Equipo 2",
+  "posicion": "delantero",
+  "edad": 28,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 65,
+    "velocidad": 58,
+    "fuerza": 59,
+    "control": 53,
+    "remate": 93,
+    "definicion": 63,
+    "regate": 90,
+    "oportunismo": 60
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 28,
+    "minutos": 1071,
+    "goles": 10,
+    "asistencias": 6,
+    "tarjetas_amarillas": 1,
+    "tarjetas_rojas": 1
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "JG000100",
+  "nombre": "Nombre6 Apellido6",
+  "equipo": "Equipo 4",
+  "posicion": "delantero",
+  "edad": 30,
+  "nacionalidad": "País C",
+  "habilidades": {
+    "resistencia": 70,
+    "velocidad": 60,
+    "fuerza": 79,
+    "control": 72,
+    "remate": 69,
+    "definicion": 75,
+    "regate": 69,
+    "oportunismo": 75
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 19,
+    "minutos": 251,
+    "goles": 1,
+    "asistencias": 8,
+    "tarjetas_amarillas": 1,
+    "tarjetas_rojas": 1
+  }
+}

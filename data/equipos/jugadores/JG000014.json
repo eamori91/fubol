@@ -1,0 +1,27 @@
+{
+  "id": "JG000014",
+  "nombre": "Nombre3 Apellido3",
+  "equipo": "Equipo 1",
+  "posicion": "centrocampista",
+  "edad": 33,
+  "nacionalidad": "País B",
+  "habilidades": {
+    "resistencia": 70,
+    "velocidad": 55,
+    "fuerza": 62,
+    "control": 87,
+    "pase": 64,
+    "vision": 69,
+    "tecnica": 80,
+    "creatividad": 66
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 4,
+    "minutos": 634,
+    "goles": 11,
+    "asistencias": 5,
+    "tarjetas_amarillas": 3,
+    "tarjetas_rojas": 1
+  }
+}

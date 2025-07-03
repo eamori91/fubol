@@ -1,0 +1,27 @@
+{
+  "id": "JG000084",
+  "nombre": "Nombre6 Apellido6",
+  "equipo": "Equipo 4",
+  "posicion": "defensa",
+  "edad": 36,
+  "nacionalidad": "País C",
+  "habilidades": {
+    "resistencia": 71,
+    "velocidad": 59,
+    "fuerza": 54,
+    "control": 55,
+    "marcaje": 87,
+    "entrada": 70,
+    "anticipacion": 71,
+    "cabeza": 88
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 16,
+    "minutos": 1796,
+    "goles": 6,
+    "asistencias": 1,
+    "tarjetas_amarillas": 2,
+    "tarjetas_rojas": 0
+  }
+}

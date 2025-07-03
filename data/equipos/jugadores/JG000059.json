@@ -1,0 +1,27 @@
+{
+  "id": "JG000059",
+  "nombre": "Nombre6 Apellido6",
+  "equipo": "Equipo 3",
+  "posicion": "defensa",
+  "edad": 22,
+  "nacionalidad": "País D",
+  "habilidades": {
+    "resistencia": 76,
+    "velocidad": 74,
+    "fuerza": 59,
+    "control": 72,
+    "marcaje": 90,
+    "entrada": 60,
+    "anticipacion": 78,
+    "cabeza": 64
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 7,
+    "minutos": 1852,
+    "goles": 1,
+    "asistencias": 7,
+    "tarjetas_amarillas": 6,
+    "tarjetas_rojas": 0
+  }
+}

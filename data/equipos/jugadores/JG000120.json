@@ -1,0 +1,27 @@
+{
+  "id": "JG000120",
+  "nombre": "Nombre1 Apellido1",
+  "equipo": "Equipo 5",
+  "posicion": "delantero",
+  "edad": 30,
+  "nacionalidad": "País A",
+  "habilidades": {
+    "resistencia": 78,
+    "velocidad": 68,
+    "fuerza": 51,
+    "control": 87,
+    "remate": 70,
+    "definicion": 80,
+    "regate": 82,
+    "oportunismo": 64
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 23,
+    "minutos": 1105,
+    "goles": 8,
+    "asistencias": 7,
+    "tarjetas_amarillas": 2,
+    "tarjetas_rojas": 0
+  }
+}

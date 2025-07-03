@@ -1,0 +1,27 @@
+{
+  "id": "JG000119",
+  "nombre": "Nombre8 Apellido8",
+  "equipo": "Equipo 5",
+  "posicion": "centrocampista",
+  "edad": 23,
+  "nacionalidad": "País A",
+  "habilidades": {
+    "resistencia": 83,
+    "velocidad": 61,
+    "fuerza": 84,
+    "control": 66,
+    "pase": 72,
+    "vision": 74,
+    "tecnica": 90,
+    "creatividad": 69
+  },
+  "estado_fisico": 100,
+  "estadisticas": {
+    "partidos": 4,
+    "minutos": 1076,
+    "goles": 13,
+    "asistencias": 9,
+    "tarjetas_amarillas": 5,
+    "tarjetas_rojas": 1
+  }
+}

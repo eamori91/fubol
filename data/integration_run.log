@@ -1,0 +1,11 @@
+2025-07-02 22:02:54,149 - run_integration - INFO - Iniciando ejecución de integración con datos reales
+2025-07-02 22:02:54,208 - run_integration - WARNING - Algunas funcionalidades pueden no estar disponibles.
+2025-07-02 22:02:54,208 - run_integration - WARNING - Configura FOOTBALL_DATA_API_KEY y/o API_FOOTBALL_KEY.
+2025-07-02 22:02:54,208 - run_integration - INFO - Ejecutando: C:\Users\50240\fubol\.venv\Scripts\python.exe scripts/setup_database.py --db_type sqlite
+2025-07-02 22:02:55,112 - run_integration - INFO - Script scripts/setup_database.py ejecutado correctamente (código: 0)
+2025-07-02 22:02:55,114 - run_integration - INFO - Ejecutando: C:\Users\50240\fubol\.venv\Scripts\python.exe scripts/update_database.py --source all --data all
+2025-07-02 22:02:57,342 - run_integration - INFO - Script scripts/update_database.py ejecutado correctamente (código: 0)
+2025-07-02 22:02:59,344 - run_integration - INFO - Ejecutando: C:\Users\50240\fubol\.venv\Scripts\python.exe scripts/test_data_integration.py
+2025-07-02 22:03:02,357 - run_integration - INFO - Script scripts/test_data_integration.py ejecutado correctamente (código: 0)
+2025-07-02 22:03:02,361 - run_integration - INFO - Ejecutando: C:\Users\50240\fubol\.venv\Scripts\python.exe scripts/demo_integracion.py --source all
+2025-07-02 22:03:05,934 - run_integration - INFO - Script scripts/demo_integracion.py ejecutado correctamente (código: 0)
