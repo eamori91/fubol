@@ -505,9 +505,76 @@ class ESPNAPI(BaseDataFetcher):
         except Exception as e:
             logger.error(f"Error al obtener equipo {team_id} desde ESPN API: {str(e)}")
             return {}
+
+    def fetch_match(self, match_id: str) -> Dict[str, Any]:
+        """
+        Obtiene los datos de un partido específico.
         
-        # --- Métodos de compatibilidad con UnifiedDataAdapter ---
-    
+        Args:
+            match_id: ID del partido
+            
+        Returns:
+            Diccionario con datos del partido o diccionario vacío si no se encuentra
+        """
+        url = f"{self.site_api_url}/apis/site/v2/sports/soccer/summary?event={match_id}"
+        
+        try:
+            data = self._make_request(url)
+            
+            if not data or 'header' not in data:
+                logger.warning(f"No se encontró el partido con ID {match_id}")
+                return {}
+            
+            header = data['header']
+            competitions = header.get('competitions', [])
+            if not competitions:
+                return {}
+
+            competition = competitions[0]
+            competitors = competition.get('competitors', [])
+            if len(competitors) < 2:
+                return {}
+
+            home_team = competitors[0] if competitors[0].get('homeAway') == 'home' else competitors[1]
+            away_team = competitors[1] if competitors[0].get('homeAway') == 'home' else competitors[0]
+
+            formatted_match = {
+                'id': header.get('id'),
+                'fecha': header.get('time'),
+                'liga': header.get('league', {}).get('name'),
+                'equipo_local': home_team.get('team', {}).get('name'),
+                'equipo_local_id': home_team.get('team', {}).get('id'),
+                'equipo_visitante': away_team.get('team', {}).get('name'),
+                'equipo_visitante_id': away_team.get('team', {}).get('id'),
+                'resultado_local': home_team.get('score'),
+                'resultado_visitante': away_team.get('score'),
+                'estado': header.get('competitions')[0].get('status', {}).get('type', {}).get('name'),
+                'fuente': 'espn-api'
+            }
+            return formatted_match
+
+        except Exception as e:
+            logger.error(f"Error al obtener partido {match_id} desde ESPN API: {str(e)}")
+            return {}
+
+    def fetch_historical_matches(self, date_from: datetime, date_to: datetime, league: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        Obtiene partidos históricos de una liga en un rango de fechas.
+        
+        Args:
+            date_from: Fecha inicial (datetime)
+            date_to: Fecha final (datetime)
+            league: Código de la liga (ej. PL, PD)
+            
+        Returns:
+            Lista de partidos históricos
+        """
+        date_from_str = date_from.strftime('%Y-%m-%d')
+        date_to_str = date_to.strftime('%Y-%m-%d')
+        
+        return self.fetch_matches(league=league, date_from=date_from_str, date_to=date_to_str)
+        
+    # --- Métodos de compatibilidad con UnifiedDataAdapter ---
     def get_proximos_partidos(self, dias: int = 7) -> List[Dict[str, Any]]:
         """
         Obtiene los partidos próximos a disputarse.
