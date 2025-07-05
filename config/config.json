@@ -1,0 +1,57 @@
+{
+    "app": {
+        "debug": false,
+        "secret_key": "fubol_secret_key_1751669333",
+        "templates_auto_reload": true
+    },
+    "cache": {
+        "enabled": true,
+        "memory_expiry": 3600,
+        "disk_expiry": 86400,
+        "max_memory_items": 1000
+    },
+    "db": {
+        "connection_pool_size": 5,
+        "optimize_queries": true,
+        "vacuum_frequency": 86400
+    },
+    "http": {
+        "max_retries": 3,
+        "timeout": 10,
+        "use_session": true,
+        "max_connections": 10,
+        "rate_limit": {
+            "enabled": true,
+            "max_per_second": 5
+        }
+    },
+    "logging": {
+        "level": "INFO",
+        "rotation": {
+            "enabled": true,
+            "max_size": "10MB",
+            "backup_count": 5
+        },
+        "metrics": {
+            "enabled": true,
+            "interval": 3600
+        }
+    },
+    "analytics": {
+        "use_dask": true,
+        "use_numba": true,
+        "parallel_threshold": 1000,
+        "batch_size": 500
+    },
+    "apis": {
+        "espn": {
+            "base_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/",
+            "rate_limit": 5
+        },
+        "football_data": {
+            "base_url": "https://api.football-data.org/v2/",
+            "rate_limit": 10,
+            "api_key": ""
+        }
+    }
+}

@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{% block title %}Explorador de Base de Datos{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Explorador de Base de Datos</h1>
+    
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Tablas</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for tabla in tablas %}
+                        <a href="{{ url_for('explorar_db', tabla=tabla) }}" 
+                           class="list-group-item list-group-item-action {% if tabla_actual == tabla %}active{% endif %}">
+                            {{ tabla }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Opciones</h5>
+                </div>
+                <div class="card-body">
+                    <form method="get" action="{{ url_for('explorar_db') }}">
+                        <div class="mb-3">
+                            <label for="limite" class="form-label">Límite de filas:</label>
+                            <input type="number" class="form-control" id="limite" name="limite" 
+                                   value="{{ limite }}" min="1" max="1000">
+                        </div>
+                        <input type="hidden" name="tabla" value="{{ tabla_actual }}">
+                        <button type="submit" class="btn btn-secondary mb-3 w-100">Aplicar</button>
+                    </form>
+                    
+                    <a href="{{ url_for('importar_datos_prueba') }}" class="btn btn-success w-100">
+                        <i class="fas fa-database"></i> Importar datos de prueba
+                    </a>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Consulta SQL</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{{ url_for('ejecutar_consulta') }}">
+                        <div class="mb-3">
+                            <textarea class="form-control" id="consulta" name="consulta" 
+                                      rows="5" placeholder="SELECT * FROM ..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-info">Ejecutar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">{{ tabla_actual }}</h5>
+                    <span class="badge bg-light text-dark">{{ total_filas }} filas</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        {% if datos %}
+                        <table class="table table-striped table-hover mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    {% for columna in columnas %}
+                                    <th>{{ columna }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for fila in datos %}
+                                <tr>
+                                    {% for valor in fila %}
+                                    <td>{{ valor }}</td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <div class="alert alert-info m-3">
+                            {% if tabla_actual %}
+                            No hay datos en la tabla o la tabla está vacía.
+                            {% else %}
+                            Seleccione una tabla para ver sus datos.
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <nav aria-label="Paginación">
+                        <ul class="pagination justify-content-center mb-0">
+                            <li class="page-item {% if pagina == 1 %}disabled{% endif %}">
+                                <a class="page-link" 
+                                   href="{{ url_for('explorar_db', tabla=tabla_actual, pagina=pagina-1, limite=limite) }}">
+                                   Anterior
+                                </a>
+                            </li>
+                            
+                            {% set start_page = pagina-2 if pagina-2 > 1 else 1 %}
+                            {% set end_page = pagina+3 if pagina+3 < total_paginas+1 else total_paginas+1 %}
+                            {% for p in range(start_page, end_page) %}
+                            <li class="page-item {% if p == pagina %}active{% endif %}">
+                                <a class="page-link" 
+                                   href="{{ url_for('explorar_db', tabla=tabla_actual, pagina=p, limite=limite) }}">
+                                   {{ p }}
+                                </a>
+                            </li>
+                            {% endfor %}
+                            
+                            <li class="page-item {% if pagina >= total_paginas %}disabled{% endif %}">
+                                <a class="page-link" 
+                                   href="{{ url_for('explorar_db', tabla=tabla_actual, pagina=pagina+1, limite=limite) }}">
+                                   Siguiente
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            
+            {% if resultado_consulta is defined %}
+            <div class="card mt-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Resultado de la consulta</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        {% if resultado_consulta.datos %}
+                        <table class="table table-striped table-hover mb-0">
+                            <thead class="table-success">
+                                <tr>
+                                    {% for columna in resultado_consulta.columnas %}
+                                    <th>{{ columna }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for fila in resultado_consulta.datos %}
+                                <tr>
+                                    {% for valor in fila %}
+                                    <td>{{ valor }}</td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <div class="alert alert-warning m-3">
+                            La consulta no devolvió resultados.
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    <pre>{{ resultado_consulta.consulta }}</pre>
+                    <p>Tiempo de ejecución: {{ resultado_consulta.tiempo }} segundos</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

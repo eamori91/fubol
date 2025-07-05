@@ -1,0 +1,1498 @@
+"""
+Adaptador unificado para integrar datos de múltiples fuentes gratuitas.
+
+Este módulo se encarga de recopilar datos de diversas fuentes gratuitas como:
+- Open Football Data (JSON)
+- ESPN FC (Web scraping)
+- World Football Data (CSV)
+- Football-data.org (API con plan gratuito)
+- ESPN API (API no oficial)
+
+Los datos se unifican en un formato estándar para ser utilizados por el sistema.
+"""
+
+import os
+import sys
+import json
+import logging
+import requests
+import pandas as pd
+import concurrent.futures
+import re
+import csv
+import uuid
+from datetime import datetime, timedelta
+from typing import Dict, List, Any, Optional, Union, Tuple
+from pathlib import Path
+import threading
+import time
+import random
+import sqlite3
+
+# Importar el nuevo adaptador de ESPN API
+from utils.espn_api import ESPNAPI
+
+# Configurar logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+)
+logger = logging.getLogger('unified_data_adapter')
+
+# Importar gestores de optimización
+from utils.cache_manager import CacheManager
+from utils.http_optimizer import HTTPOptimizer
+from utils.db_optimizer import DBOptimizer
+from utils.log_manager import LogManager
+from utils.analytics_optimizer import AnalyticsOptimizer
+
+# Instancias por defecto (se reemplazarán en initialize)
+_cache_manager = None
+_http_optimizer = None
+_db_optimizer = None,
+    "equipos": {"timestamp": 0, "data": []},
+    "jugadores": {"timestamp": 0, "data": {}},
+    "arbitros": {"timestamp": 0, "data": []},
+    "partidos_historicos": {"timestamp": 0, "data": pd.DataFrame()}
+}
+# Tiempo de caducidad de caché (en segundos)
+CACHE_EXPIRY = 3600  # 1 hora
+
+
+class UnifiedDataAdapter:
+    """Adaptador unificado para múltiples fuentes de datos."""
+
+    def __init__(self, cache_manager=None, http_optimizer=None, db_optimizer=None):
+        """Inicializa el adaptador con componentes optimizados"""
+        global _cache_manager, _http_optimizer, _db_optimizer
+        
+        # Usar instancias proporcionadas o crear por defecto
+        _cache_manager = cache_manager or CacheManager(cache_dir="data/cache")
+        _http_optimizer = http_optimizer or HTTPOptimizer()
+        _db_optimizer = db_optimizer or DBOptimizer()
+        
+        # Inicializar adaptador de ESPN
+        self.espn_api = ESPNAPI(http_client=_http_optimizer.session)
+        
+        logger.info("UnifiedDataAdapter inicializado con optimizaciones")
+
+    """Adaptador unificado para obtener datos de múltiples fuentes."""
+    
+    def __init__(self):
+        """Inicializa el adaptador con la configuración de variables de entorno."""
+        # Football-Data.org API
+        self.football_data_api_key = os.environ.get('FOOTBALL_DATA_API_KEY', '')
+        self.use_football_data_api = bool(self.football_data_api_key)
+        
+        # Open Football Data (JSON)
+        self.use_open_football = os.environ.get('USE_OPEN_FOOTBALL_DATA', 'true').lower() == 'true'
+        self.open_football_url = os.environ.get('OPEN_FOOTBALL_DATA_URL', 
+                                               'https://github.com/openfootball/football.json')
+        
+        # ESPN FC Data (Scraping)
+        self.use_espn_data = os.environ.get('USE_ESPN_DATA', 'true').lower() == 'true'
+        self.espn_base_url = os.environ.get('ESPN_BASE_URL', 'https://www.espn.com/soccer')
+        
+        # ESPN API (API no oficial)
+        self.use_espn_api = os.environ.get('USE_ESPN_API', 'true').lower() == 'true'
+        
+        # World Football Data (CSV)
+        self.use_world_football = os.environ.get('USE_WORLD_FOOTBALL', 'true').lower() == 'true'
+        self.world_football_url = os.environ.get('WORLD_FOOTBALL_URL', 
+                                                'https://www.football-data.co.uk/data.php')
+        
+        # Cache directory
+        self.cache_dir = Path('data/cache')
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
+        
+        logger.info(f"Adaptador unificado inicializado con {self._count_active_sources()} fuentes activas")
+    
+    def _count_active_sources(self) -> int:
+        """Cuenta el número de fuentes de datos activas."""
+        count = 0
+        if self.use_football_data_api:
+            count += 1
+        if self.use_open_football:
+            count += 1
+        if self.use_espn_data:
+            count += 1
+        if self.use_espn_api:
+            count += 1
+        if self.use_world_football:
+            count += 1
+        return count
+    
+    def obtener_proximos_partidos(self, dias: int = 7, liga: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        Obtiene los partidos próximos a disputarse desde fuentes gratuitas.
+        
+        Args:
+            dias: Número de días hacia adelante para buscar
+            liga: Liga específica para filtrar (opcional)
+            
+        Returns:
+            Lista de partidos próximos en formato estándar
+        """
+        cache_key = "proximos_partidos"
+        
+        # Verificar caché
+        with _cache_lock:
+            cache_entry = _cached_data[cache_key]
+            if time.time() - cache_entry["timestamp"] < CACHE_EXPIRY:
+                logger.info(f"Usando datos en caché para {cache_key}")
+                partidos = cache_entry["data"]
+                if liga:
+                    partidos = [p for p in partidos if p.get('liga', '').lower() == liga.lower()]
+                
+                # Filtrar por días
+                fecha_limite = datetime.now() + timedelta(days=dias)
+                partidos = [p for p in partidos if self._parse_fecha(p.get('fecha', '')) <= fecha_limite]
+                
+                return partidos
+        
+        # Si no hay caché válido, obtener datos frescos
+        partidos = []
+        
+        # Lista de funciones para obtener datos de diferentes fuentes
+        source_functions = []
+        
+        if self.use_football_data_api:
+            source_functions.append(self._get_proximos_partidos_football_data_api)
+        
+        if self.use_open_football:
+            source_functions.append(self._get_proximos_partidos_open_football)
+        
+        if self.use_espn_data:
+            source_functions.append(self._get_proximos_partidos_espn)
+            
+        if self.use_espn_api:
+            source_functions.append(self._get_proximos_partidos_espn_api)
+        
+        # Ejecutar en paralelo
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            futures = [executor.submit(func) for func in source_functions]
+            for future in concurrent.futures.as_completed(futures):
+                try:
+                    result = future.result()
+                    if result:
+                        partidos.extend(result)
+                except Exception as e:
+                    logger.error(f"Error al obtener próximos partidos: {e}")
+        
+        # Eliminar duplicados basados en equipos y fecha
+        partidos = self._eliminar_duplicados_partidos(partidos)
+        
+        # Almacenar en caché
+        with _cache_lock:
+            _cached_data[cache_key] = {"timestamp": time.time(), "data": partidos}
+        
+        # Aplicar filtros
+        if liga:
+            partidos = [p for p in partidos if p.get('liga', '').lower() == liga.lower()]
+        
+        # Filtrar por días
+        fecha_limite = datetime.now() + timedelta(days=dias)
+        partidos = [p for p in partidos if self._parse_fecha(p.get('fecha', '')) <= fecha_limite]
+        
+        # Ordenar por fecha
+        partidos = sorted(partidos, key=lambda x: self._parse_fecha(x.get('fecha', '')))
+        
+        return partidos
+    
+    def obtener_datos_equipo(self, nombre_equipo: str) -> Dict[str, Any]:
+        """
+        Obtiene datos históricos y actuales de un equipo.
+        
+        Args:
+            nombre_equipo: Nombre del equipo a buscar
+            
+        Returns:
+            Diccionario con información del equipo
+        """
+        # Normalizar nombre del equipo para búsquedas
+        nombre_normalizado = self._normalizar_nombre_equipo(nombre_equipo)
+        
+        # Verificar caché de equipos
+        with _cache_lock:
+            cache_entry = _cached_data["equipos"]
+            if time.time() - cache_entry["timestamp"] < CACHE_EXPIRY:
+                for equipo in cache_entry["data"]:
+                    if self._normalizar_nombre_equipo(equipo.get('nombre', '')) == nombre_normalizado:
+                        return equipo
+        
+        # Si no está en caché, buscar en diferentes fuentes
+        equipo_info = {}
+        
+        # Lista de funciones para obtener datos de diferentes fuentes
+        source_functions = []
+        
+        if self.use_football_data_api:
+            source_functions.append(lambda: self._get_equipo_football_data_api(nombre_equipo))
+        
+        if self.use_open_football:
+            source_functions.append(lambda: self._get_equipo_open_football(nombre_equipo))
+        
+        if self.use_espn_data:
+            source_functions.append(lambda: self._get_equipo_espn(nombre_equipo))
+            
+        if self.use_espn_api:
+            source_functions.append(lambda: self._get_equipo_espn_api(nombre_equipo))
+        
+        # Ejecutar en paralelo
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            futures = {executor.submit(func): func.__name__ for func in source_functions}
+            for future in concurrent.futures.as_completed(futures):
+                try:
+                    result = future.result()
+                    if result:
+                        # Combinar la información de diferentes fuentes
+                        if not equipo_info:
+                            equipo_info = result
+                        else:
+                            for key, value in result.items():
+                                if key not in equipo_info or not equipo_info[key]:
+                                    equipo_info[key] = value
+                except Exception as e:
+                    logger.error(f"Error al obtener datos del equipo {nombre_equipo}: {e}")
+        
+        # Si no se encontró información, devolver diccionario vacío
+        if not equipo_info:
+            return {}
+        
+        # Añadir a caché de equipos
+        with _cache_lock:
+            equipos = _cached_data["equipos"]["data"]
+            # Reemplazar si ya existe
+            for i, equipo in enumerate(equipos):
+                if self._normalizar_nombre_equipo(equipo.get('nombre', '')) == nombre_normalizado:
+                    equipos[i] = equipo_info
+                    break
+            else:
+                equipos.append(equipo_info)
+            _cached_data["equipos"] = {"timestamp": time.time(), "data": equipos}
+        
+        return equipo_info
+    
+    # --- CRUD y gestión de jugadores ---
+    def obtener_jugadores_equipo(self, equipo_id: str) -> List[Dict[str, Any]]:
+        """
+        Obtiene todos los jugadores de un equipo específico desde las fuentes activas.
+        
+        Args:
+            equipo_id: ID del equipo
+            
+        Returns:
+            Lista de jugadores con sus datos
+        """
+        jugadores = []
+        # Buscar en caché primero
+        with _cache_lock:
+            cache_entry = _cached_data["jugadores"]
+            if equipo_id in cache_entry["data"] and time.time() - cache_entry["timestamp"] < CACHE_EXPIRY:
+                return cache_entry["data"][equipo_id]
+        # Si no está en caché, buscar en las fuentes
+        if self.use_espn_api:
+            jugadores = self._get_jugadores_espn_api(equipo_id)
+        # TODO: Agregar otras fuentes si es necesario
+        # Actualizar caché
+        with _cache_lock:
+            cache_entry = _cached_data["jugadores"]
+            cache_entry["data"][equipo_id] = jugadores
+            cache_entry["timestamp"] = time.time()
+        return jugadores
+
+    def obtener_jugador_por_id(self, jugador_id: str, equipo_id: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        """
+        Obtiene un jugador por su ID (y opcionalmente equipo).
+        
+        Args:
+            jugador_id: ID del jugador a buscar
+            equipo_id: ID del equipo (opcional)
+            
+        Returns:
+            Diccionario con información del jugador o None si no se encuentra
+        """
+        jugadores = []
+        if equipo_id:
+            jugadores = self.obtener_jugadores_equipo(equipo_id)
+        else:
+            # Buscar en todas las fuentes si no se especifica equipo
+            # (No eficiente, pero útil para pruebas)
+            if self.use_espn_api:
+                # Buscar en ligas principales
+                for liga in ["PD", "PL", "BL1", "SA", "FL1"]:
+                    equipos = self._get_equipos_liga_espn_api(liga)
+                    for equipo in equipos:
+                        jugadores = self._get_jugadores_espn_api(equipo.get('id'))
+                        for jugador in jugadores:
+                            if str(jugador.get('id')) == str(jugador_id):
+                                return jugador
+        for jugador in jugadores:
+            if str(jugador.get('id')) == str(jugador_id):
+                return jugador
+        return None
+
+    def guardar_jugador(self, jugador_datos: Dict[str, Any], equipo_id: str) -> Dict[str, Any]:
+        """
+        Guarda un nuevo jugador en la base de datos local (por equipo).
+        
+        Args:
+            jugador_datos: Datos del jugador
+            equipo_id: ID del equipo al que pertenece el jugador
+            
+        Returns:
+            Diccionario con resultado de la operación
+        """
+        # TODO: Implementar almacenamiento local (sqlite o archivo)
+        return {'success': False, 'error': 'No implementado'}
+
+    def actualizar_jugador(self, jugador_id: str, jugador_datos: Dict[str, Any], equipo_id: str) -> Dict[str, Any]:
+        """
+        Actualiza un jugador existente en la base de datos local (por equipo).
+        
+        Args:
+            jugador_id: ID del jugador a actualizar
+            jugador_datos: Nuevos datos del jugador
+            equipo_id: ID del equipo al que pertenece el jugador
+            
+        Returns:
+            Diccionario con resultado de la operación
+        """
+        # TODO: Implementar actualización local
+        return {'success': False, 'error': 'No implementado'}
+
+    def eliminar_jugador(self, jugador_id: str, equipo_id: str) -> Dict[str, Any]:
+        """
+        Elimina un jugador de la base de datos local (por equipo).
+        
+        Args:
+            jugador_id: ID del jugador a eliminar
+            equipo_id: ID del equipo del que se eliminará el jugador
+            
+        Returns:
+            Diccionario con resultado de la operación
+        """
+        # TODO: Implementar eliminación local
+        return {'success': False, 'error': 'No implementado'}
+
+    def importar_jugadores(self, jugadores: List[Dict[str, Any]], equipo_id: str, sobrescribir: bool = False) -> Dict[str, Any]:
+        """
+        Importa una lista de jugadores a la base de datos local (por equipo).
+        
+        Args:
+            jugadores: Lista de jugadores a importar
+            equipo_id: ID del equipo al que pertenecen los jugadores
+            sobrescribir: Si es True, sobrescribe jugadores existentes con el mismo ID o nombre
+            
+        Returns:
+            Diccionario con resultado de la operación
+        """
+        # TODO: Implementar importación local
+        return {'success': False, 'error': 'No implementado'}
+
+    def _get_jugadores_espn_api(self, equipo_id: str) -> List[Dict[str, Any]]:
+        """
+        Obtiene jugadores de un equipo usando ESPN API.
+        """
+        try:
+            espn = ESPNAPI()
+            return espn.fetch_players(team_id=equipo_id)
+        except Exception as e:
+            logger.error(f"Error obteniendo jugadores ESPN API: {e}")
+            return []
+
+    # --- Métodos para equipos ---
+    def obtener_equipos_liga(self, liga: str) -> List[Dict[str, Any]]:
+        """
+        Obtiene todos los equipos de una liga específica.
+        
+        Args:
+            liga: Nombre de la liga
+            
+        Returns:
+            Lista de equipos de la liga
+        """
+        equipos = []
+        
+        # Buscar en caché primero
+        with _cache_lock:
+            cache_entry = _cached_data["equipos"]
+            if time.time() - cache_entry["timestamp"] < CACHE_EXPIRY:
+                equipos = [e for e in cache_entry["data"] if e.get('liga', '').lower() == liga.lower()]
+                if equipos:
+                    return equipos
+        
+        # Si no hay datos en caché, buscar en todas las fuentes configuradas
+        source_functions = []
+        
+        if self.use_football_data_api:
+            source_functions.append(lambda: self._get_equipos_liga_football_data_api(liga))
+        
+        if self.use_espn_data:
+            source_functions.append(lambda: self._get_equipos_liga_espn(liga))
+            
+        if self.use_espn_api:
+            source_functions.append(lambda: self._get_equipos_liga_espn_api(liga))
+            
+        if self.use_open_football:
+            source_functions.append(lambda: self._get_equipos_liga_open_football(liga))
+        
+        # Ejecutar en paralelo
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            futures = [executor.submit(func) for func in source_functions]
+            for future in concurrent.futures.as_completed(futures):
+                try:
+                    result = future.result()
+                    if result:
+                        for equipo in result:
+                            # Evitar duplicados por nombre
+                            if not any(e.get('nombre', '').lower() == equipo.get('nombre', '').lower() for e in equipos):
+                                equipos.append(equipo)
+                except Exception as e:
+                    logger.error(f"Error al obtener equipos de la liga {liga}: {e}")
+        
+        # Actualizar caché
+        if equipos:
+            with _cache_lock:
+                cache_equipos = _cached_data["equipos"]["data"]
+                for equipo in equipos:
+                    # Reemplazar o añadir equipos
+                    for i, eq in enumerate(cache_equipos):
+                        if eq.get('nombre', '').lower() == equipo.get('nombre', '').lower():
+                            cache_equipos[i] = equipo
+                            break
+                    else:
+                        cache_equipos.append(equipo)
+                _cached_data["equipos"] = {"timestamp": time.time(), "data": cache_equipos}
+        
+        return equipos
+    
+    def obtener_equipo_por_id(self, equipo_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Obtiene un equipo por su ID.
+        
+        Args:
+            equipo_id: ID del equipo a buscar
+            
+        Returns:
+            Diccionario con información del equipo o None si no se encuentra
+        """
+        # Buscar en caché primero
+        with _cache_lock:
+            cache_entry = _cached_data["equipos"]
+            if time.time() - cache_entry["timestamp"] < CACHE_EXPIRY:
+                for equipo in cache_entry["data"]:
+                    if str(equipo.get('id', '')) == str(equipo_id):
+                        return equipo
+        
+        # Si no está en caché, buscar en la base de datos local
+        try:
+            db_path = os.path.join(self.cache_dir, 'equipos_db.sqlite')
+            if os.path.exists(db_path):
+                conn = sqlite3.connect(db_path)
+                conn.row_factory = sqlite3.Row
+                cursor = conn.cursor()
+                
+                cursor.execute("SELECT * FROM equipos WHERE id = ?", (equipo_id,))
+                row = cursor.fetchone()
+                
+                if row:
+                    equipo = dict(row)
+                    conn.close()
+                    return equipo
+                
+                conn.close()
+        except Exception as e:
+            logger.error(f"Error al buscar equipo en base de datos: {e}")
+        
+        # Como último recurso, intentar obtener el equipo de las fuentes
+        if self.use_football_data_api and equipo_id.startswith('fd-'):
+            equipo = self._get_equipo_por_id_football_data_api(equipo_id)
+            if equipo:
+                return equipo
+                
+        if self.use_espn_api and equipo_id.startswith('espn-'):
+            equipo = self._get_equipo_por_id_espn_api(equipo_id)
+            if equipo:
+                return equipo
+        
+        return None
+    
+    def guardar_equipo(self, equipo_datos: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Guarda un nuevo equipo en la base de datos local.
+        
+        Args:
+            equipo_datos: Datos del equipo
+            
+        Returns:
+            Diccionario con resultado de la operación
+        """
+        try:
+            # Generar ID si no existe
+            if 'id' not in equipo_datos or not equipo_datos['id']:
+                fuente = equipo_datos.get('fuente', 'manual')
+                equipo_datos['id'] = f"{fuente}-{str(uuid.uuid4())[:8]}"
+            
+            # Validar campos requeridos
+            if not equipo_datos.get('nombre'):
+                return {'success': False, 'error': 'El nombre del equipo es obligatorio'}
+            
+            # Preparar directorio de base de datos
+            db_path = os.path.join(self.cache_dir, 'equipos_db.sqlite')
+            crear_tabla = not os.path.exists(db_path)
+            
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+            
+            # Crear tabla si no existe
+            if crear_tabla:
+                cursor.execute('''
+                CREATE TABLE IF NOT EXISTS equipos (
+                    id TEXT PRIMARY KEY,
+                    nombre TEXT NOT NULL,
+                    nombre_corto TEXT,
+                    pais TEXT,
+                    liga TEXT,
+                    fundacion INTEGER,
+                    estadio TEXT,
+                    entrenador TEXT,
+                    colores TEXT,
+                    web TEXT,
+                    escudo_url TEXT,
+                    fuente TEXT,
+                    fecha_creacion TEXT,
+                    fecha_actualizacion TEXT
+                )
+                ''')
+            
+            # Verificar si ya existe un equipo con el mismo nombre
+            cursor.execute("SELECT id FROM equipos WHERE LOWER(nombre) = LOWER(?)", 
+                           (equipo_datos.get('nombre', ''),))
+            existente = cursor.fetchone()
+            
+            if existente:
+                conn.close()
+                return {'success': False, 'error': f"Ya existe un equipo con el nombre {equipo_datos.get('nombre')}"}
+            
+            # Preparar datos para inserción
+            ahora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            equipo_datos['fecha_creacion'] = ahora
+            equipo_datos['fecha_actualizacion'] = ahora
+            
+            # Insertar equipo
+            columnas = equipo_datos.keys()
+            placeholders = ', '.join(['?'] * len(columnas))
+            columnas_str = ', '.join(columnas)
+            
+            query = f"INSERT INTO equipos ({columnas_str}) VALUES ({placeholders})"
+            cursor.execute(query, list(equipo_datos.values()))
+            
+            conn.commit()
+            conn.close()
+            
+            # Actualizar caché
+            with _cache_lock:
+                cache_equipos = _cached_data["equipos"]["data"]
+                cache_equipos.append(equipo_datos)
+                _cached_data["equipos"] = {"timestamp": time.time(), "data": cache_equipos}
+            
+            return {'success': True, 'id': equipo_datos['id']}
+            
+        except Exception as e:
+            logger.error(f"Error al guardar equipo: {e}")
+            return {'success': False, 'error': str(e)}
+    
+    def actualizar_equipo(self, equipo_id: str, equipo_datos: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Actualiza un equipo existente en la base de datos local.
+        
+        Args:
+            equipo_id: ID del equipo a actualizar
+            equipo_datos: Nuevos datos del equipo
+            
+        Returns:
+            Diccionario con resultado de la operación
+        """
+        try:
+            # Validar campos requeridos
+            if not equipo_datos.get('nombre'):
+                return {'success': False, 'error': 'El nombre del equipo es obligatorio'}
+            
+            # Preparar directorio de base de datos
+            db_path = os.path.join(self.cache_dir, 'equipos_db.sqlite')
+            if not os.path.exists(db_path):
+                return {'success': False, 'error': 'La base de datos no existe'}
+            
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+            
+            # Verificar si el equipo existe
+            cursor.execute("SELECT id FROM equipos WHERE id = ?", (equipo_id,))
+            existente = cursor.fetchone()
+            
+            if not existente:
+                conn.close()
+                return {'success': False, 'error': f"No existe un equipo con el ID {equipo_id}"}
+            
+            # Verificar si hay otro equipo con el mismo nombre (excepto este)
+            cursor.execute("SELECT id FROM equipos WHERE LOWER(nombre) = LOWER(?) AND id != ?", 
+                           (equipo_datos.get('nombre', ''), equipo_id))
+            duplicado = cursor.fetchone()
+            
+            if duplicado:
+                conn.close()
+                return {'success': False, 'error': f"Ya existe otro equipo con el nombre {equipo_datos.get('nombre')}"}
+            
+            # Preparar datos para actualización
+            equipo_datos['fecha_actualizacion'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            
+            # Actualizar equipo
+            update_cols = []
+            update_values = []
+            
+            for key, value in equipo_datos.items():
+                if key != 'id':  # No actualizamos el ID
+                    update_cols.append(f"{key} = ?")
+                    update_values.append(value)
+            
+            # Añadir ID para la condición WHERE
+            update_values.append(equipo_id)
+            
+            query = f"UPDATE equipos SET {', '.join(update_cols)} WHERE id = ?"
+            cursor.execute(query, update_values)
+            
+            conn.commit()
+            conn.close()
+            
+            # Actualizar caché
+            with _cache_lock:
+                cache_equipos = _cached_data["equipos"]["data"]
+                for i, equipo in enumerate(cache_equipos):
+                    if equipo.get('id') == equipo_id:
+                        cache_equipos[i] = equipo_datos
+                        break
+                _cached_data["equipos"] = {"timestamp": time.time(), "data": cache_equipos}
+            
+            return {'success': True}
+            
+        except Exception as e:
+            logger.error(f"Error al actualizar equipo: {e}")
+            return {'success': False, 'error': str(e)}
+    
+    def eliminar_equipo(self, equipo_id: str) -> Dict[str, Any]:
+        """
+        Elimina un equipo de la base de datos local.
+        
+        Args:
+            equipo_id: ID del equipo a eliminar
+            
+        Returns:
+            Diccionario con resultado de la operación
+        """
+        try:
+            # Preparar directorio de base de datos
+            db_path = os.path.join(self.cache_dir, 'equipos_db.sqlite')
+            if not os.path.exists(db_path):
+                return {'success': False, 'error': 'La base de datos no existe'}
+            
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+            
+            # Verificar si el equipo existe
+            cursor.execute("SELECT id FROM equipos WHERE id = ?", (equipo_id,))
+            existente = cursor.fetchone()
+            
+            if not existente:
+                conn.close()
+                return {'success': False, 'error': f"No existe un equipo con el ID {equipo_id}"}
+            
+            # Eliminar equipo
+            cursor.execute("DELETE FROM equipos WHERE id = ?", (equipo_id,))
+            
+            conn.commit()
+            conn.close()
+            
+            # Actualizar caché
+            with _cache_lock:
+                cache_equipos = _cached_data["equipos"]["data"]
+                cache_equipos = [e for e in cache_equipos if e.get('id') != equipo_id]
+                _cached_data["equipos"] = {"timestamp": time.time(), "data": cache_equipos}
+            
+            return {'success': True}
+            
+        except Exception as e:
+            logger.error(f"Error al eliminar equipo: {e}")
+            return {'success': False, 'error': str(e)}
+    
+    def importar_equipos(self, equipos: List[Dict[str, Any]], sobrescribir: bool = False) -> Dict[str, Any]:
+        """
+        Importa una lista de equipos a la base de datos local.
+        
+        Args:
+            equipos: Lista de equipos a importar
+            sobrescribir: Si es True, sobrescribe equipos existentes con el mismo ID o nombre
+            
+        Returns:
+            Diccionario con resultado de la operación
+        """
+        importados = 0
+        errores = 0
+        
+        for equipo in equipos:
+            try:
+                # Generar ID si no existe
+                if 'id' not in equipo or not equipo['id']:
+                    fuente = equipo.get('fuente', 'import')
+                    equipo['id'] = f"{fuente}-{str(uuid.uuid4())[:8]}"
+                
+                # Buscar si ya existe
+                equipo_existente = self.obtener_equipo_por_id(equipo['id'])
+                existe_por_nombre = False
+                
+                if not equipo_existente and 'nombre' in equipo:
+                    # Buscar por nombre
+                    with _cache_lock:
+                        cache_equipos = _cached_data["equipos"]["data"]
+                        for e in cache_equipos:
+                            if e.get('nombre', '').lower() == equipo['nombre'].lower():
+                                existe_por_nombre = True
+                                equipo_existente = e
+                                break
+                
+                if equipo_existente and not sobrescribir:
+                    # Saltar este equipo si ya existe y no se debe sobrescribir
+                    errores += 1
+                    continue
+                
+                if equipo_existente and sobrescribir:
+                    # Actualizar equipo existente
+                    if existe_por_nombre:
+                        equipo['id'] = equipo_existente['id']
+                    
+                    resultado = self.actualizar_equipo(equipo['id'], equipo)
+                    if resultado.get('success'):
+                        importados += 1
+                    else:
+                        errores += 1
+                else:
+                    # Crear nuevo equipo
+                    resultado = self.guardar_equipo(equipo)
+                    if resultado.get('success'):
+                        importados += 1
+                    else:
+                        errores += 1
+            
+            except Exception as e:
+                logger.error(f"Error importando equipo: {e}")
+                errores += 1
+        
+        return {
+            'success': importados > 0,
+            'importados': importados,
+            'errores': errores,
+            'total': len(equipos)
+        }
+    
+    # --- CRUD y gestión de partidos (matches) ---
+    def obtener_partidos_liga(self, liga: str, fecha_inicio: Optional[str] = None, fecha_fin: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        Obtiene todos los partidos de una liga específica en un rango de fechas.
+        """
+        partidos = []
+        if self.use_espn_api:
+            partidos = self._get_partidos_espn_api(liga, fecha_inicio, fecha_fin)
+        # TODO: Agregar otras fuentes si es necesario
+        return partidos
+
+    def obtener_partido_por_id(self, partido_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Obtiene un partido por su ID.
+        
+        Args:
+            partido_id: ID del partido a buscar
+            
+        Returns:
+            Datos del partido o None si no se encuentra
+        """
+        # Buscar en todos los partidos
+        partidos = self.obtener_partidos()
+        for partido in partidos:
+            if str(partido.get('id', '')) == str(partido_id):
+                return partido
+        
+        # Si no se encontró, intentar obtener directamente de cada fuente
+        return self._obtener_partido_por_id_directo(partido_id)
+
+    def _obtener_partido_por_id_directo(self, partido_id: str) -> Optional[Dict[str, Any]]:
+        """Intenta obtener un partido directamente de las fuentes disponibles."""
+        # ESPN API
+        if self.use_espn_api:
+            try:
+                espn_api = ESPNAPI()
+                partido = espn_api.fetch_match(partido_id)
+                if partido:
+                    return self._standardize_match(partido, 'espn_api')
+            except Exception as e:
+                logger.error(f"Error al obtener partido {partido_id} de ESPN API: {str(e)}")
+        
+        # Football Data API
+        if self.use_football_data_api:
+            try:
+                # Implementar obtención directa si la API lo soporta
+                pass
+            except Exception as e:
+                logger.error(f"Error al obtener partido {partido_id} de Football Data API: {str(e)}")
+        
+        return None
+
+    def guardar_partido(self, partido_datos: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Guarda un nuevo partido en el sistema.
+        
+        Args:
+            partido_datos: Diccionario con los datos del partido
+            
+        Returns:
+            Diccionario con el resultado de la operación
+        """
+        try:
+            # Validar datos mínimos requeridos
+            if 'equipo_local' not in partido_datos or 'equipo_visitante' not in partido_datos or 'fecha' not in partido_datos:
+                return {'success': False, 'error': 'Datos incompletos. Se requiere equipo_local, equipo_visitante y fecha.'}
+            
+            # Crear ID único si no se proporciona
+            if 'id' not in partido_datos:
+                partido_datos['id'] = str(uuid.uuid4())
+            
+            # Buscar si el partido ya existe
+            partido_existente = self.obtener_partido_por_id(partido_datos['id'])
+            if partido_existente:
+                return {'success': False, 'error': f"Ya existe un partido con ID {partido_datos['id']}"}
+            
+            # Guardar en base de datos o archivo
+            self._guardar_partido_en_bd(partido_datos)
+            
+            # Actualizar caché
+            self._actualizar_cache_partidos(partido_datos)
+            
+            return {'success': True, 'partido_id': partido_datos['id']}
+        
+        except Exception as e:
+            logger.error(f"Error al guardar partido: {str(e)}")
+            return {'success': False, 'error': str(e)}
+
+    def actualizar_partido(self, partido_id: str, partido_datos: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Actualiza un partido existente.
+        
+        Args:
+            partido_id: ID del partido a actualizar
+            partido_datos: Nuevos datos del partido
+            
+        Returns:
+            Diccionario con el resultado de la operación
+        """
+        try:
+            # Verificar que el partido existe
+            partido_existente = self.obtener_partido_por_id(partido_id)
+            if not partido_existente:
+                return {'success': False, 'error': f"No existe un partido con ID {partido_id}"}
+            
+            # Asegurarse de que el ID no cambia
+            partido_datos['id'] = partido_id
+            
+            # Actualizar en base de datos o archivo
+            self._actualizar_partido_en_bd(partido_id, partido_datos)
+            
+            # Actualizar caché
+            self._actualizar_cache_partidos(partido_datos, actualizar=True)
+            
+            return {'success': True, 'partido_id': partido_id}
+        
+        except Exception as e:
+            logger.error(f"Error al actualizar partido: {str(e)}")
+            return {'success': False, 'error': str(e)}
+
+    def eliminar_partido(self, partido_id: str) -> Dict[str, Any]:
+        """
+        Elimina un partido.
+        
+        Args:
+            partido_id: ID del partido a eliminar
+            
+        Returns:
+            Diccionario con el resultado de la operación
+        """
+        try:
+            # Verificar que el partido existe
+            partido_existente = self.obtener_partido_por_id(partido_id)
+            if not partido_existente:
+                return {'success': False, 'error': f"No existe un partido con ID {partido_id}"}
+            
+            # Eliminar de base de datos o archivo
+            self._eliminar_partido_de_bd(partido_id)
+            
+            # Actualizar caché
+            self._eliminar_partido_de_cache(partido_id)
+            
+            return {'success': True}
+        
+        except Exception as e:
+            logger.error(f"Error al eliminar partido: {str(e)}")
+            return {'success': False, 'error': str(e)}
+
+    def importar_partidos(self, partidos: List[Dict[str, Any]], sobrescribir: bool = False) -> Dict[str, Any]:
+        """
+        Importa una lista de partidos.
+        
+        Args:
+            partidos: Lista de diccionarios con datos de partidos
+            sobrescribir: Si se debe sobrescribir partidos existentes
+            
+        Returns:
+            Diccionario con resultados de la operación
+        """
+        importados = 0
+        errores = 0
+        
+        for partido in partidos:
+            try:
+                # Verificar si el partido ya existe
+                partido_existente = None
+                if 'id' in partido:
+                    partido_existente = self.obtener_partido_por_id(partido['id'])
+                
+                # Si no existe o se debe sobrescribir, guardar/actualizar
+                if not partido_existente:
+                    resultado = self.guardar_partido(partido)
+                    if resultado.get('success'):
+                        importados += 1
+                    else:
+                        errores += 1
+                        logger.warning(f"Error al importar partido: {resultado.get('error')}")
+                elif sobrescribir:
+                    resultado = self.actualizar_partido(partido['id'], partido)
+                    if resultado.get('success'):
+                        importados += 1
+                    else:
+                        errores += 1
+                        logger.warning(f"Error al actualizar partido: {resultado.get('error')}")
+                
+            except Exception as e:
+                errores += 1
+                logger.error(f"Error al procesar partido durante importación: {str(e)}")
+        
+        return {
+            'success': importados > 0,
+            'importados': importados,
+            'errores': errores
+        }
+
+    # Métodos privados para gestión de BD y caché
+
+    def _guardar_partido_en_bd(self, partido_datos: Dict[str, Any]) -> None:
+        """Guarda un partido en la base de datos."""
+        try:
+            # Crear conexión a la base de datos
+            conn = self._get_db_connection()
+            cursor = conn.cursor()
+            
+            # Preparar datos para la inserción
+            # Extraer IDs de equipos
+            equipo_local_id = partido_datos['equipo_local'].get('id') if isinstance(partido_datos['equipo_local'], dict) else partido_datos['equipo_local']
+            equipo_visitante_id = partido_datos['equipo_visitante'].get('id') if isinstance(partido_datos['equipo_visitante'], dict) else partido_datos['equipo_visitante']
+            
+            # Preparar datos de goles
+            goles_local = partido_datos.get('goles_local') if partido_datos.get('goles_local') != '' else None
+            goles_visitante = partido_datos.get('goles_visitante') if partido_datos.get('goles_visitante') != '' else None
+            
+            # Insertar partido en la base de datos
+            cursor.execute('''
+                INSERT INTO partidos (id, fecha, equipo_local_id, equipo_visitante_id, 
+                                    goles_local, goles_visitante, liga, temporada, 
+                                    jornada, estadio, arbitro_id, estado, fuente)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                partido_datos['id'],
+                partido_datos.get('fecha', ''),
+                equipo_local_id,
+                equipo_visitante_id,
+                goles_local,
+                goles_visitante,
+                partido_datos.get('liga', ''),
+                partido_datos.get('temporada', ''),
+                partido_datos.get('jornada', ''),
+                partido_datos.get('estadio', ''),
+                partido_datos.get('arbitro', ''),
+                partido_datos.get('estado', 'programado'),
+                partido_datos.get('fuente', 'manual')
+            ))
+            
+            conn.commit()
+            conn.close()
+            
+        except sqlite3.Error as e:
+            logger.error(f"Error de SQLite al guardar partido: {str(e)}")
+            raise Exception(f"Error al guardar partido en base de datos: {str(e)}")
+        except Exception as e:
+            logger.error(f"Error al guardar partido en base de datos: {str(e)}")
+            raise
+
+    def _actualizar_partido_en_bd(self, partido_id: str, partido_datos: Dict[str, Any]) -> None:
+        """Actualiza un partido en la base de datos."""
+        try:
+            # Crear conexión a la base de datos
+            conn = self._get_db_connection()
+            cursor = conn.cursor()
+            
+            # Preparar datos para la actualización
+            # Extraer IDs de equipos
+            equipo_local_id = partido_datos['equipo_local'].get('id') if isinstance(partido_datos['equipo_local'], dict) else partido_datos['equipo_local']
+            equipo_visitante_id = partido_datos['equipo_visitante'].get('id') if isinstance(partido_datos['equipo_visitante'], dict) else partido_datos['equipo_visitante']
+            
+            # Preparar datos de goles
+            goles_local = partido_datos.get('goles_local') if partido_datos.get('goles_local') != '' else None
+            goles_visitante = partido_datos.get('goles_visitante') if partido_datos.get('goles_visitante') != '' else None
+            
+            # Actualizar partido en la base de datos
+            cursor.execute('''
+                UPDATE partidos 
+                SET fecha = ?, equipo_local_id = ?, equipo_visitante_id = ?,
+                    goles_local = ?, goles_visitante = ?, liga = ?, temporada = ?,
+                    jornada = ?, estadio = ?, arbitro_id = ?, estado = ?, fuente = ?
+                WHERE id = ?
+            ''', (
+                partido_datos.get('fecha', ''),
+                equipo_local_id,
+                equipo_visitante_id,
+                goles_local,
+                goles_visitante,
+                partido_datos.get('liga', ''),
+                partido_datos.get('temporada', ''),
+                partido_datos.get('jornada', ''),
+                partido_datos.get('estadio', ''),
+                partido_datos.get('arbitro', ''),
+                partido_datos.get('estado', 'programado'),
+                partido_datos.get('fuente', 'manual'),
+                partido_id
+            ))
+            
+            conn.commit()
+            conn.close()
+            
+        except sqlite3.Error as e:
+            logger.error(f"Error de SQLite al actualizar partido: {str(e)}")
+            raise Exception(f"Error al actualizar partido en base de datos: {str(e)}")
+        except Exception as e:
+            logger.error(f"Error al actualizar partido en base de datos: {str(e)}")
+            raise
+
+    def _eliminar_partido_de_bd(self, partido_id: str) -> None:
+        """Elimina un partido de la base de datos."""
+        try:
+            # Crear conexión a la base de datos
+            conn = self._get_db_connection()
+            cursor = conn.cursor()
+            
+            # Eliminar partido
+            cursor.execute('DELETE FROM partidos WHERE id = ?', (partido_id,))
+            
+            conn.commit()
+            conn.close()
+            
+        except sqlite3.Error as e:
+            logger.error(f"Error de SQLite al eliminar partido: {str(e)}")
+            raise Exception(f"Error al eliminar partido de base de datos: {str(e)}")
+        except Exception as e:
+            logger.error(f"Error al eliminar partido de base de datos: {str(e)}")
+            raise
+
+    def _actualizar_cache_partidos(self, partido_datos: Dict[str, Any], actualizar: bool = False) -> None:
+        """Actualiza la caché de partidos."""
+        with _cache_lock:
+            # Actualizar caché de partidos próximos
+            proximos_cache = _cached_data["proximos_partidos"]
+            if time.time() - proximos_cache["timestamp"] < CACHE_EXPIRY:
+                partido_fecha = self._parse_fecha(partido_datos.get('fecha', ''))
+                hoy = datetime.now().date()
+                
+                # Si la fecha del partido es en el futuro, actualizar caché de próximos
+                if partido_fecha > hoy:
+                    if actualizar:
+                        # Buscar y reemplazar
+                        for i, p in enumerate(proximos_cache["data"]):
+                            if p.get('id') == partido_datos['id']:
+                                proximos_cache["data"][i] = partido_datos
+                                break
+                    else:
+                        # Añadir nuevo
+                        proximos_cache["data"].append(partido_datos)
+            
+            # Actualizar caché de partidos históricos
+            historicos_cache = _cached_data["partidos_historicos"]
+            if time.time() - historicos_cache["timestamp"] < CACHE_EXPIRY:
+                partido_fecha = self._parse_fecha(partido_datos.get('fecha', ''))
+                hoy = datetime.now().date()
+                
+                # Si la fecha del partido es en el pasado, actualizar caché históricos
+                if partido_fecha <= hoy:
+                    if isinstance(historicos_cache["data"], pd.DataFrame):
+                        # Si es DataFrame, convertir a lista, actualizar y volver a convertir
+                        partidos_list = historicos_cache["data"].to_dict(orient='records')
+                        if actualizar:
+                            # Buscar y reemplazar
+                            for i, p in enumerate(partidos_list):
+                                if p.get('id') == partido_datos['id']:
+                                    partidos_list[i] = partido_datos
+                                    break
+                        else:
+                            # Añadir nuevo
+                            partidos_list.append(partido_datos)
+                        
+                        historicos_cache["data"] = pd.DataFrame(partidos_list)
+                    elif isinstance(historicos_cache["data"], list):
+                        if actualizar:
+                            # Buscar y reemplazar
+                            for i, p in enumerate(historicos_cache["data"]):
+                                if p.get('id') == partido_datos['id']:
+                                    historicos_cache["data"][i] = partido_datos
+                                    break
+                        else:
+                            # Añadir nuevo
+                            historicos_cache["data"].append(partido_datos)
+
+    def _eliminar_partido_de_cache(self, partido_id: str) -> None:
+        """Elimina un partido de la caché."""
+        with _cache_lock:
+            # Eliminar de caché de partidos próximos
+            proximos_cache = _cached_data["proximos_partidos"]
+            if time.time() - proximos_cache["timestamp"] < CACHE_EXPIRY:
+                proximos_cache["data"] = [p for p in proximos_cache["data"] if p.get('id') != partido_id]
+            
+            # Eliminar de caché de partidos históricos
+            historicos_cache = _cached_data["partidos_historicos"]
+            if time.time() - historicos_cache["timestamp"] < CACHE_EXPIRY:
+                if isinstance(historicos_cache["data"], pd.DataFrame):
+                    # Filtrar DataFrame
+                    historicos_cache["data"] = historicos_cache["data"][historicos_cache["data"]['id'] != partido_id]
+                elif isinstance(historicos_cache["data"], list):
+                    # Filtrar lista
+                    historicos_cache["data"] = [p for p in historicos_cache["data"] if p.get('id') != partido_id]
+
+    def _get_db_connection(self):
+        """Obtiene una conexión a la base de datos."""
+        db_path = os.path.join('data', 'database', 'football_analytics.db')
+        os.makedirs(os.path.dirname(db_path), exist_ok=True)
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        
+        # Verificar si existen las tablas necesarias
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='partidos'")
+        if not cursor.fetchone():
+            # Crear tabla de partidos si no existe
+            cursor.execute('''
+                CREATE TABLE partidos (
+                    id TEXT PRIMARY KEY,
+                    fecha TEXT,
+                    equipo_local_id TEXT,
+                    equipo_visitante_id TEXT,
+                    goles_local INTEGER,
+                    goles_visitante INTEGER,
+                    liga TEXT,
+                    temporada TEXT,
+                    jornada TEXT,
+                    estadio TEXT,
+                    arbitro_id TEXT,
+                    estado TEXT,
+                    fuente TEXT
+                )
+            ''')
+            conn.commit()
+        
+        return conn
+
+    def _standardize_match(self, match_data: Dict[str, Any], source: str) -> Dict[str, Any]:
+        """Estandariza los datos de un partido según la fuente."""
+        try:
+            # Base de datos estandarizada
+            standardized = {
+                'id': str(match_data.get('id', '')),
+                'fecha': '',
+                'hora': '',
+                'equipo_local': {},
+                'equipo_visitante': {},
+                'liga': '',
+                'temporada': '',
+                'jornada': '',
+                'estadio': '',
+                'arbitro': '',
+                'goles_local': None,
+                'goles_visitante': None,
+                'estado': 'programado',
+                'fuente': source
+            }
+            
+            # Adaptar según la fuente
+            if source == 'espn_api':
+                # Formato fecha
+                if 'date' in match_data:
+                    try:
+                        fecha = datetime.strptime(match_data['date'], '%Y-%m-%dT%H:%M:%SZ')
+                        standardized['fecha'] = fecha.strftime('%Y-%m-%d')
+                        standardized['hora'] = fecha.strftime('%H:%M')
+                    except:
+                        standardized['fecha'] = match_data.get('date', '')
+                
+                # Equipos
+                if 'home_team' in match_data:
+                    standardized['equipo_local'] = {
+                        'id': str(match_data['home_team'].get('id', '')),
+                        'nombre': match_data['home_team'].get('name', '')
+                    }
+                
+                if 'away_team' in match_data:
+                    standardized['equipo_visitante'] = {
+                        'id': str(match_data['away_team'].get('id', '')),
+                        'nombre': match_data['away_team'].get('name', '')
+                    }
+                
+                # Liga y competición
+                standardized['liga'] = match_data.get('competition', {}).get('name', '')
+                
+                # Resultado
+                if 'score' in match_data and match_data['score']:
+                    standardized['goles_local'] = match_data['score'].get('home_score')
+                    standardized['goles_visitante'] = match_data['score'].get('away_score')
+                
+                # Estado
+                if 'status' in match_data:
+                    if match_data['status'] == 'FINAL':
+                        standardized['estado'] = 'finalizado'
+                    elif match_data['status'] == 'SCHEDULED':
+                        standardized['estado'] = 'programado'
+                    elif match_data['status'] == 'LIVE':
+                        standardized['estado'] = 'en_juego'
+                    else:
+                        standardized['estado'] = match_data['status'].lower()
+                
+            elif source == 'football_data_api':
+                # Implementar adaptación para Football Data API
+                pass
+            
+            # Añadir otros adaptadores según sea necesario
+            
+            return standardized
+            
+        except Exception as e:
+            logger.error(f"Error al estandarizar partido desde {source}: {str(e)}")
+            return {'id': str(match_data.get('id', '')), 'error': str(e), 'fuente': source}
+
+    def _get_partidos_historicos_espn_api(self) -> List[Dict[str, Any]]:
+        """Obtiene partidos históricos desde ESPN API."""
+        try:
+            espn_api = ESPNAPI()
+            # Obtener partidos de los últimos 30 días
+            fecha_fin = datetime.now()
+            fecha_inicio = fecha_fin - timedelta(days=30)
+            
+            partidos = espn_api.fetch_matches(
+                date_from=fecha_inicio.strftime('%Y%m%d'),
+                date_to=fecha_fin.strftime('%Y%m%d')
+            )
+            
+            # Estandarizar los partidos
+            return [self._standardize_match(partido, 'espn_api') for partido in partidos]
+            
+        except Exception as e:
+            logger.error(f"Error al obtener partidos históricos de ESPN API: {str(e)}")
+            return []
+
+    def _get_partidos_historicos_football_data_api(self) -> List[Dict[str, Any]]:
+        """Obtiene partidos históricos desde Football Data API."""
+        # Implementar cuando sea necesario
+        return []
+
+    def _get_partidos_historicos_espn(self) -> List[Dict[str, Any]]:
+        """Obtiene partidos históricos mediante web scraping de ESPN."""
+        # Implementar cuando sea necesario
+        return []
+
+    def _get_partidos_historicos_world_football(self) -> List[Dict[str, Any]]:
+        """Obtiene partidos históricos desde World Football Data."""
+        # Implementar cuando sea necesario
+        return []
+
+    def obtener_partidos(self, desde: Optional[str] = None, hasta: Optional[str] = None, 
+                     liga: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        Obtiene partidos históricos y programados según los filtros especificados.
+        
+        Args:
+            desde: Fecha de inicio en formato YYYY-MM-DD
+            hasta: Fecha de fin en formato YYYY-MM-DD
+            liga: Nombre de la liga
+            
+        Returns:
+            Lista de partidos en formato estándar
+        """
+        # Obtener todos los partidos disponibles (históricos y próximos)
+        partidos = []
+        
+        # Obtener partidos históricos
+        try:
+            historicos = self._obtener_partidos_historicos()
+            if historicos:
+                for partido in historicos:
+                    # Solo añadir si no está ya en la lista
+                    if not any(p.get('id') == partido.get('id') for p in partidos):
+                        partidos.append(partido)
+        except Exception as e:
+            logger.error(f"Error al obtener partidos históricos: {e}")
+        
+        # Obtener próximos partidos
+        try:
+            proximos = self.obtener_proximos_partidos(dias=30)  # Obtener próximos 30 días
+            if proximos:
+                for partido in proximos:
+                    # Solo añadir si no está ya en la lista
+                    if not any(p.get('id') == partido.get('id') for p in partidos):
+                        partidos.append(partido)
+        except Exception as e:
+            logger.error(f"Error al obtener próximos partidos: {e}")
+        
+        # Aplicar filtros
+        partidos_filtrados = partidos
+        
+        # Filtrar por fecha de inicio
+        if desde:
+            try:
+                fecha_desde = self._parse_fecha(desde)
+                partidos_filtrados = [p for p in partidos_filtrados if self._parse_fecha(p.get('fecha', '')) >= fecha_desde]
+            except:
+                logger.warning(f"Formato de fecha 'desde' inválido: {desde}")
+        
+        # Filtrar por fecha de fin
+        if hasta:
+            try:
+                fecha_hasta = self._parse_fecha(hasta)
+                partidos_filtrados = [p for p in partidos_filtrados if self._parse_fecha(p.get('fecha', '')) <= fecha_hasta]
+            except:
+                logger.warning(f"Formato de fecha 'hasta' inválido: {hasta}")
+        
+        # Filtrar por liga
+        if liga:
+            partidos_filtrados = [p for p in partidos_filtrados if liga.lower() == p.get('liga', '').lower()]
+        
+        return partidos_filtrados
+
+    def _obtener_partidos_historicos(self) -> List[Dict[str, Any]]:
+        """
+        Obtiene partidos históricos de todas las fuentes disponibles.
+        
+        Returns:
+            Lista de partidos en formato estándar
+        """
+        # Comprobar caché
+        with _cache_lock:
+            cache_key = "partidos_historicos"
+            cache_entry = _cached_data[cache_key]
+            if time.time() - cache_entry["timestamp"] < CACHE_EXPIRY:
+                # Convertir DataFrame a lista de diccionarios si es necesario
+                if isinstance(cache_entry["data"], pd.DataFrame) and not cache_entry["data"].empty:
+                    return cache_entry["data"].to_dict(orient='records')
+                elif isinstance(cache_entry["data"], list):
+                    return cache_entry["data"]
+        
+        partidos = []
+        source_functions = []
+        
+        # Football Data API
+        if self.use_football_data_api:
+            source_functions.append(self._get_partidos_historicos_football_data_api)
+        
+        # ESPN Data
+        if self.use_espn_data:
+            source_functions.append(self._get_partidos_historicos_espn)
+        
+        # ESPN API
+        if self.use_espn_api:
+            source_functions.append(self._get_partidos_historicos_espn_api)
+        
+        # World Football Data
+        if self.use_world_football:
+            source_functions.append(self._get_partidos_historicos_world_football)
+        
+        # Ejecutar todas las funciones y recopilar resultados
+        with concurrent.futures.ThreadPoolExecutor(max_workers=len(source_functions)) as executor:
+            future_to_source = {executor.submit(func): func.__name__ for func in source_functions}
+            for future in concurrent.futures.as_completed(future_to_source):
+                source_name = future_to_source[future]
+                try:
+                    result = future.result()
+                    if result:
+                        # Si es un DataFrame, convertirlo a lista de diccionarios
+                        if isinstance(result, pd.DataFrame):
+                            result = result.to_dict(orient='records')
+                        
+                        partidos.extend(result)
+                        logger.info(f"Obtenidos {len(result)} partidos históricos de {source_name}")
+                except Exception as e:
+                    logger.error(f"Error al obtener partidos históricos de {source_name}: {str(e)}")
+        
+        # Actualizar caché
+        with _cache_lock:
+            _cached_data[cache_key] = {"timestamp": time.time(), "data": partidos}
+        
+        return partidos
+
+    def _parse_fecha(self, fecha_str: str) -> datetime.date:
+        """
+        Parsea una fecha en formato string a datetime.date.
+        
+        Args:
+            fecha_str: String con la fecha
+            
+        Returns:
+            Objeto datetime.date con la fecha parseada
+        """
+        try:
+            # Intentar varios formatos de fecha
+            for fmt in ['%Y-%m-%d', '%d/%m/%Y', '%d-%m-%Y', '%Y/%m/%d']:
+                try:
+                    return datetime.strptime(fecha_str, fmt).date()
+                except ValueError:
+                    continue
+            
+            # Si llegamos aquí, no se pudo parsear con ningún formato
+            logger.warning(f"No se pudo parsear la fecha: {fecha_str}")
+            return datetime.now().date()  # Devolver fecha actual como fallback
+            
+        except Exception as e:
+            logger.error(f"Error al parsear fecha {fecha_str}: {str(e)}")
+            return datetime.now().date()  # Devolver fecha actual como fallback
+
+    def _fetch_equipos_api1(self):
+        """Obtiene equipos de la primera API"""
+        # Implementación específica usando http_optimizer
+        return []
+        
+    def _fetch_equipos_api2(self):
+        """Obtiene equipos de la segunda API"""
+        # Implementación específica usando http_optimizer
+        return []
+        
+    def _fetch_equipos_espn(self):
+        """Obtiene equipos de ESPN"""
+        return self.espn_api.get_equipos()
+        
+    def _unificar_equipos(self, equipos_por_fuente):
+        """Unifica equipos de múltiples fuentes eliminando duplicados"""
+        # Usar AnalyticsOptimizer para procesamiento paralelo si hay muchos equipos
+        return [equipo for fuente in equipos_por_fuente for equipo in fuente]
+        
+    def _guardar_equipos_db(self, conn, equipos):
+        """Guarda equipos en base de datos de forma optimizada"""
+        # Implementación usando db_optimizer
+        pass

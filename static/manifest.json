@@ -1,87 +1,21 @@
 {
-  "name": "Analizador Deportivo de Fútbol",
-  "short_name": "FootballAI",
-  "description": "Análisis inteligente con IA para predicciones precisas de fútbol",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#2E7D32",
-  "theme_color": "#4CAF50",
-  "orientation": "portrait-primary",
-  "scope": "/",
-  "icons": [
-    {
-      "src": "/static/img/icon-72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/static/img/icon-96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/static/img/icon-128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/static/img/icon-144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/static/img/icon-152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/static/img/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/static/img/icon-384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/static/img/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Predicción Rápida",
-      "short_name": "Predecir",
-      "description": "Realizar una predicción rápida",
-      "url": "/futuro",
-      "icons": [{ "src": "/static/img/icon-96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Análisis Histórico",
-      "short_name": "Histórico",
-      "description": "Ver análisis histórico",
-      "url": "/historico",
-      "icons": [{ "src": "/static/img/icon-96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Partidos de Hoy",
-      "short_name": "Hoy",
-      "description": "Ver partidos de hoy",
-      "url": "/proximo",
-      "icons": [{ "src": "/static/img/icon-96.png", "sizes": "96x96" }]
-    }
-  ],
-  "categories": ["sports", "entertainment", "productivity"],
-  "lang": "es",
-  "prefer_related_applications": false
+    "name": "Sistema de An\u00e1lisis de F\u00fatbol",
+    "short_name": "Fubol",
+    "description": "Sistema avanzado de an\u00e1lisis de f\u00fatbol",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#4285f4",
+    "icons": [
+        {
+            "src": "/static/images/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/static/images/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
 }

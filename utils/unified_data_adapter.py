@@ -20,12 +20,14 @@ import pandas as pd
 import concurrent.futures
 import re
 import csv
+import uuid
 from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, List, Any, Optional, Union, Tuple
 from pathlib import Path
 import threading
 import time
 import random
+import sqlite3
 
 # Importar el nuevo adaptador de ESPN API
 from utils.espn_api import ESPNAPI
@@ -37,10 +39,21 @@ logging.basicConfig(
 )
 logger = logging.getLogger('unified_data_adapter')
 
-# Variables globales para almacenamiento en memoria caché
+# Importar gestores de optimización
+from utils.cache_manager import CacheManager
+from utils.http_optimizer import HTTPOptimizer
+from utils.db_optimizer import DBOptimizer
+from utils.log_manager import LogManager
+from utils.analytics_optimizer import AnalyticsOptimizer
+
+# Instancias por defecto (se reemplazarán en initialize)
+_cache_manager = None
+_http_optimizer = None
+_db_optimizer = None
+
+# Variables globales mínimas para compatibilidad con código anterior
 _cache_lock = threading.Lock()
 _cached_data = {
-    "proximos_partidos": {"timestamp": 0, "data": []},
     "equipos": {"timestamp": 0, "data": []},
     "jugadores": {"timestamp": 0, "data": {}},
     "arbitros": {"timestamp": 0, "data": []},
@@ -51,10 +64,20 @@ CACHE_EXPIRY = 3600  # 1 hora
 
 
 class UnifiedDataAdapter:
-    """Adaptador unificado para obtener datos de múltiples fuentes."""
-    
-    def __init__(self):
-        """Inicializa el adaptador con la configuración de variables de entorno."""
+    """Adaptador unificado para múltiples fuentes de datos."""
+
+    def __init__(self, cache_manager=None, http_optimizer=None, db_optimizer=None):
+        """Inicializa el adaptador con componentes optimizados y configuración de variables de entorno."""
+        global _cache_manager, _http_optimizer, _db_optimizer
+        
+        # Usar instancias proporcionadas o crear por defecto
+        _cache_manager = cache_manager or CacheManager(cache_dir="data/cache")
+        _http_optimizer = http_optimizer or HTTPOptimizer()
+        _db_optimizer = db_optimizer or DBOptimizer()
+        
+        # Inicializar adaptador de ESPN
+        self.espn_api = ESPNAPI()
+        
         # Football-Data.org API
         self.football_data_api_key = os.environ.get('FOOTBALL_DATA_API_KEY', '')
         self.use_football_data_api = bool(self.football_data_api_key)
@@ -248,39 +271,169 @@ class UnifiedDataAdapter:
         
         return equipo_info
     
-    def obtener_jugadores_equipo(self, nombre_equipo: str) -> List[Dict[str, Any]]:
+    # --- CRUD y gestión de jugadores ---
+    def obtener_jugadores_equipo(self, equipo_id: str) -> List[Dict[str, Any]]:
         """
-        Obtiene la lista de jugadores de un equipo.
+        Obtiene todos los jugadores de un equipo específico desde las fuentes activas.
         
         Args:
-            nombre_equipo: Nombre del equipo
+            equipo_id: ID del equipo
             
         Returns:
             Lista de jugadores con sus datos
         """
-        # Normalizar nombre del equipo para búsquedas
-        nombre_normalizado = self._normalizar_nombre_equipo(nombre_equipo)
-        
-        # Verificar caché de jugadores
+        jugadores = []
+        # Buscar en caché primero
         with _cache_lock:
             cache_entry = _cached_data["jugadores"]
-            if time.time() - cache_entry["timestamp"] < CACHE_EXPIRY and nombre_normalizado in cache_entry["data"]:
-                return cache_entry["data"][nombre_normalizado]
+            if equipo_id in cache_entry["data"] and time.time() - cache_entry["timestamp"] < CACHE_EXPIRY:
+                return cache_entry["data"][equipo_id]
+        # Si no está en caché, buscar en las fuentes
+        if self.use_espn_api:
+            jugadores = self._get_jugadores_espn_api(equipo_id)
+        # TODO: Agregar otras fuentes si es necesario
+        # Actualizar caché
+        with _cache_lock:
+            cache_entry = _cached_data["jugadores"]
+            cache_entry["data"][equipo_id] = jugadores
+            cache_entry["timestamp"] = time.time()
+        return jugadores
+
+    def obtener_jugador_por_id(self, jugador_id: str, equipo_id: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        """
+        Obtiene un jugador por su ID (y opcionalmente equipo).
         
-        # Si no está en caché, buscar en diferentes fuentes
+        Args:
+            jugador_id: ID del jugador a buscar
+            equipo_id: ID del equipo (opcional)
+            
+        Returns:
+            Diccionario con información del jugador o None si no se encuentra
+        """
         jugadores = []
+        if equipo_id:
+            jugadores = self.obtener_jugadores_equipo(equipo_id)
+        else:
+            # Buscar en todas las fuentes si no se especifica equipo
+            # (No eficiente, pero útil para pruebas)
+            if self.use_espn_api:
+                # Buscar en ligas principales
+                for liga in ["PD", "PL", "BL1", "SA", "FL1"]:
+                    equipos = self._get_equipos_liga_espn_api(liga)
+                    for equipo in equipos:
+                        jugadores = self._get_jugadores_espn_api(equipo.get('id'))
+                        for jugador in jugadores:
+                            if str(jugador.get('id')) == str(jugador_id):
+                                return jugador
+        for jugador in jugadores:
+            if str(jugador.get('id')) == str(jugador_id):
+                return jugador
+        return None
+
+    def guardar_jugador(self, jugador_datos: Dict[str, Any], equipo_id: str) -> Dict[str, Any]:
+        """
+        Guarda un nuevo jugador en la base de datos local (por equipo).
         
-        # Lista de funciones para obtener datos de diferentes fuentes
+        Args:
+            jugador_datos: Datos del jugador
+            equipo_id: ID del equipo al que pertenece el jugador
+            
+        Returns:
+            Diccionario con resultado de la operación
+        """
+        # TODO: Implementar almacenamiento local (sqlite o archivo)
+        return {'success': False, 'error': 'No implementado'}
+
+    def actualizar_jugador(self, jugador_id: str, jugador_datos: Dict[str, Any], equipo_id: str) -> Dict[str, Any]:
+        """
+        Actualiza un jugador existente en la base de datos local (por equipo).
+        
+        Args:
+            jugador_id: ID del jugador a actualizar
+            jugador_datos: Nuevos datos del jugador
+            equipo_id: ID del equipo al que pertenece el jugador
+            
+        Returns:
+            Diccionario con resultado de la operación
+        """
+        # TODO: Implementar actualización local
+        return {'success': False, 'error': 'No implementado'}
+
+    def eliminar_jugador(self, jugador_id: str, equipo_id: str) -> Dict[str, Any]:
+        """
+        Elimina un jugador de la base de datos local (por equipo).
+        
+        Args:
+            jugador_id: ID del jugador a eliminar
+            equipo_id: ID del equipo del que se eliminará el jugador
+            
+        Returns:
+            Diccionario con resultado de la operación
+        """
+        # TODO: Implementar eliminación local
+        return {'success': False, 'error': 'No implementado'}
+
+    def importar_jugadores(self, jugadores: List[Dict[str, Any]], equipo_id: str, sobrescribir: bool = False) -> Dict[str, Any]:
+        """
+        Importa una lista de jugadores a la base de datos local (por equipo).
+        
+        Args:
+            jugadores: Lista de jugadores a importar
+            equipo_id: ID del equipo al que pertenecen los jugadores
+            sobrescribir: Si es True, sobrescribe jugadores existentes con el mismo ID o nombre
+            
+        Returns:
+            Diccionario con resultado de la operación
+        """
+        # TODO: Implementar importación local
+        return {'success': False, 'error': 'No implementado'}
+
+    def _get_jugadores_espn_api(self, equipo_id: str) -> List[Dict[str, Any]]:
+        """
+        Obtiene jugadores de un equipo usando ESPN API.
+        """
+        try:
+            espn = ESPNAPI()
+            return espn.fetch_players(team_id=equipo_id)
+        except Exception as e:
+            logger.error(f"Error obteniendo jugadores ESPN API: {e}")
+            return []
+
+    # --- Métodos para equipos ---
+    def obtener_equipos_liga(self, liga: str) -> List[Dict[str, Any]]:
+        """
+        Obtiene todos los equipos de una liga específica.
+        
+        Args:
+            liga: Nombre de la liga
+            
+        Returns:
+            Lista de equipos de la liga
+        """
+        equipos = []
+        
+        # Buscar en caché primero
+        with _cache_lock:
+            cache_entry = _cached_data["equipos"]
+            if time.time() - cache_entry["timestamp"] < CACHE_EXPIRY:
+                equipos = [e for e in cache_entry["data"] if e.get('liga', '').lower() == liga.lower()]
+                if equipos:
+                    return equipos
+        
+        # Si no hay datos en caché, buscar en todas las fuentes configuradas
         source_functions = []
         
         if self.use_football_data_api:
-            source_functions.append(lambda: self._get_jugadores_football_data_api(nombre_equipo))
+            source_functions.append(lambda: self._get_equipos_liga_football_data_api(liga))
         
         if self.use_espn_data:
-            source_functions.append(lambda: self._get_jugadores_espn(nombre_equipo))
+            source_functions.append(lambda: self._get_equipos_liga_espn(liga))
             
         if self.use_espn_api:
-            source_functions.append(lambda: self._get_jugadores_espn_api(nombre_equipo))
+            source_functions.append(lambda: self._get_equipos_liga_espn_api(liga))
+            
+        if self.use_open_football:
+            source_functions.append(lambda: self._get_equipos_liga_open_football(liga))
         
         # Ejecutar en paralelo
         with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -289,1169 +442,836 @@ class UnifiedDataAdapter:
                 try:
                     result = future.result()
                     if result:
-                        jugadores.extend(result)
+                        for equipo in result:
+                            # Evitar duplicados por nombre
+                            if not any(e.get('nombre', '').lower() == equipo.get('nombre', '').lower() for e in equipos):
+                                equipos.append(equipo)
                 except Exception as e:
-                    logger.error(f"Error al obtener jugadores del equipo {nombre_equipo}: {e}")
+                    logger.error(f"Error al obtener equipos de la liga {liga}: {e}")
         
-        # Eliminar duplicados basados en nombre
-        jugadores = self._eliminar_duplicados_jugadores(jugadores)
+        # Actualizar caché
+        if equipos:
+            with _cache_lock:
+                cache_equipos = _cached_data["equipos"]["data"]
+                for equipo in equipos:
+                    # Reemplazar o añadir equipos
+                    for i, eq in enumerate(cache_equipos):
+                        if eq.get('nombre', '').lower() == equipo.get('nombre', '').lower():
+                            cache_equipos[i] = equipo
+                            break
+                    else:
+                        cache_equipos.append(equipo)
+                _cached_data["equipos"] = {"timestamp": time.time(), "data": cache_equipos}
         
-        # Almacenar en caché
-        with _cache_lock:
-            jugadores_cache = _cached_data["jugadores"]["data"]
-            jugadores_cache[nombre_normalizado] = jugadores
-            _cached_data["jugadores"] = {"timestamp": time.time(), "data": jugadores_cache}
-        
-        return jugadores
+        return equipos
     
-    def obtener_arbitros(self) -> List[Dict[str, Any]]:
+    def obtener_equipo_por_id(self, equipo_id: str) -> Optional[Dict[str, Any]]:
         """
-        Obtiene la lista de árbitros disponibles.
-        
-        Returns:
-            Lista de árbitros con sus datos
-        """
-        cache_key = "arbitros"
-        
-        # Verificar caché
-        with _cache_lock:
-            cache_entry = _cached_data[cache_key]
-            if time.time() - cache_entry["timestamp"] < CACHE_EXPIRY:
-                return cache_entry["data"]
-        
-        # Si no hay caché válido, obtener datos frescos
-        arbitros = []
-        
-        # Esta información es más difícil de obtener de fuentes gratuitas
-        # Intentar con football-data.org primero
-        if self.use_football_data_api:
-            arbitros = self._get_arbitros_football_data_api()
-        
-        # Si no hay datos, intentar con World Football Data
-        if not arbitros and self.use_world_football:
-            arbitros = self._get_arbitros_world_football()
-        
-        # Si seguimos sin datos, generar algunos de ejemplo
-        if not arbitros:
-            arbitros = self._get_arbitros_ejemplo()
-        
-        # Almacenar en caché
-        with _cache_lock:
-            _cached_data[cache_key] = {"timestamp": time.time(), "data": arbitros}
-        
-        return arbitros
-    
-    def obtener_historial_arbitro(self, nombre_arbitro: str, equipo: Optional[str] = None) -> Dict[str, Any]:
-        """
-        Obtiene el historial de un árbitro, opcionalmente filtrado por equipo.
+        Obtiene un equipo por su ID.
         
         Args:
-            nombre_arbitro: Nombre del árbitro
-            equipo: Nombre del equipo para filtrar (opcional)
+            equipo_id: ID del equipo a buscar
             
         Returns:
-            Diccionario con estadísticas del árbitro
+            Diccionario con información del equipo o None si no se encuentra
         """
-        # Esta función es compleja y requiere datos de partidos históricos
-        # Primero obtener partidos históricos
-        partidos_df = self.obtener_partidos_historicos_dataframe()
-        
-        # Filtrar por árbitro si hay columna de árbitro
-        if 'arbitro' in partidos_df.columns:
-            # Normalizar nombre para búsqueda
-            nombre_normalizado = self._normalizar_nombre(nombre_arbitro)
-            
-            # Buscar partidos con este árbitro
-            partidos_arbitro = partidos_df[partidos_df['arbitro'].apply(
-                lambda x: self._normalizar_nombre(str(x)) == nombre_normalizado if pd.notna(x) else False
-            )]
-            
-            # Si no hay partidos, devolver estadísticas vacías
-            if len(partidos_arbitro) == 0:
-                return {
-                    'nombre': nombre_arbitro,
-                    'partidos': 0,
-                    'tarjetas_amarillas': 0,
-                    'tarjetas_rojas': 0,
-                    'estadisticas_equipos': {}
-                }
-            
-            # Filtrar por equipo si se especifica
-            estadisticas_equipo = {}
-            if equipo and not partidos_arbitro.empty:
-                nombre_equipo_normalizado = self._normalizar_nombre_equipo(equipo)
-                
-                # Partidos donde este equipo es local
-                partidos_local = partidos_arbitro[partidos_arbitro['equipo_local'].apply(
-                    lambda x: self._normalizar_nombre_equipo(x) == nombre_equipo_normalizado if pd.notna(x) else False
-                )]
-                
-                # Partidos donde este equipo es visitante
-                partidos_visitante = partidos_arbitro[partidos_arbitro['equipo_visitante'].apply(
-                    lambda x: self._normalizar_nombre_equipo(x) == nombre_equipo_normalizado if pd.notna(x) else False
-                )]
-                
-                # Calcular estadísticas para este equipo
-                partidos_total = len(partidos_local) + len(partidos_visitante)
-                
-                if partidos_total > 0:
-                    # Contar victorias, empates, derrotas
-                    victorias = 0
-                    empates = 0
-                    derrotas = 0
-                    
-                    for _, partido in partidos_local.iterrows():
-                        if partido['goles_local'] > partido['goles_visitante']:
-                            victorias += 1
-                        elif partido['goles_local'] == partido['goles_visitante']:
-                            empates += 1
-                        else:
-                            derrotas += 1
-                    
-                    for _, partido in partidos_visitante.iterrows():
-                        if partido['goles_visitante'] > partido['goles_local']:
-                            victorias += 1
-                        elif partido['goles_visitante'] == partido['goles_local']:
-                            empates += 1
-                        else:
-                            derrotas += 1
-                    
-                    estadisticas_equipo = {
-                        'partidos': partidos_total,
-                        'victorias': victorias,
-                        'empates': empates,
-                        'derrotas': derrotas,
-                        'efectividad': round((victorias * 3 + empates) / (partidos_total * 3) * 100, 2)
-                    }
-            
-            # Calcular estadísticas generales
-            tarjetas_amarillas = 0
-            tarjetas_rojas = 0
-            
-            # Contar tarjetas si existen esas columnas
-            if 'tarjetas_amarillas_local' in partidos_arbitro.columns:
-                tarjetas_amarillas += partidos_arbitro['tarjetas_amarillas_local'].sum()
-            
-            if 'tarjetas_amarillas_visitante' in partidos_arbitro.columns:
-                tarjetas_amarillas += partidos_arbitro['tarjetas_amarillas_visitante'].sum()
-            
-            if 'tarjetas_rojas_local' in partidos_arbitro.columns:
-                tarjetas_rojas += partidos_arbitro['tarjetas_rojas_local'].sum()
-            
-            if 'tarjetas_rojas_visitante' in partidos_arbitro.columns:
-                tarjetas_rojas += partidos_arbitro['tarjetas_rojas_visitante'].sum()
-            
-            # Crear resultado
-            resultado = {
-                'nombre': nombre_arbitro,
-                'partidos': len(partidos_arbitro),
-                'tarjetas_amarillas_promedio': round(tarjetas_amarillas / len(partidos_arbitro), 2) if len(partidos_arbitro) > 0 else 0,
-                'tarjetas_rojas_promedio': round(tarjetas_rojas / len(partidos_arbitro), 2) if len(partidos_arbitro) > 0 else 0
-            }
-            
-            if estadisticas_equipo:
-                resultado['estadisticas_equipo'] = estadisticas_equipo
-            
-            return resultado
-        
-        # Si no hay datos de árbitros, devolver estadísticas simuladas
-        if equipo:
-            return self._get_historial_arbitro_ejemplo(nombre_arbitro, equipo)
-        else:
-            return self._get_historial_arbitro_ejemplo(nombre_arbitro)
-    
-    def obtener_partidos_historicos_dataframe(self) -> pd.DataFrame:
-        """
-        Obtiene un DataFrame con partidos históricos de todas las fuentes disponibles.
-        
-        Returns:
-            DataFrame con partidos históricos
-        """
-        cache_key = "partidos_historicos"
-        
-        # Verificar caché
+        # Buscar en caché primero
         with _cache_lock:
-            cache_entry = _cached_data[cache_key]
-            if time.time() - cache_entry["timestamp"] < CACHE_EXPIRY and not cache_entry["data"].empty:
-                return cache_entry["data"]
+            cache_entry = _cached_data["equipos"]
+            if time.time() - cache_entry["timestamp"] < CACHE_EXPIRY:
+                for equipo in cache_entry["data"]:
+                    if str(equipo.get('id', '')) == str(equipo_id):
+                        return equipo
         
-        # Si no hay caché válido, obtener datos frescos
-        dataframes = []
-        
-        # World Football Data (mejor para datos históricos)
-        if self.use_world_football:
-            df = self._get_partidos_historicos_world_football()
-            if df is not None and not df.empty:
-                dataframes.append(df)
-        
-        # Football-data.org API
-        if self.use_football_data_api:
-            df = self._get_partidos_historicos_football_data_api()
-            if df is not None and not df.empty:
-                dataframes.append(df)
-        
-        # Open Football Data
-        if self.use_open_football:
-            df = self._get_partidos_historicos_open_football()
-            if df is not None and not df.empty:
-                dataframes.append(df)
-        
-        # Si no hay datos, crear DataFrame vacío con estructura correcta
-        if not dataframes:
-            columns = ['fecha', 'temporada', 'liga', 'equipo_local', 'equipo_visitante', 
-                      'goles_local', 'goles_visitante', 'arbitro']
-            df_final = pd.DataFrame(columns=columns)
-        else:
-            # Combinar todos los DataFrames
-            df_final = pd.concat(dataframes, ignore_index=True)
-            
-            # Eliminar duplicados
-            if not df_final.empty:
-                # Asegurarse de que las columnas clave existan
-                key_columns = ['fecha', 'equipo_local', 'equipo_visitante']
-                existing_columns = [col for col in key_columns if col in df_final.columns]
-                
-                if len(existing_columns) == len(key_columns):
-                    df_final = df_final.drop_duplicates(subset=key_columns)
-        
-        # Almacenar en caché
-        with _cache_lock:
-            _cached_data[cache_key] = {"timestamp": time.time(), "data": df_final}
-        
-        return df_final
-    
-    #
-    # Métodos privados para las diferentes fuentes de datos
-    #
-    
-    def _get_proximos_partidos_football_data_api(self) -> List[Dict[str, Any]]:
-        """Obtiene próximos partidos desde Football-Data.org API."""
+        # Si no está en caché, buscar en la base de datos local
         try:
-            # Definir URL para próximos partidos
-            url = "https://api.football-data.org/v4/matches"
-            
-            # Definir fechas (próximos 7 días por defecto)
-            date_from = datetime.now().strftime('%Y-%m-%d')
-            date_to = (datetime.now() + timedelta(days=7)).strftime('%Y-%m-%d')
-            
-            # Parámetros de la petición
-            params = {
-                'dateFrom': date_from,
-                'dateTo': date_to,
-                'status': 'SCHEDULED'
-            }
-            
-            # Headers con API key
-            headers = {'X-Auth-Token': self.football_data_api_key}
-            
-            # Realizar petición
-            response = requests.get(url, params=params, headers=headers)
-            
-            if response.status_code == 200:
-                data = response.json()
-                matches = data.get('matches', [])
+            db_path = os.path.join(self.cache_dir, 'equipos_db.sqlite')
+            if os.path.exists(db_path):
+                conn = sqlite3.connect(db_path)
+                conn.row_factory = sqlite3.Row
+                cursor = conn.cursor()
                 
-                # Convertir a formato estándar
-                resultado = []
-                for match in matches:
-                    partido = {
-                        'id': str(match.get('id', '')),
-                        'fecha': match.get('utcDate', ''),
-                        'liga': match.get('competition', {}).get('name', ''),
-                        'equipo_local': match.get('homeTeam', {}).get('name', ''),
-                        'equipo_visitante': match.get('awayTeam', {}).get('name', ''),
-                        'estadio': match.get('venue', 'Por determinar'),
-                        'arbitro': match.get('referees', [{}])[0].get('name', 'Por determinar') if match.get('referees') else 'Por determinar',
-                        'estado': match.get('status', 'SCHEDULED'),
-                        'fuente': 'football-data.org'
-                    }
-                    resultado.append(partido)
+                cursor.execute("SELECT * FROM equipos WHERE id = ?", (equipo_id,))
+                row = cursor.fetchone()
                 
-                logger.info(f"Se obtuvieron {len(resultado)} partidos próximos desde Football-Data.org")
-                return resultado
-            else:
-                logger.warning(f"Error al obtener partidos desde Football-Data.org: {response.status_code}")
-                return []
+                if row:
+                    equipo = dict(row)
+                    conn.close()
+                    return equipo
                 
+                conn.close()
         except Exception as e:
-            logger.error(f"Error al obtener próximos partidos desde Football-Data.org: {e}")
-            return []
-    
-    def _get_proximos_partidos_open_football(self) -> List[Dict[str, Any]]:
-        """Obtiene próximos partidos desde Open Football Data."""
-        # Esta fuente no tiene datos de próximos partidos, solo históricos
-        # Implementación simulada para demostración
-        return []
-    
-    def _get_proximos_partidos_espn(self) -> List[Dict[str, Any]]:
-        """Obtiene próximos partidos desde ESPN."""
-        # En un entorno real, esto implementaría web scraping de ESPN
-        # Simulación para demostración
-        ligas = ["LaLiga", "Premier League", "Serie A", "Bundesliga", "Ligue 1"]
-        equipos = {
-            "LaLiga": ["Real Madrid", "Barcelona", "Atlético Madrid", "Sevilla", "Valencia"],
-            "Premier League": ["Manchester City", "Liverpool", "Arsenal", "Manchester United", "Chelsea"],
-            "Serie A": ["Inter", "Milan", "Juventus", "Napoli", "Roma"],
-            "Bundesliga": ["Bayern Munich", "Dortmund", "Leipzig", "Leverkusen", "Frankfurt"],
-            "Ligue 1": ["PSG", "Marseille", "Monaco", "Lyon", "Lille"]
-        }
-        estadios = {
-            "Real Madrid": "Santiago Bernabéu",
-            "Barcelona": "Camp Nou",
-            "Atlético Madrid": "Metropolitano",
-            "Sevilla": "Ramón Sánchez Pizjuán",
-            "Valencia": "Mestalla",
-            "Manchester City": "Etihad Stadium",
-            "Liverpool": "Anfield",
-            "Arsenal": "Emirates Stadium",
-            "Manchester United": "Old Trafford",
-            "Chelsea": "Stamford Bridge",
-            "Inter": "San Siro",
-            "Milan": "San Siro",
-            "Juventus": "Allianz Stadium",
-            "Napoli": "Diego Armando Maradona",
-            "Roma": "Olímpico de Roma",
-            "Bayern Munich": "Allianz Arena",
-            "Dortmund": "Signal Iduna Park",
-            "Leipzig": "Red Bull Arena",
-            "Leverkusen": "BayArena",
-            "Frankfurt": "Deutsche Bank Park",
-            "PSG": "Parc des Princes",
-            "Marseille": "Vélodrome",
-            "Monaco": "Louis II",
-            "Lyon": "Groupama Stadium",
-            "Lille": "Pierre-Mauroy"
-        }
-        arbitros = ["Mateu Lahoz", "Michael Oliver", "Daniele Orsato", "Felix Brych", "Clément Turpin"]
+            logger.error(f"Error al buscar equipo en base de datos: {e}")
         
-        resultado = []
-        
-        # Generar partidos para los próximos 10 días
-        for i in range(1, 11):
-            fecha = datetime.now() + timedelta(days=i)
-            
-            # Decidir aleatoriamente si hay partidos este día
-            if random.random() < 0.7:  # 70% de probabilidad
-                # Número aleatorio de partidos para este día (1-5)
-                num_partidos = random.randint(1, 5)
+        # Como último recurso, intentar obtener el equipo de las fuentes
+        if self.use_football_data_api and equipo_id.startswith('fd-'):
+            equipo = self._get_equipo_por_id_football_data_api(equipo_id)
+            if equipo:
+                return equipo
                 
-                for _ in range(num_partidos):
-                    # Seleccionar liga aleatoria
-                    liga = random.choice(ligas)
-                    
-                    # Seleccionar equipos aleatorios sin repetir
-                    equipos_liga = equipos[liga].copy()
-                    local = random.choice(equipos_liga)
-                    equipos_liga.remove(local)
-                    visitante = random.choice(equipos_liga)
-                    
-                    # Crear partido
-                    partido = {
-                        'id': f"espn-{fecha.strftime('%Y%m%d')}-{local.replace(' ', '')}-{visitante.replace(' ', '')}",
-                        'fecha': fecha.strftime('%Y-%m-%dT%H:%M:%SZ').replace('Z', ''),
-                        'liga': liga,
-                        'equipo_local': local,
-                        'equipo_visitante': visitante,
-                        'estadio': estadios.get(local, 'Estadio local'),
-                        'arbitro': random.choice(arbitros),
-                        'estado': 'SCHEDULED',
-                        'fuente': 'espn'
-                    }
-                    resultado.append(partido)
-        
-        logger.info(f"Se generaron {len(resultado)} partidos próximos simulados desde ESPN")
-        return resultado
-    
-    def _get_proximos_partidos_espn_api(self) -> List[Dict[str, Any]]:
-        """Obtiene próximos partidos desde la API no oficial de ESPN."""
-        try:
-            # Inicializar el adaptador de ESPN API
-            espn_api = ESPNAPI()
-            
-            # Lista de códigos de liga a consultar
-            ligas = ["PD", "PL", "BL1", "SA", "FL1"]
-            
-            # Calcular fechas desde hoy hasta 14 días después
-            fecha_inicio = datetime.now().strftime('%Y-%m-%d')
-            fecha_fin = (datetime.now() + timedelta(days=14)).strftime('%Y-%m-%d')
-            
-            resultados = []
-            
-            # Obtener próximos partidos para cada liga
-            for liga in ligas:
-                try:
-                    partidos = espn_api.fetch_matches(league=liga, date_from=fecha_inicio, date_to=fecha_fin)
-                    if partidos:
-                        resultados.extend(partidos)
-                except Exception as e:
-                    logger.warning(f"Error al obtener partidos de la liga {liga} desde ESPN API: {str(e)}")
-            
-            logger.info(f"Obtenidos {len(resultados)} próximos partidos desde ESPN API")
-            return resultados
-            
-        except Exception as e:
-            logger.error(f"Error al obtener próximos partidos desde ESPN API: {str(e)}")
-            return []
-    
-    def _get_equipo_football_data_api(self, nombre_equipo: str) -> Dict[str, Any]:
-        """Obtiene datos de un equipo desde Football-Data.org API."""
-        try:
-            # Primero necesitamos encontrar el ID del equipo
-            # Para esto, hacemos una búsqueda en las principales ligas
-            ligas_principales = ['PL', 'PD', 'SA', 'BL1', 'FL1']  # Códigos de ligas principales
-            
-            equipo_id = None
-            equipo_data = None
-            
-            # Buscar en cada liga hasta encontrar el equipo
-            for liga_codigo in ligas_principales:
-                if equipo_id:
-                    break
-                    
-                url = f"https://api.football-data.org/v4/competitions/{liga_codigo}/teams"
-                headers = {'X-Auth-Token': self.football_data_api_key}
-                
-                response = requests.get(url, headers=headers)
-                
-                if response.status_code == 200:
-                    teams = response.json().get('teams', [])
-                    
-                    # Normalizar nombre del equipo para búsqueda
-                    nombre_normalizado = self._normalizar_nombre_equipo(nombre_equipo)
-                    
-                    # Buscar equipo por nombre
-                    for team in teams:
-                        team_name = team.get('name', '')
-                        team_short_name = team.get('shortName', '')
-                        team_tla = team.get('tla', '')
-                        
-                        # Comparar con diferentes variantes del nombre
-                        if (self._normalizar_nombre_equipo(team_name) == nombre_normalizado or
-                            self._normalizar_nombre_equipo(team_short_name) == nombre_normalizado or
-                            self._normalizar_nombre_equipo(team_tla) == nombre_normalizado):
-                            equipo_id = team.get('id')
-                            equipo_data = team
-                            break
-            
-            # Si encontramos el equipo, extraer la información
-            if equipo_data:
-                return {
-                    'id': str(equipo_data.get('id', '')),
-                    'nombre': equipo_data.get('name', ''),
-                    'nombre_corto': equipo_data.get('shortName', equipo_data.get('tla', '')),
-                    'pais': equipo_data.get('area', {}).get('name', ''),
-                    'fundacion': equipo_data.get('founded', None),
-                    'estadio': equipo_data.get('venue', ''),
-                    'entrenador': '',  # No disponible en esta API
-                    'escudo_url': equipo_data.get('crest', ''),
-                    'colores': '',  # No disponible en esta API
-                    'web': equipo_data.get('website', ''),
-                    'fuente': 'football-data.org'
-                }
-            else:
-                logger.warning(f"Equipo {nombre_equipo} no encontrado en Football-Data.org")
-                return {}
-                
-        except Exception as e:
-            logger.error(f"Error al obtener datos del equipo {nombre_equipo} desde Football-Data.org: {e}")
-            return {}
-    
-    def _get_equipo_open_football(self, nombre_equipo: str) -> Dict[str, Any]:
-        """Obtiene datos de un equipo desde Open Football Data."""
-        # Esta fuente tiene datos limitados de equipos
-        # Implementación simulada para demostración
-        return {}
-    
-    def _get_equipo_espn(self, nombre_equipo: str) -> Dict[str, Any]:
-        """Obtiene datos de un equipo desde ESPN."""
-        # En un entorno real, esto implementaría web scraping de ESPN
-        # Simulación para demostración
-        equipos_ejemplo = {
-            "real madrid": {
-                'id': 'espn-83',
-                'nombre': 'Real Madrid',
-                'nombre_corto': 'Madrid',
-                'pais': 'España',
-                'fundacion': 1902,
-                'estadio': 'Santiago Bernabéu',
-                'entrenador': 'Carlo Ancelotti',
-                'escudo_url': 'https://a.espncdn.com/i/teamlogos/soccer/500/86.png',
-                'colores': 'Blanco',
-                'web': 'https://www.realmadrid.com',
-                'fuente': 'espn'
-            },
-            "barcelona": {
-                'id': 'espn-81',
-                'nombre': 'Barcelona',
-                'nombre_corto': 'Barça',
-                'pais': 'España',
-                'fundacion': 1899,
-                'estadio': 'Camp Nou',
-                'entrenador': 'Xavi Hernández',
-                'escudo_url': 'https://a.espncdn.com/i/teamlogos/soccer/500/83.png',
-                'colores': 'Azulgrana',
-                'web': 'https://www.fcbarcelona.com',
-                'fuente': 'espn'
-            }
-            # Aquí se añadirían más equipos
-        }
-        
-        # Normalizar nombre del equipo para búsqueda
-        nombre_normalizado = self._normalizar_nombre_equipo(nombre_equipo)
-        
-        # Buscar el equipo en nuestra "base de datos" simulada
-        for key, equipo in equipos_ejemplo.items():
-            if self._normalizar_nombre_equipo(key) == nombre_normalizado:
+        if self.use_espn_api and equipo_id.startswith('espn-'):
+            equipo = self._get_equipo_por_id_espn_api(equipo_id)
+            if equipo:
                 return equipo
         
-        # Si no se encuentra, devolver diccionario vacío
-        return {}
+        return None
     
-    def _get_equipo_espn_api(self, nombre_equipo: str) -> Dict[str, Any]:
-        """Obtiene datos de un equipo desde la API no oficial de ESPN."""
-        try:
-            # Inicializar el adaptador de ESPN API
-            espn_api = ESPNAPI()
-            
-            # Normalizar el nombre del equipo para búsqueda
-            nombre_normalizado = self._normalizar_nombre_equipo(nombre_equipo)
-            
-            # Lista de ligas principales para buscar
-            ligas = ["PD", "PL", "BL1", "SA", "FL1"]
-            
-            # Buscar en cada liga
-            for liga in ligas:
-                try:
-                    # Obtener todos los equipos de la liga
-                    equipos = espn_api.fetch_teams(league=liga)
-                    
-                    # Buscar por nombre normalizado
-                    for equipo in equipos:
-                        nombre_eq_norm = self._normalizar_nombre_equipo(equipo.get('nombre', ''))
-                        nombre_corto_norm = self._normalizar_nombre_equipo(equipo.get('nombre_corto', ''))
-                        
-                        if nombre_eq_norm == nombre_normalizado or nombre_corto_norm == nombre_normalizado:
-                            logger.info(f"Equipo {nombre_equipo} encontrado en liga {liga} via ESPN API")
-                            return equipo
-                            
-                except Exception as e:
-                    logger.warning(f"Error al buscar equipo en liga {liga} desde ESPN API: {str(e)}")
-            
-            logger.warning(f"Equipo {nombre_equipo} no encontrado via ESPN API")
-            return {}
-            
-        except Exception as e:
-            logger.error(f"Error al obtener datos del equipo {nombre_equipo} desde ESPN API: {str(e)}")
-            return {}
-    
-    def _get_jugadores_football_data_api(self, nombre_equipo: str) -> List[Dict[str, Any]]:
-        """Obtiene jugadores de un equipo desde Football-Data.org API."""
-        try:
-            # Primero necesitamos obtener el ID del equipo
-            equipo_info = self._get_equipo_football_data_api(nombre_equipo)
-            
-            if not equipo_info or 'id' not in equipo_info:
-                logger.warning(f"No se pudo obtener ID del equipo {nombre_equipo} para buscar jugadores")
-                return []
-            
-            equipo_id = equipo_info['id']
-            
-            # Obtener plantel del equipo
-            url = f"https://api.football-data.org/v4/teams/{equipo_id}"
-            headers = {'X-Auth-Token': self.football_data_api_key}
-            
-            response = requests.get(url, headers=headers)
-            
-            if response.status_code == 200:
-                data = response.json()
-                squad = data.get('squad', [])
-                
-                if not squad:
-                    logger.warning(f"Plantel vacío para el equipo {nombre_equipo}")
-                    return []
-                
-                # Convertir a formato estándar
-                jugadores = []
-                for player in squad:
-                    # Separar nombre y apellido
-                    nombre_completo = player.get('name', '')
-                    partes_nombre = nombre_completo.split(' ', 1)
-                    nombre = partes_nombre[0]
-                    apellido = partes_nombre[1] if len(partes_nombre) > 1 else ''
-                    
-                    jugador = {
-                        'id': str(player.get('id', '')),
-                        'nombre': nombre,
-                        'apellido': apellido,
-                        'nombre_completo': nombre_completo,
-                        'posicion': player.get('position', ''),
-                        'nacionalidad': player.get('nationality', ''),
-                        'fecha_nacimiento': player.get('dateOfBirth', ''),
-                        'dorsal': player.get('shirtNumber'),
-                        'equipo': nombre_equipo,
-                        'fuente': 'football-data.org'
-                    }
-                    jugadores.append(jugador)
-                
-                logger.info(f"Se obtuvieron {len(jugadores)} jugadores del equipo {nombre_equipo} desde Football-Data.org")
-                return jugadores
-            else:
-                logger.warning(f"Error al obtener jugadores del equipo {nombre_equipo}: {response.status_code}")
-                return []
-                
-        except Exception as e:
-            logger.error(f"Error al obtener jugadores del equipo {nombre_equipo}: {e}")
-            return []
-    
-    def _get_jugadores_espn(self, nombre_equipo: str) -> List[Dict[str, Any]]:
-        """Obtiene jugadores de un equipo desde ESPN."""
-        # Simulación para demostración
-        jugadores_ejemplo = {
-            "real madrid": [
-                {
-                    'id': 'espn-player-1',
-                    'nombre': 'Thibaut',
-                    'apellido': 'Courtois',
-                    'nombre_completo': 'Thibaut Courtois',
-                    'posicion': 'Portero',
-                    'nacionalidad': 'Bélgica',
-                    'fecha_nacimiento': '1992-05-11',
-                    'dorsal': 1,
-                    'equipo': 'Real Madrid',
-                    'fuente': 'espn'
-                },
-                {
-                    'id': 'espn-player-2',
-                    'nombre': 'Dani',
-                    'apellido': 'Carvajal',
-                    'nombre_completo': 'Dani Carvajal',
-                    'posicion': 'Defensa',
-                    'nacionalidad': 'España',
-                    'fecha_nacimiento': '1992-01-11',
-                    'dorsal': 2,
-                    'equipo': 'Real Madrid',
-                    'fuente': 'espn'
-                }
-                # Añadir más jugadores aquí
-            ],
-            "barcelona": [
-                {
-                    'id': 'espn-player-11',
-                    'nombre': 'Marc-André',
-                    'apellido': 'ter Stegen',
-                    'nombre_completo': 'Marc-André ter Stegen',
-                    'posicion': 'Portero',
-                    'nacionalidad': 'Alemania',
-                    'fecha_nacimiento': '1992-04-30',
-                    'dorsal': 1,
-                    'equipo': 'Barcelona',
-                    'fuente': 'espn'
-                },
-                {
-                    'id': 'espn-player-12',
-                    'nombre': 'Ronald',
-                    'apellido': 'Araújo',
-                    'nombre_completo': 'Ronald Araújo',
-                    'posicion': 'Defensa',
-                    'nacionalidad': 'Uruguay',
-                    'fecha_nacimiento': '1999-03-07',
-                    'dorsal': 4,
-                    'equipo': 'Barcelona',
-                    'fuente': 'espn'
-                }
-                # Añadir más jugadores aquí
-            ]
-        }
-        
-        # Normalizar nombre del equipo para búsqueda
-        nombre_normalizado = self._normalizar_nombre_equipo(nombre_equipo)
-        
-        # Buscar el equipo en nuestra "base de datos" simulada
-        for key, jugadores in jugadores_ejemplo.items():
-            if self._normalizar_nombre_equipo(key) == nombre_normalizado:
-                return jugadores
-        
-        # Si no se encuentra, devolver lista vacía
-        return []
-    
-    def _get_jugadores_espn_api(self, nombre_equipo: str) -> List[Dict[str, Any]]:
-        """Obtiene jugadores de un equipo desde la API no oficial de ESPN."""
-        try:
-            # Inicializar el adaptador de ESPN API
-            espn_api = ESPNAPI()
-            
-            # Primero necesitamos encontrar el ID del equipo
-            equipo = self._get_equipo_espn_api(nombre_equipo)
-            
-            if not equipo or 'id' not in equipo:
-                logger.warning(f"No se pudo encontrar el equipo {nombre_equipo} en ESPN API")
-                return []
-                
-            team_id = equipo['id']
-            
-            # Obtener jugadores usando el ID del equipo
-            jugadores = espn_api.fetch_players(team_id=team_id)
-            
-            if not jugadores:
-                logger.warning(f"No se encontraron jugadores para el equipo {nombre_equipo} (ID: {team_id}) en ESPN API")
-                return []
-                
-            logger.info(f"Se encontraron {len(jugadores)} jugadores para el equipo {nombre_equipo} via ESPN API")
-            return jugadores
-            
-        except Exception as e:
-            logger.error(f"Error al obtener jugadores del equipo {nombre_equipo} desde ESPN API: {str(e)}")
-            return []
-    
-    def _get_arbitros_football_data_api(self) -> List[Dict[str, Any]]:
-        """Obtiene árbitros desde Football-Data.org API."""
-        # Football-Data.org no tiene un endpoint específico para árbitros
-        # Tenemos que extraerlos de los partidos
-        try:
-            # Obtener algunos partidos recientes para extraer árbitros
-            url = "https://api.football-data.org/v4/matches"
-            headers = {'X-Auth-Token': self.football_data_api_key}
-            
-            # Fechas para últimos 30 días
-            date_from = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
-            date_to = datetime.now().strftime('%Y-%m-%d')
-            
-            params = {
-                'dateFrom': date_from,
-                'dateTo': date_to
-            }
-            
-            response = requests.get(url, params=params, headers=headers)
-            
-            if response.status_code == 200:
-                data = response.json()
-                matches = data.get('matches', [])
-                
-                # Extraer árbitros únicos
-                arbitros = {}
-                
-                for match in matches:
-                    referees = match.get('referees', [])
-                    
-                    for referee in referees:
-                        if referee.get('type') == 'REFEREE' and referee.get('id'):
-                            referee_id = referee.get('id')
-                            
-                            if referee_id not in arbitros:
-                                arbitros[referee_id] = {
-                                    'id': str(referee.get('id')),
-                                    'nombre': referee.get('name', ''),
-                                    'nacionalidad': referee.get('nationality', ''),
-                                    'fuente': 'football-data.org'
-                                }
-                
-                resultado = list(arbitros.values())
-                logger.info(f"Se obtuvieron {len(resultado)} árbitros desde Football-Data.org")
-                return resultado
-            else:
-                logger.warning(f"Error al obtener partidos para extraer árbitros: {response.status_code}")
-                return []
-                
-        except Exception as e:
-            logger.error(f"Error al obtener árbitros desde Football-Data.org: {e}")
-            return []
-    
-    def _get_arbitros_world_football(self) -> List[Dict[str, Any]]:
-        """Obtiene árbitros desde World Football Data."""
-        # Implementación simulada para demostración
-        return []
-    
-    def _get_arbitros_ejemplo(self) -> List[Dict[str, Any]]:
-        """Genera lista de árbitros de ejemplo."""
-        arbitros = [
-            {
-                'id': 'arb-1',
-                'nombre': 'Mateu Lahoz',
-                'nacionalidad': 'España',
-                'fuente': 'ejemplo'
-            },
-            {
-                'id': 'arb-2',
-                'nombre': 'Michael Oliver',
-                'nacionalidad': 'Inglaterra',
-                'fuente': 'ejemplo'
-            },
-            {
-                'id': 'arb-3',
-                'nombre': 'Daniele Orsato',
-                'nacionalidad': 'Italia',
-                'fuente': 'ejemplo'
-            },
-            {
-                'id': 'arb-4',
-                'nombre': 'Felix Brych',
-                'nacionalidad': 'Alemania',
-                'fuente': 'ejemplo'
-            },
-            {
-                'id': 'arb-5',
-                'nombre': 'Clément Turpin',
-                'nacionalidad': 'Francia',
-                'fuente': 'ejemplo'
-            }
-        ]
-        
-        logger.info("Generando lista de árbitros de ejemplo")
-        return arbitros
-    
-    def _get_historial_arbitro_ejemplo(self, nombre_arbitro: str, equipo: Optional[str] = None) -> Dict[str, Any]:
-        """Genera historial de árbitro de ejemplo."""
-        # Generar estadísticas aleatorias pero plausibles
-        partidos = random.randint(50, 200)
-        tarjetas_amarillas = random.randint(3, 6)  # Promedio por partido
-        tarjetas_rojas = round(random.uniform(0.1, 0.5), 2)  # Promedio por partido
-        
-        resultado = {
-            'nombre': nombre_arbitro,
-            'partidos': partidos,
-            'tarjetas_amarillas_promedio': tarjetas_amarillas,
-            'tarjetas_rojas_promedio': tarjetas_rojas,
-            'fuente': 'ejemplo'
-        }
-        
-        # Si se especifica equipo, añadir estadísticas para ese equipo
-        if equipo:
-            # Generar resultados aleatorios pero plausibles
-            partidos_equipo = random.randint(5, 20)
-            victorias = random.randint(1, partidos_equipo - 2)
-            empates = random.randint(1, partidos_equipo - victorias)
-            derrotas = partidos_equipo - victorias - empates
-            
-            estadisticas_equipo = {
-                'partidos': partidos_equipo,
-                'victorias': victorias,
-                'empates': empates,
-                'derrotas': derrotas,
-                'efectividad': round((victorias * 3 + empates) / (partidos_equipo * 3) * 100, 2)
-            }
-            
-            resultado['estadisticas_equipo'] = estadisticas_equipo
-        
-        logger.info(f"Generando historial de ejemplo para árbitro {nombre_arbitro}")
-        return resultado
-    
-    def _get_partidos_historicos_world_football(self) -> pd.DataFrame:
-        """Obtiene partidos históricos desde World Football Data."""
-        try:
-            # En un entorno real, esto descargaría archivos CSV
-            # Para demostración, crearemos un DataFrame con datos de ejemplo
-            data = []
-            
-            # Generar datos para las últimas 3 temporadas
-            temporadas = ['2022-2023', '2023-2024', '2024-2025']
-            ligas = ["LaLiga", "Premier League", "Serie A", "Bundesliga", "Ligue 1"]
-            equipos = {
-                "LaLiga": ["Real Madrid", "Barcelona", "Atlético Madrid", "Sevilla", "Valencia"],
-                "Premier League": ["Manchester City", "Liverpool", "Arsenal", "Manchester United", "Chelsea"],
-                "Serie A": ["Inter", "Milan", "Juventus", "Napoli", "Roma"],
-                "Bundesliga": ["Bayern Munich", "Dortmund", "Leipzig", "Leverkusen", "Frankfurt"],
-                "Ligue 1": ["PSG", "Marseille", "Monaco", "Lyon", "Lille"]
-            }
-            arbitros = ["Mateu Lahoz", "Michael Oliver", "Daniele Orsato", "Felix Brych", "Clément Turpin"]
-            
-            # Generar partidos para las temporadas
-            for temporada in temporadas:
-                # Fecha de inicio y fin de la temporada
-                if temporada == '2022-2023':
-                    inicio = datetime(2022, 8, 1)
-                    fin = datetime(2023, 5, 31)
-                elif temporada == '2023-2024':
-                    inicio = datetime(2023, 8, 1)
-                    fin = datetime(2024, 5, 31)
-                else:  # 2024-2025
-                    inicio = datetime(2024, 8, 1)
-                    fin = datetime(2025, 1, 31)  # Hasta la fecha actual
-                
-                # Para cada liga
-                for liga in ligas:
-                    equipos_liga = equipos[liga]
-                    
-                    # Generar partidos (ida y vuelta)
-                    for i in range(len(equipos_liga)):
-                        for j in range(len(equipos_liga)):
-                            if i != j:  # No juega contra sí mismo
-                                # Partido de ida
-                                fecha_ida = inicio + timedelta(days=random.randint(0, (fin - inicio).days))
-                                
-                                # Resultados aleatorios
-                                goles_local = random.randint(0, 5)
-                                goles_visitante = random.randint(0, 5)
-                                
-                                # Estadísticas adicionales
-                                tarjetas_amarillas_local = random.randint(0, 5)
-                                tarjetas_amarillas_visitante = random.randint(0, 5)
-                                tarjetas_rojas_local = random.randint(0, 1)
-                                tarjetas_rojas_visitante = random.randint(0, 1)
-                                
-                                data.append({
-                                    'fecha': fecha_ida,
-                                    'temporada': temporada,
-                                    'liga': liga,
-                                    'equipo_local': equipos_liga[i],
-                                    'equipo_visitante': equipos_liga[j],
-                                    'goles_local': goles_local,
-                                    'goles_visitante': goles_visitante,
-                                    'arbitro': random.choice(arbitros),
-                                    'tarjetas_amarillas_local': tarjetas_amarillas_local,
-                                    'tarjetas_amarillas_visitante': tarjetas_amarillas_visitante,
-                                    'tarjetas_rojas_local': tarjetas_rojas_local,
-                                    'tarjetas_rojas_visitante': tarjetas_rojas_visitante
-                                })
-            
-            # Crear DataFrame
-            df = pd.DataFrame(data)
-            logger.info(f"Generados {len(df)} partidos históricos simulados")
-            return df
-            
-        except Exception as e:
-            logger.error(f"Error al obtener partidos históricos desde World Football Data: {e}")
-            return pd.DataFrame()
-    
-    def _get_partidos_historicos_football_data_api(self) -> pd.DataFrame:
-        """Obtiene partidos históricos desde Football-Data.org API."""
-        try:
-            # La API tiene límites estrictos, obtendremos solo algunos partidos recientes
-            url = "https://api.football-data.org/v4/matches"
-            headers = {'X-Auth-Token': self.football_data_api_key}
-            
-            # Fechas para últimos 30 días
-            date_from = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
-            date_to = datetime.now().strftime('%Y-%m-%d')
-            
-            params = {
-                'dateFrom': date_from,
-                'dateTo': date_to,
-                'status': 'FINISHED'
-            }
-            
-            response = requests.get(url, params=params, headers=headers)
-            
-            if response.status_code == 200:
-                data = response.json()
-                matches = data.get('matches', [])
-                
-                # Convertir a formato de DataFrame
-                partidos_data = []
-                
-                for match in matches:
-                    arbitro = None
-                    for referee in match.get('referees', []):
-                        if referee.get('type') == 'REFEREE':
-                            arbitro = referee.get('name')
-                            break
-                    
-                    partido = {
-                        'fecha': datetime.fromisoformat(match.get('utcDate', '').replace('Z', '+00:00')),
-                        'temporada': str(match.get('season', {}).get('startDate', '')[:4]) + '-' + 
-                                    str(match.get('season', {}).get('endDate', '')[-4:]),
-                        'liga': match.get('competition', {}).get('name', ''),
-                        'equipo_local': match.get('homeTeam', {}).get('name', ''),
-                        'equipo_visitante': match.get('awayTeam', {}).get('name', ''),
-                        'goles_local': match.get('score', {}).get('fullTime', {}).get('home'),
-                        'goles_visitante': match.get('score', {}).get('fullTime', {}).get('away'),
-                        'arbitro': arbitro
-                    }
-                    partidos_data.append(partido)
-                
-                # Crear DataFrame
-                df = pd.DataFrame(partidos_data)
-                logger.info(f"Se obtuvieron {len(df)} partidos históricos desde Football-Data.org")
-                return df
-            else:
-                logger.warning(f"Error al obtener partidos históricos: {response.status_code}")
-                return pd.DataFrame()
-                
-        except Exception as e:
-            logger.error(f"Error al obtener partidos históricos desde Football-Data.org: {e}")
-            return pd.DataFrame()
-    
-    def _get_partidos_historicos_open_football(self) -> pd.DataFrame:
-        """Obtiene partidos históricos desde Open Football Data."""
-        # Esta fuente proporciona datos en formato JSON
-        # Implementación simulada para demostración
-        return pd.DataFrame()
-    
-    def _eliminar_duplicados_partidos(self, partidos: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def guardar_equipo(self, equipo_datos: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Elimina partidos duplicados basados en equipos y fecha.
+        Guarda un nuevo equipo en la base de datos local.
         
         Args:
-            partidos: Lista de partidos que pueden contener duplicados
+            equipo_datos: Datos del equipo
             
         Returns:
-            Lista de partidos sin duplicados
+            Diccionario con resultado de la operación
         """
-        unique_dict = {}
+        try:
+            # Generar ID si no existe
+            if 'id' not in equipo_datos or not equipo_datos['id']:
+                fuente = equipo_datos.get('fuente', 'manual')
+                equipo_datos['id'] = f"{fuente}-{str(uuid.uuid4())[:8]}"
+            
+            # Validar campos requeridos
+            if not equipo_datos.get('nombre'):
+                return {'success': False, 'error': 'El nombre del equipo es obligatorio'}
+            
+            # Preparar directorio de base de datos
+            db_path = os.path.join(self.cache_dir, 'equipos_db.sqlite')
+            crear_tabla = not os.path.exists(db_path)
+            
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+            
+            # Crear tabla si no existe
+            if crear_tabla:
+                cursor.execute('''
+                CREATE TABLE IF NOT EXISTS equipos (
+                    id TEXT PRIMARY KEY,
+                    nombre TEXT NOT NULL,
+                    nombre_corto TEXT,
+                    pais TEXT,
+                    liga TEXT,
+                    fundacion INTEGER,
+                    estadio TEXT,
+                    entrenador TEXT,
+                    colores TEXT,
+                    web TEXT,
+                    escudo_url TEXT,
+                    fuente TEXT,
+                    fecha_creacion TEXT,
+                    fecha_actualizacion TEXT
+                )
+                ''')
+            
+            # Verificar si ya existe un equipo con el mismo nombre
+            cursor.execute("SELECT id FROM equipos WHERE LOWER(nombre) = LOWER(?)", 
+                           (equipo_datos.get('nombre', ''),))
+            existente = cursor.fetchone()
+            
+            if existente:
+                conn.close()
+                return {'success': False, 'error': f"Ya existe un equipo con el nombre {equipo_datos.get('nombre')}"}
+            
+            # Preparar datos para inserción
+            ahora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            equipo_datos['fecha_creacion'] = ahora
+            equipo_datos['fecha_actualizacion'] = ahora
+            
+            # Insertar equipo
+            columnas = equipo_datos.keys()
+            placeholders = ', '.join(['?'] * len(columnas))
+            columnas_str = ', '.join(columnas)
+            
+            query = f"INSERT INTO equipos ({columnas_str}) VALUES ({placeholders})"
+            cursor.execute(query, list(equipo_datos.values()))
+            
+            conn.commit()
+            conn.close()
+            
+            # Actualizar caché
+            with _cache_lock:
+                cache_equipos = _cached_data["equipos"]["data"]
+                cache_equipos.append(equipo_datos)
+                _cached_data["equipos"] = {"timestamp": time.time(), "data": cache_equipos}
+            
+            return {'success': True, 'id': equipo_datos['id']}
+            
+        except Exception as e:
+            logger.error(f"Error al guardar equipo: {e}")
+            return {'success': False, 'error': str(e)}
+    
+    def actualizar_equipo(self, equipo_id: str, equipo_datos: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Actualiza un equipo existente en la base de datos local.
+        
+        Args:
+            equipo_id: ID del equipo a actualizar
+            equipo_datos: Nuevos datos del equipo
+            
+        Returns:
+            Diccionario con resultado de la operación
+        """
+        try:
+            # Validar campos requeridos
+            if not equipo_datos.get('nombre'):
+                return {'success': False, 'error': 'El nombre del equipo es obligatorio'}
+            
+            # Preparar directorio de base de datos
+            db_path = os.path.join(self.cache_dir, 'equipos_db.sqlite')
+            if not os.path.exists(db_path):
+                return {'success': False, 'error': 'La base de datos no existe'}
+            
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+            
+            # Verificar si el equipo existe
+            cursor.execute("SELECT id FROM equipos WHERE id = ?", (equipo_id,))
+            existente = cursor.fetchone()
+            
+            if not existente:
+                conn.close()
+                return {'success': False, 'error': f"No existe un equipo con el ID {equipo_id}"}
+            
+            # Verificar si hay otro equipo con el mismo nombre (excepto este)
+            cursor.execute("SELECT id FROM equipos WHERE LOWER(nombre) = LOWER(?) AND id != ?", 
+                           (equipo_datos.get('nombre', ''), equipo_id))
+            duplicado = cursor.fetchone()
+            
+            if duplicado:
+                conn.close()
+                return {'success': False, 'error': f"Ya existe otro equipo con el nombre {equipo_datos.get('nombre')}"}
+            
+            # Preparar datos para actualización
+            equipo_datos['fecha_actualizacion'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            
+            # Actualizar equipo
+            update_cols = []
+            update_values = []
+            
+            for key, value in equipo_datos.items():
+                if key != 'id':  # No actualizamos el ID
+                    update_cols.append(f"{key} = ?")
+                    update_values.append(value)
+            
+            # Añadir ID para la condición WHERE
+            update_values.append(equipo_id)
+            
+            query = f"UPDATE equipos SET {', '.join(update_cols)} WHERE id = ?"
+            cursor.execute(query, update_values)
+            
+            conn.commit()
+            conn.close()
+            
+            # Actualizar caché
+            with _cache_lock:
+                cache_equipos = _cached_data["equipos"]["data"]
+                for i, equipo in enumerate(cache_equipos):
+                    if equipo.get('id') == equipo_id:
+                        cache_equipos[i] = equipo_datos
+                        break
+                _cached_data["equipos"] = {"timestamp": time.time(), "data": cache_equipos}
+            
+            return {'success': True}
+            
+        except Exception as e:
+            logger.error(f"Error al actualizar equipo: {e}")
+            return {'success': False, 'error': str(e)}
+    
+    def eliminar_equipo(self, equipo_id: str) -> Dict[str, Any]:
+        """
+        Elimina un equipo de la base de datos local.
+        
+        Args:
+            equipo_id: ID del equipo a eliminar
+            
+        Returns:
+            Diccionario con resultado de la operación
+        """
+        try:
+            # Preparar directorio de base de datos
+            db_path = os.path.join(self.cache_dir, 'equipos_db.sqlite')
+            if not os.path.exists(db_path):
+                return {'success': False, 'error': 'La base de datos no existe'}
+            
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+            
+            # Verificar si el equipo existe
+            cursor.execute("SELECT id FROM equipos WHERE id = ?", (equipo_id,))
+            existente = cursor.fetchone()
+            
+            if not existente:
+                conn.close()
+                return {'success': False, 'error': f"No existe un equipo con el ID {equipo_id}"}
+            
+            # Eliminar equipo
+            cursor.execute("DELETE FROM equipos WHERE id = ?", (equipo_id,))
+            
+            conn.commit()
+            conn.close()
+            
+            # Actualizar caché
+            with _cache_lock:
+                cache_equipos = _cached_data["equipos"]["data"]
+                cache_equipos = [e for e in cache_equipos if e.get('id') != equipo_id]
+                _cached_data["equipos"] = {"timestamp": time.time(), "data": cache_equipos}
+            
+            return {'success': True}
+            
+        except Exception as e:
+            logger.error(f"Error al eliminar equipo: {e}")
+            return {'success': False, 'error': str(e)}
+    
+    def importar_equipos(self, equipos: List[Dict[str, Any]], sobrescribir: bool = False) -> Dict[str, Any]:
+        """
+        Importa una lista de equipos a la base de datos local.
+        
+        Args:
+            equipos: Lista de equipos a importar
+            sobrescribir: Si es True, sobrescribe equipos existentes con el mismo ID o nombre
+            
+        Returns:
+            Diccionario con resultado de la operación
+        """
+        importados = 0
+        errores = 0
+        
+        for equipo in equipos:
+            try:
+                # Generar ID si no existe
+                if 'id' not in equipo or not equipo['id']:
+                    fuente = equipo.get('fuente', 'import')
+                    equipo['id'] = f"{fuente}-{str(uuid.uuid4())[:8]}"
+                
+                # Buscar si ya existe
+                equipo_existente = self.obtener_equipo_por_id(equipo['id'])
+                existe_por_nombre = False
+                
+                if not equipo_existente and 'nombre' in equipo:
+                    # Buscar por nombre
+                    with _cache_lock:
+                        cache_equipos = _cached_data["equipos"]["data"]
+                        for e in cache_equipos:
+                            if e.get('nombre', '').lower() == equipo['nombre'].lower():
+                                existe_por_nombre = True
+                                equipo_existente = e
+                                break
+                
+                if equipo_existente and not sobrescribir:
+                    # Saltar este equipo si ya existe y no se debe sobrescribir
+                    errores += 1
+                    continue
+                
+                if equipo_existente and sobrescribir:
+                    # Actualizar equipo existente
+                    if existe_por_nombre:
+                        equipo['id'] = equipo_existente['id']
+                    
+                    resultado = self.actualizar_equipo(equipo['id'], equipo)
+                    if resultado.get('success'):
+                        importados += 1
+                    else:
+                        errores += 1
+                else:
+                    # Crear nuevo equipo
+                    resultado = self.guardar_equipo(equipo)
+                    if resultado.get('success'):
+                        importados += 1
+                    else:
+                        errores += 1
+            
+            except Exception as e:
+                logger.error(f"Error importando equipo: {e}")
+                errores += 1
+        
+        return {
+            'success': importados > 0,
+            'importados': importados,
+            'errores': errores,
+            'total': len(equipos)
+        }
+    
+    # --- CRUD y gestión de partidos (matches) ---
+    def obtener_partidos_liga(self, liga: str, fecha_inicio: Optional[str] = None, fecha_fin: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        Obtiene todos los partidos de una liga específica en un rango de fechas.
+        """
+        partidos = []
+        if self.use_espn_api:
+            partidos = self._get_partidos_espn_api(liga, fecha_inicio, fecha_fin)
+        # TODO: Agregar otras fuentes si es necesario
+        return partidos
+
+    def obtener_partido_por_id(self, partido_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Obtiene un partido por su ID.
+        
+        Args:
+            partido_id: ID del partido a buscar
+            
+        Returns:
+            Datos del partido o None si no se encuentra
+        """
+        # Buscar en todos los partidos
+        partidos = self.obtener_partidos()
+        for partido in partidos:
+            if str(partido.get('id', '')) == str(partido_id):
+                return partido
+        
+        # Si no se encontró, intentar obtener directamente de cada fuente
+        return self._obtener_partido_por_id_directo(partido_id)
+
+    def _obtener_partido_por_id_directo(self, partido_id: str) -> Optional[Dict[str, Any]]:
+        """Intenta obtener un partido directamente de las fuentes disponibles."""
+        # ESPN API
+        if self.use_espn_api:
+            try:
+                espn_api = ESPNAPI()
+                partido = espn_api.fetch_match(partido_id)
+                if partido:
+                    return self._standardize_match(partido, 'espn_api')
+            except Exception as e:
+                logger.error(f"Error al obtener partido {partido_id} de ESPN API: {str(e)}")
+        
+        # Football Data API
+        if self.use_football_data_api:
+            try:
+                # Implementar obtención directa si la API lo soporta
+                pass
+            except Exception as e:
+                logger.error(f"Error al obtener partido {partido_id} de Football Data API: {str(e)}")
+        
+        return None
+
+    def guardar_partido(self, partido_datos: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Guarda un nuevo partido en el sistema.
+        
+        Args:
+            partido_datos: Diccionario con los datos del partido
+            
+        Returns:
+            Diccionario con el resultado de la operación
+        """
+        try:
+            # Validar datos mínimos requeridos
+            if 'equipo_local' not in partido_datos or 'equipo_visitante' not in partido_datos or 'fecha' not in partido_datos:
+                return {'success': False, 'error': 'Datos incompletos. Se requiere equipo_local, equipo_visitante y fecha.'}
+            
+            # Crear ID único si no se proporciona
+            if 'id' not in partido_datos:
+                partido_datos['id'] = str(uuid.uuid4())
+            
+            # Buscar si el partido ya existe
+            partido_existente = self.obtener_partido_por_id(partido_datos['id'])
+            if partido_existente:
+                return {'success': False, 'error': f"Ya existe un partido con ID {partido_datos['id']}"}
+            
+            # Guardar en base de datos o archivo
+            self._guardar_partido_en_bd(partido_datos)
+            
+            # Actualizar caché
+            self._actualizar_cache_partidos(partido_datos)
+            
+            return {'success': True, 'partido_id': partido_datos['id']}
+        
+        except Exception as e:
+            logger.error(f"Error al guardar partido: {str(e)}")
+            return {'success': False, 'error': str(e)}
+
+    def actualizar_partido(self, partido_id: str, partido_datos: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Actualiza un partido existente.
+        
+        Args:
+            partido_id: ID del partido a actualizar
+            partido_datos: Nuevos datos del partido
+            
+        Returns:
+            Diccionario con el resultado de la operación
+        """
+        try:
+            # Verificar que el partido existe
+            partido_existente = self.obtener_partido_por_id(partido_id)
+            if not partido_existente:
+                return {'success': False, 'error': f"No existe un partido con ID {partido_id}"}
+            
+            # Asegurarse de que el ID no cambia
+            partido_datos['id'] = partido_id
+            
+            # Actualizar en base de datos o archivo
+            self._actualizar_partido_en_bd(partido_id, partido_datos)
+            
+            # Actualizar caché
+            self._actualizar_cache_partidos(partido_datos, actualizar=True)
+            
+            return {'success': True, 'partido_id': partido_id}
+        
+        except Exception as e:
+            logger.error(f"Error al actualizar partido: {str(e)}")
+            return {'success': False, 'error': str(e)}
+
+    def eliminar_partido(self, partido_id: str) -> Dict[str, Any]:
+        """
+        Elimina un partido.
+        
+        Args:
+            partido_id: ID del partido a eliminar
+            
+        Returns:
+            Diccionario con el resultado de la operación
+        """
+        try:
+            # Verificar que el partido existe
+            partido_existente = self.obtener_partido_por_id(partido_id)
+            if not partido_existente:
+                return {'success': False, 'error': f"No existe un partido con ID {partido_id}"}
+            
+            # Eliminar de base de datos o archivo
+            self._eliminar_partido_de_bd(partido_id)
+            
+            # Actualizar caché
+            self._eliminar_partido_de_cache(partido_id)
+            
+            return {'success': True}
+        
+        except Exception as e:
+            logger.error(f"Error al eliminar partido: {str(e)}")
+            return {'success': False, 'error': str(e)}
+
+    def importar_partidos(self, partidos: List[Dict[str, Any]], sobrescribir: bool = False) -> Dict[str, Any]:
+        """
+        Importa una lista de partidos.
+        
+        Args:
+            partidos: Lista de diccionarios con datos de partidos
+            sobrescribir: Si se debe sobrescribir partidos existentes
+            
+        Returns:
+            Diccionario con resultados de la operación
+        """
+        importados = 0
+        errores = 0
         
         for partido in partidos:
-            # Crear clave única para cada partido
-            local = self._normalizar_nombre_equipo(partido.get('equipo_local', ''))
-            visitante = self._normalizar_nombre_equipo(partido.get('equipo_visitante', ''))
-            fecha = partido.get('fecha', '')
-            
-            # Asegurarse de que local siempre sea "menor" que visitante para normalizar la clave
-            if local > visitante:
-                local, visitante = visitante, local
+            try:
+                # Verificar si el partido ya existe
+                partido_existente = None
+                if 'id' in partido:
+                    partido_existente = self.obtener_partido_por_id(partido['id'])
                 
-            key = f"{local}_{visitante}_{fecha[:10]}"  # Usar solo la fecha sin hora
-            
-            # Si la clave no existe, o la fuente actual es mejor, guardar este partido
-            if key not in unique_dict or self._is_better_source(partido, unique_dict[key]):
-                unique_dict[key] = partido
+                # Si no existe o se debe sobrescribir, guardar/actualizar
+                if not partido_existente:
+                    resultado = self.guardar_partido(partido)
+                    if resultado.get('success'):
+                        importados += 1
+                    else:
+                        errores += 1
+                        logger.warning(f"Error al importar partido: {resultado.get('error')}")
+                elif sobrescribir:
+                    resultado = self.actualizar_partido(partido['id'], partido)
+                    if resultado.get('success'):
+                        importados += 1
+                    else:
+                        errores += 1
+                        logger.warning(f"Error al actualizar partido: {resultado.get('error')}")
+                
+            except Exception as e:
+                errores += 1
+                logger.error(f"Error al procesar partido durante importación: {str(e)}")
         
-        return list(unique_dict.values())
-    
-    def _eliminar_duplicados_jugadores(self, jugadores: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        return {
+            'success': importados > 0,
+            'importados': importados,
+            'errores': errores
+        }
+
+    # --- Métodos para obtener próximos partidos ---
+    def _get_proximos_partidos_football_data_api(self) -> List[Dict[str, Any]]:
         """
-        Elimina jugadores duplicados basados en nombre.
+        Obtiene próximos partidos desde Football Data API.
         
-        Args:
-            jugadores: Lista de jugadores que pueden contener duplicados
-            
         Returns:
-            Lista de jugadores sin duplicados
+            Lista de partidos en formato estándar
         """
-        unique_dict = {}
-        
-        for jugador in jugadores:
-            # Crear clave única para cada jugador
-            nombre = self._normalizar_nombre(jugador.get('nombre_completo', 
-                                            f"{jugador.get('nombre', '')} {jugador.get('apellido', '')}"))
+        if not self.football_data_api_key:
+            return []
             
-            # Si la clave no existe, o la fuente actual es mejor, guardar este jugador
-            if nombre not in unique_dict or self._is_better_source(jugador, unique_dict[nombre]):
-                unique_dict[nombre] = jugador
-        
-        return list(unique_dict.values())
-    
-    def _is_better_source(self, item1: Dict[str, Any], item2: Dict[str, Any]) -> bool:
+        try:
+            # Usar el optimizador HTTP para hacer la petición
+            url = "https://api.football-data.org/v2/matches"
+            headers = {"X-Auth-Token": self.football_data_api_key}
+            params = {"status": "SCHEDULED", "dateFrom": datetime.now().strftime("%Y-%m-%d")}
+            
+            if _http_optimizer:
+                response = _http_optimizer.get(url, headers=headers, params=params)
+            else:
+                response = requests.get(url, headers=headers, params=params)
+                
+            if response.status_code != 200:
+                logger.error(f"Error al obtener próximos partidos de Football Data API: {response.status_code}")
+                return []
+                
+            data = response.json()
+            partidos = []
+            
+            # Convertir al formato estándar
+            for match in data.get("matches", []):
+                partido = {
+                    "id": str(match.get("id", "")),
+                    "local": match.get("homeTeam", {}).get("name", ""),
+                    "visitante": match.get("awayTeam", {}).get("name", ""),
+                    "fecha": match.get("utcDate", ""),
+                    "liga": match.get("competition", {}).get("name", ""),
+                    "fuente": "football-data.org"
+                }
+                partidos.append(partido)
+                
+            return partidos
+            
+        except Exception as e:
+            logger.error(f"Error al obtener próximos partidos de Football Data API: {e}")
+            return []
+            
+    def _get_proximos_partidos_open_football(self) -> List[Dict[str, Any]]:
         """
-        Determina si la fuente del primer item es mejor que la del segundo.
+        Obtiene próximos partidos desde Open Football Data.
         
-        Args:
-            item1: Primer item para comparar
-            item2: Segundo item para comparar
-            
         Returns:
-            True si item1 tiene mejor fuente, False en caso contrario
-        """
-        # Prioridad de fuentes (de mejor a peor)
-        sources_priority = ['football-data.org', 'api-football', 'espn', 'open-football', 'world-football', 'ejemplo']
-        
-        source1 = item1.get('fuente', '')
-        source2 = item2.get('fuente', '')
-        
-        # Si ambas fuentes son iguales, mantener el primero
-        if source1 == source2:
-            return False
-        
-        # Si alguna fuente no está en la lista de prioridades, usar orden alfabético
-        if source1 not in sources_priority:
-            return False
-        if source2 not in sources_priority:
-            return True
-        
-        # Comparar prioridad
-        return sources_priority.index(source1) < sources_priority.index(source2)
-    
-    def _normalizar_nombre_equipo(self, nombre: str) -> str:
-        """
-        Normaliza el nombre de un equipo para búsqueda.
-        
-        Args:
-            nombre: Nombre del equipo a normalizar
-            
-        Returns:
-            Nombre normalizado
-        """
-        if not nombre:
-            return ""
-        
-        # Convertir a minúsculas
-        nombre = nombre.lower()
-        
-        # Eliminar acentos y caracteres especiales
-        nombre = self._eliminar_acentos(nombre)
-        
-        # Eliminar palabras comunes
-        palabras_comunes = ['fc', 'cf', 'afc', 'united', 'city']
-        for palabra in palabras_comunes:
-            nombre = re.sub(r'\b' + palabra + r'\b', '', nombre)
-        
-        # Eliminar caracteres no alfanuméricos y espacios múltiples
-        nombre = re.sub(r'[^a-z0-9\s]', '', nombre)
-        nombre = re.sub(r'\s+', ' ', nombre).strip()
-        
-        return nombre
-    
-    def _normalizar_nombre(self, nombre: str) -> str:
-        """
-        Normaliza un nombre para búsqueda.
-        
-        Args:
-            nombre: Nombre a normalizar
-            
-        Returns:
-            Nombre normalizado
-        """
-        if not nombre:
-            return ""
-        
-        # Convertir a minúsculas
-        nombre = nombre.lower()
-        
-        # Eliminar acentos y caracteres especiales
-        nombre = self._eliminar_acentos(nombre)
-        
-        # Eliminar caracteres no alfanuméricos y espacios múltiples
-        nombre = re.sub(r'[^a-z0-9\s]', '', nombre)
-        nombre = re.sub(r'\s+', ' ', nombre).strip()
-        
-        return nombre
-    
-    def _eliminar_acentos(self, texto: str) -> str:
-        """
-        Elimina acentos y caracteres diacríticos de un texto.
-        
-        Args:
-            texto: Texto a procesar
-            
-        Returns:
-            Texto sin acentos ni diacríticos
-        """
-        import unicodedata
-        
-        if not texto:
-            return ""
-        
-        # Normalizar texto
-        texto_norm = unicodedata.normalize('NFKD', texto)
-        # Eliminar diacríticos
-        return ''.join([c for c in texto_norm if not unicodedata.combining(c)])
-    
-    def _parse_fecha(self, fecha_str: str) -> datetime:
-        """
-        Convierte una cadena de fecha a objeto datetime.
-        
-        Args:
-            fecha_str: Cadena de fecha en formato ISO
-            
-        Returns:
-            Objeto datetime
+            Lista de partidos en formato estándar
         """
         try:
-            # Intentar diferentes formatos
-            if 'T' in fecha_str:
-                # Formato ISO con T
-                return datetime.fromisoformat(fecha_str.replace('Z', '+00:00'))
-            else:
-                # Formato simple YYYY-MM-DD
-                return datetime.strptime(fecha_str, '%Y-%m-%d')
-        except (ValueError, TypeError):
-            # Si hay error, devolver fecha actual
-            return datetime.now()
+            # Esta fuente requiere descargar archivos JSON de GitHub
+            # Como ejemplo, simulamos los datos
+            partidos = []
+            
+            # En una implementación real, se descargarían los datos
+            # y se procesarían
+            
+            return partidos
+            
+        except Exception as e:
+            logger.error(f"Error al obtener próximos partidos de Open Football: {e}")
+            return []
+            
+    def _get_proximos_partidos_espn(self) -> List[Dict[str, Any]]:
+        """
+        Obtiene próximos partidos desde ESPN por scraping.
+        
+        Returns:
+            Lista de partidos en formato estándar
+        """
+        try:
+            # Esta fuente requeriría scraping de páginas de ESPN
+            # Como ejemplo, simulamos los datos
+            partidos = []
+            
+            # En una implementación real, se haría scraping
+            # y se procesarían los datos
+            
+            return partidos
+            
+        except Exception as e:
+            logger.error(f"Error al obtener próximos partidos de ESPN: {e}")
+            return []
+            
+    def _get_proximos_partidos_espn_api(self) -> List[Dict[str, Any]]:
+        """
+        Obtiene próximos partidos desde ESPN API.
+        
+        Returns:
+            Lista de partidos en formato estándar
+        """
+        try:
+            # Usar el adaptador de ESPN API
+            proximos = self.espn_api.get_proximos_partidos()
+            
+            # Convertir al formato estándar si es necesario
+            partidos = []
+            for partido in proximos:
+                # Asumiendo que el adaptador ya devuelve el formato correcto
+                # o realizamos la conversión aquí si es necesario
+                partidos.append(partido)
+                
+            return partidos
+            
+        except Exception as e:
+            logger.error(f"Error al obtener próximos partidos de ESPN API: {e}")
+            return []
+            
+    # --- Métodos para obtener equipos ---
+    def _get_equipo_football_data_api(self, nombre_equipo: str) -> Dict[str, Any]:
+        """
+        Obtiene datos de un equipo desde Football Data API.
+        
+        Args:
+            nombre_equipo: Nombre del equipo a buscar
+            
+        Returns:
+            Diccionario con información del equipo
+        """
+        try:
+            # Implementación para obtener equipo desde la API
+            return {}
+        except Exception as e:
+            logger.error(f"Error al obtener equipo de Football Data API: {e}")
+            return {}
+            
+    def _get_equipo_open_football(self, nombre_equipo: str) -> Dict[str, Any]:
+        """
+        Obtiene datos de un equipo desde Open Football Data.
+        
+        Args:
+            nombre_equipo: Nombre del equipo a buscar
+            
+        Returns:
+            Diccionario con información del equipo
+        """
+        try:
+            # Implementación para obtener equipo desde Open Football
+            return {}
+        except Exception as e:
+            logger.error(f"Error al obtener equipo de Open Football: {e}")
+            return {}
+            
+    def _get_equipo_espn(self, nombre_equipo: str) -> Dict[str, Any]:
+        """
+        Obtiene datos de un equipo desde ESPN mediante scraping.
+        
+        Args:
+            nombre_equipo: Nombre del equipo a buscar
+            
+        Returns:
+            Diccionario con información del equipo
+        """
+        try:
+            # Implementación para obtener equipo desde ESPN mediante scraping
+            return {}
+        except Exception as e:
+            logger.error(f"Error al obtener equipo de ESPN: {e}")
+            return {}
+            
+    def _get_equipo_espn_api(self, nombre_equipo: str) -> Dict[str, Any]:
+        """
+        Obtiene datos de un equipo desde ESPN API.
+        
+        Args:
+            nombre_equipo: Nombre del equipo a buscar
+            
+        Returns:
+            Diccionario con información del equipo
+        """
+        try:
+            # Implementación para obtener equipo desde ESPN API
+            equipo = self.espn_api.get_equipo(nombre_equipo)
+            return equipo
+        except Exception as e:
+            logger.error(f"Error al obtener equipo de ESPN API: {e}")
+            return {}
+            
+    # --- Métodos para obtener equipos por liga ---
+    def _get_equipos_liga_football_data_api(self, liga: str) -> List[Dict[str, Any]]:
+        """
+        Obtiene equipos de una liga desde Football Data API.
+        
+        Args:
+            liga: Nombre de la liga
+            
+        Returns:
+            Lista de equipos
+        """
+        try:
+            # Implementación para obtener equipos de una liga desde la API
+            return []
+        except Exception as e:
+            logger.error(f"Error al obtener equipos de liga desde Football Data API: {e}")
+            return []
+            
+    def _get_equipos_liga_espn(self, liga: str) -> List[Dict[str, Any]]:
+        """
+        Obtiene equipos de una liga desde ESPN mediante scraping.
+        
+        Args:
+            liga: Nombre de la liga
+            
+        Returns:
+            Lista de equipos
+        """
+        try:
+            # Implementación para obtener equipos de una liga desde ESPN mediante scraping
+            return []
+        except Exception as e:
+            logger.error(f"Error al obtener equipos de liga desde ESPN: {e}")
+            return []
+            
+    def _get_equipos_liga_espn_api(self, liga: str) -> List[Dict[str, Any]]:
+        """
+        Obtiene equipos de una liga desde ESPN API.
+        
+        Args:
+            liga: Nombre de la liga
+            
+        Returns:
+            Lista de equipos
+        """
+        try:
+            # Implementación para obtener equipos de una liga desde ESPN API
+            equipos = self.espn_api.get_equipos_liga(liga)
+            return equipos
+        except Exception as e:
+            logger.error(f"Error al obtener equipos de liga desde ESPN API: {e}")
+            return []
+            
+    def _get_equipos_liga_open_football(self, liga: str) -> List[Dict[str, Any]]:
+        """
+        Obtiene equipos de una liga desde Open Football Data.
+        
+        Args:
+            liga: Nombre de la liga
+            
+        Returns:
+            Lista de equipos
+        """
+        try:
+            # Implementación para obtener equipos de una liga desde Open Football
+            return []
+        except Exception as e:
+            logger.error(f"Error al obtener equipos de liga desde Open Football: {e}")
+            return []
+            
+    # --- Métodos para obtener equipos por ID ---
+    def _get_equipo_por_id_football_data_api(self, equipo_id: str) -> Dict[str, Any]:
+        """
+        Obtiene datos de un equipo por ID desde Football Data API.
+        
+        Args:
+            equipo_id: ID del equipo a buscar
+            
+        Returns:
+            Diccionario con información del equipo
+        """
+        try:
+            # Implementación para obtener equipo por ID desde la API
+            return {}
+        except Exception as e:
+            logger.error(f"Error al obtener equipo por ID desde Football Data API: {e}")
+            return {}
+            
+    def _get_equipo_por_id_espn_api(self, equipo_id: str) -> Dict[str, Any]:
+        """
+        Obtiene datos de un equipo por ID desde ESPN API.
+        
+        Args:
+            equipo_id: ID del equipo a buscar
+            
+        Returns:
+            Diccionario con información del equipo
+        """
+        try:
+            # Implementación para obtener equipo por ID desde ESPN API
+            equipo = self.espn_api.get_equipo_por_id(equipo_id)
+            return equipo
+        except Exception as e:
+            logger.error(f"Error al obtener equipo por ID desde ESPN API: {e}")
+            return {}

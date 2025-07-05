@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Error{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">¡Ups! Ha ocurrido un error</h4>
+        <p>{{ mensaje }}</p>
+        <hr>
+        <p class="mb-0">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">Volver al inicio</a>
+            <a href="{{ url_for('explorar_db') }}" class="btn btn-secondary">Explorar base de datos</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

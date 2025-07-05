@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}Información de Árbitro: {{ arbitro.nombre }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('futuro') }}">Próximos Partidos</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ arbitro.nombre }}</li>
+        </ol>
+    </nav>
+    
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h1 class="mb-0">{{ arbitro.nombre }}</h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Estadísticas generales</h3>
+                    <table class="table">
+                        <tr>
+                            <th>Partidos dirigidos</th>
+                            <td>{{ arbitro.partidos }}</td>
+                        </tr>
+                        <tr>
+                            <th>Tarjetas amarillas por partido</th>
+                            <td>{{ arbitro.tarjetas_amarillas_promedio }}</td>
+                        </tr>
+                        <tr>
+                            <th>Tarjetas rojas por partido</th>
+                            <td>{{ arbitro.tarjetas_rojas_promedio }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            {% if equipo_filtrado %}
+            <h3>Estadísticas con {{ equipo_filtrado }}</h3>
+            {% if arbitro.estadisticas_equipo %}
+            <div class="row">
+                <div class="col-md-6">
+                    <table class="table">
+                        <tr>
+                            <th>Partidos dirigidos a {{ equipo_filtrado }}</th>
+                            <td>{{ arbitro.estadisticas_equipo.partidos }}</td>
+                        </tr>
+                        <tr>
+                            <th>Victorias</th>
+                            <td>{{ arbitro.estadisticas_equipo.victorias }}</td>
+                        </tr>
+                        <tr>
+                            <th>Empates</th>
+                            <td>{{ arbitro.estadisticas_equipo.empates }}</td>
+                        </tr>
+                        <tr>
+                            <th>Derrotas</th>
+                            <td>{{ arbitro.estadisticas_equipo.derrotas }}</td>
+                        </tr>
+                        <tr>
+                            <th>Efectividad</th>
+                            <td>{{ arbitro.estadisticas_equipo.efectividad }}%</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <canvas id="estadisticasChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                No hay datos disponibles para {{ arbitro.nombre }} con el equipo {{ equipo_filtrado }}.
+            </div>
+            {% endif %}
+            {% else %}
+            <div class="mt-4">
+                <h3>Filtrar por equipo</h3>
+                <form action="{{ url_for('vista_arbitro', nombre_arbitro=arbitro.nombre) }}" method="get" class="row g-3">
+                    <div class="col-md-8">
+                        <input type="text" name="equipo" class="form-control" placeholder="Nombre del equipo">
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary">Filtrar</button>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header bg-info text-white">
+            <h5>Acerca de los datos</h5>
+        </div>
+        <div class="card-body">
+            <p>Los datos mostrados provienen de diversas fuentes gratuitas unificadas:</p>
+            <ul>
+                <li><strong>Football-Data.org:</strong> API con límite de 10 llamadas/minuto</li>
+                <li><strong>Open Football Data:</strong> Datos abiertos en formato JSON</li>
+                <li><strong>ESPN FC:</strong> Datos obtenidos mediante scraping</li>
+                <li><strong>World Football Data:</strong> Archivos CSV con datos históricos</li>
+            </ul>
+            <p>Los datos sobre árbitros son más limitados en fuentes gratuitas y pueden incluir datos simulados o parciales.</p>
+        </div>
+    </div>
+</div>
+
+{% if arbitro.estadisticas_equipo %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('estadisticasChart').getContext('2d');
+    
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Victorias', 'Empates', 'Derrotas'],
+            datasets: [{
+                data: [
+                    {{ arbitro.estadisticas_equipo.victorias }}, 
+                    {{ arbitro.estadisticas_equipo.empates }}, 
+                    {{ arbitro.estadisticas_equipo.derrotas }}
+                ],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.7)',
+                    'rgba(54, 162, 235, 0.7)',
+                    'rgba(255, 99, 132, 0.7)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Desempeño con {{ equipo_filtrado }}'
+                }
+            }
+        }
+    });
+});
+</script>
+{% endif %}
+{% endblock %}

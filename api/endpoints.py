@@ -35,17 +35,36 @@ conversor = CSVtoJSON()
 deep_learning = DeepLearningPredictor() if DEEP_LEARNING_AVAILABLE else None
 unified_adapter = UnifiedDataAdapter()  # Nuevo adaptador unificado
 
-def inicializar_componentes():
-    """Inicializa componentes necesarios para la API"""
-    # Cargar datos históricos si existen
+def inicializar_componentes(cache_manager=None, http_optimizer=None, db_optimizer=None):
+    """
+    Inicializa componentes necesarios para la API
+    
+    Args:
+        cache_manager: Instancia de CacheManager (opcional)
+        http_optimizer: Instancia de HTTPOptimizer (opcional)
+        db_optimizer: Instancia de DBOptimizer (opcional)
+    """
+    # Utilizar cache para datos históricos si existe cache_manager
+    if cache_manager:
+        # Intentar obtener datos desde caché
+        datos = cache_manager.get('partidos_historicos')
+        if datos is not None:
+            analizador.datos = datos
+            return
+    
+    # Si no hay caché o no hay datos en caché, cargar desde archivo
     ruta_datos = os.path.join('cache', 'partidos_historicos.csv')
     if os.path.exists(ruta_datos):
         datos = data_loader.cargar_datos_csv(ruta_datos)
         analizador.datos = datos
+        
+        # Guardar en caché si existe cache_manager
+        if cache_manager:
+            cache_manager.set('partidos_historicos', datos, expiry=3600)
     else:
         analizador.datos = analizador.generar_datos_ejemplo()
     
-    # Cargar modelos predictivos
+    # Cargar modelos predictivos optimizados
     analizador.cargar_modelos()
     
     # Cargar datos de equipos si existen

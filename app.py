@@ -2,7 +2,7 @@
 Aplicación web para el Analizador Deportivo de Fútbol
 """
 
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
 import pandas as pd
 import numpy as np
 import json
@@ -27,12 +27,32 @@ from utils.data_loader import DataLoader
 from utils.visualizacion import Visualizador
 from utils.unified_data_adapter import UnifiedDataAdapter
 
+# Importar componentes de optimización
+from utils.cache_manager import CacheManager
+from utils.http_optimizer import HTTPOptimizer
+from utils.db_optimizer import DBOptimizer
+from utils.config_manager import ConfigManager
+from utils.log_manager import LogManager
+from utils.analytics_optimizer import AnalyticsOptimizer
+
 # Importar componentes de API
 from api import api_bp, inicializar_componentes
 from analisis.simulador import SimuladorPartidos
 from analisis.entidades import GestorEquipos
 
 app = Flask(__name__)
+
+# Inicializar componentes de optimización
+config_manager = ConfigManager(config_dir="config")
+cache_manager = CacheManager(cache_dir="data/cache")
+http_optimizer = HTTPOptimizer()
+db_optimizer = DBOptimizer()
+log_manager = LogManager()
+analytics_optimizer = AnalyticsOptimizer()
+
+# Configurar aplicación con optimizaciones
+app.config["SECRET_KEY"] = config_manager.get("app.secret_key", "fubol_secret_key_default")
+app.config["DEBUG"] = config_manager.get("app.debug", False)
 
 # Registrar blueprint de API
 app.register_blueprint(api_bp)
@@ -48,15 +68,20 @@ analisis_posiciones = AnalisisPosiciones()
 analisis_jugadores = AnalisisJugadoresClave()
 simulador = SimuladorPartidos(analisis_futuro)
 gestor_equipos = GestorEquipos()
-unified_adapter = UnifiedDataAdapter()  # Nuevo adaptador unificado
+# Adaptador unificado con componentes optimizados
+unified_adapter = UnifiedDataAdapter(cache_manager=cache_manager, 
+                                    http_optimizer=http_optimizer,
+                                    db_optimizer=db_optimizer)
 
 # Añadir funciones globales a Jinja2
 app.jinja_env.globals.update(max=max)
 app.jinja_env.globals.update(min=min)
 app.jinja_env.globals.update(len=len)
 
-# Inicializar componentes de API
-inicializar_componentes()
+# Inicializar componentes de API con optimizaciones
+inicializar_componentes(cache_manager=cache_manager,
+                        http_optimizer=http_optimizer,
+                        db_optimizer=db_optimizer)
 
 @app.route('/')
 def index():
@@ -1369,3 +1394,1017 @@ def importar_datos_prueba():
     except Exception as e:
         mensaje = f"Error al importar datos de prueba: {str(e)}"
         return render_template('error.html', mensaje=mensaje)
+
+@app.route('/configurar-fuentes', methods=['GET', 'POST'])
+def configurar_fuentes():
+    """Ruta para configurar las fuentes de datos y sus parámetros"""
+    if request.method == 'POST':
+        # Guardar configuración en variables de entorno
+        # ESPN API
+        os.environ['USE_ESPN_API'] = 'true' if request.form.get('use_espn_api') else 'false'
+        
+        # Football Data API
+        os.environ['USE_FOOTBALL_DATA_API'] = 'true' if request.form.get('use_football_data_api') else 'false'
+        football_data_api_key = request.form.get('football_data_api_key', '')
+        if football_data_api_key:
+            os.environ['FOOTBALL_DATA_API_KEY'] = football_data_api_key
+        
+        # ESPN Data (Scraping)
+        os.environ['USE_ESPN_DATA'] = 'true' if request.form.get('use_espn_data') else 'false'
+        os.environ['ESPN_BASE_URL'] = request.form.get('espn_base_url', 'https://www.espn.com/soccer')
+        
+        # Open Football Data
+        os.environ['USE_OPEN_FOOTBALL_DATA'] = 'true' if request.form.get('use_open_football') else 'false'
+        os.environ['OPEN_FOOTBALL_DATA_URL'] = request.form.get('open_football_url', 
+                                                             'https://github.com/openfootball/football.json')
+        
+        # World Football Data
+        os.environ['USE_WORLD_FOOTBALL'] = 'true' if request.form.get('use_world_football') else 'false'
+        os.environ['WORLD_FOOTBALL_URL'] = request.form.get('world_football_url', 
+                                                         'https://www.football-data.co.uk/data.php')
+        
+        # Configuración global
+        os.environ['DATA_FORMAT'] = request.form.get('formato_datos', 'estandar')
+        os.environ['CACHE_EXPIRY'] = str(int(float(request.form.get('duracion_cache', 1)) * 3600))
+        os.environ['CONFLICT_STRATEGY'] = request.form.get('estrategia_conflictos', 'prioridad')
+        os.environ['SAVE_RETRIEVED_DATA'] = 'true' if request.form.get('guardar_datos') else 'false'
+        
+        # Reinicializar el adaptador unificado con las nuevas configuraciones
+        global unified_adapter
+        unified_adapter = UnifiedDataAdapter()
+        
+        return render_template('configuracion_fuentes.html',
+                              mensaje="Configuración guardada correctamente.",
+                              tipo_mensaje="success",
+                              **obtener_configuracion_fuentes())
+    
+    # Método GET: mostrar configuración actual
+    return render_template('configuracion_fuentes.html', **obtener_configuracion_fuentes())
+
+@app.route('/test-fuentes')
+def test_fuentes():
+    """Probar y mostrar datos de cada fuente configurada"""
+    # Iniciar pruebas de fuentes
+    datos_prueba = {}
+    
+    # Probar ESPN API si está activa
+    if unified_adapter.use_espn_api:
+        try:
+            inicio = time.time()
+            # Obtener un equipo popular para prueba
+            equipos = unified_adapter._get_proximos_partidos_espn_api()
+            fin = time.time()
+            datos_prueba['ESPN API'] = {
+                'partidos': len(equipos) if equipos else 0,
+                'equipos': 'Disponible',
+                'jugadores': 'Disponible',
+                'tiempo': round(fin - inicio, 2),
+                'estado': 'ok'
+            }
+        except Exception as e:
+            datos_prueba['ESPN API'] = {
+                'estado': 'error',
+                'mensaje': str(e)
+            }
+    
+    # Probar Football-Data API si está activa
+    if unified_adapter.use_football_data_api:
+        try:
+            inicio = time.time()
+            partidos = unified_adapter._get_proximos_partidos_football_data_api()
+            fin = time.time()
+            datos_prueba['Football-Data.org'] = {
+                'partidos': len(partidos) if partidos else 0,
+                'equipos': 'Disponible',
+                'jugadores': 'Disponible',
+                'tiempo': round(fin - inicio, 2),
+                'estado': 'ok'
+            }
+        except Exception as e:
+            datos_prueba['Football-Data.org'] = {
+                'estado': 'error',
+                'mensaje': str(e)
+            }
+    
+    # Probar ESPN Scraping si está activo
+    if unified_adapter.use_espn_data:
+        try:
+            inicio = time.time()
+            partidos = unified_adapter._get_proximos_partidos_espn()
+            fin = time.time()
+            datos_prueba['ESPN Scraping'] = {
+                'partidos': len(partidos) if partidos else 0,
+                'equipos': 'Disponible',
+                'jugadores': 'Disponible',
+                'tiempo': round(fin - inicio, 2),
+                'estado': 'ok'
+            }
+        except Exception as e:
+            datos_prueba['ESPN Scraping'] = {
+                'estado': 'error',
+                'mensaje': str(e)
+            }
+    
+    # Probar Open Football Data si está activo
+    if unified_adapter.use_open_football:
+        try:
+            inicio = time.time()
+            partidos = unified_adapter._get_proximos_partidos_open_football()
+            fin = time.time()
+            datos_prueba['Open Football'] = {
+                'partidos': len(partidos) if partidos else 0,
+                'equipos': 'Disponible',
+                'jugadores': 'No disponible',
+                'tiempo': round(fin - inicio, 2),
+                'estado': 'ok'
+            }
+        except Exception as e:
+            datos_prueba['Open Football'] = {
+                'estado': 'error',
+                'mensaje': str(e)
+            }
+    
+    # Probar World Football Data si está activo
+    if unified_adapter.use_world_football:
+        try:
+            inicio = time.time()
+            datos = unified_adapter._get_partidos_historicos_world_football()
+            fin = time.time()
+            datos_prueba['World Football'] = {
+                'partidos': len(datos) if datos is not None and not datos.empty else 0,
+                'equipos': 'Indirecto',
+                'jugadores': 'No disponible',
+                'tiempo': round(fin - inicio, 2),
+                'estado': 'ok'
+            }
+        except Exception as e:
+            datos_prueba['World Football'] = {
+                'estado': 'error',
+                'mensaje': str(e)
+            }
+            
+    # Mostrar resultados
+    configuracion = obtener_configuracion_fuentes()
+    configuracion['datos_prueba'] = datos_prueba
+    return render_template('configuracion_fuentes.html', 
+                          mensaje="Pruebas de fuentes completadas.", 
+                          tipo_mensaje="info",
+                          **configuracion)
+
+def obtener_configuracion_fuentes():
+    """Obtener la configuración actual de fuentes para mostrar en el formulario"""
+    # Obtener métricas básicas (simuladas para este ejemplo)
+    metricas = {
+        'espn_api': {
+            'equipos': '5000+',
+            'jugadores': '10000+',
+            'partidos': '1000+'
+        },
+        'football_data_api': {
+            'equipos': '2500+',
+            'jugadores': '8000+',
+            'partidos': '800+'
+        },
+        'espn_data': {
+            'equipos': '2000+',
+            'jugadores': '5000+',
+            'partidos': '500+'
+        },
+        'open_football': {
+            'equipos': '1500+',
+            'jugadores': 'N/A',
+            'partidos': '3000+'
+        },
+        'world_football': {
+            'equipos': '1000+',
+            'jugadores': 'N/A',
+            'partidos': '5000+'
+        }
+    }
+    
+    # Devolver la configuración actual
+    return {
+        'use_espn_api': unified_adapter.use_espn_api,
+        'use_football_data_api': unified_adapter.use_football_data_api,
+        'football_data_api_key': unified_adapter.football_data_api_key,
+        'use_espn_data': unified_adapter.use_espn_data,
+        'espn_base_url': unified_adapter.espn_base_url,
+        'use_open_football': unified_adapter.use_open_football,
+        'open_football_url': unified_adapter.open_football_url,
+        'use_world_football': unified_adapter.use_world_football,
+        'world_football_url': unified_adapter.world_football_url,
+        'formato_datos': os.environ.get('DATA_FORMAT', 'estandar'),
+        'duracion_cache': float(os.environ.get('CACHE_EXPIRY', 3600)) / 3600,
+        'estrategia_conflictos': os.environ.get('CONFLICT_STRATEGY', 'prioridad'),
+        'guardar_datos': os.environ.get('SAVE_RETRIEVED_DATA', 'true').lower() == 'true',
+        'metricas': metricas
+    }
+
+@app.route('/datos-equipos')
+def datos_equipos():
+    """Vista para gestionar datos de equipos con filtrado y edición"""
+    # Obtener parámetros de filtrado
+    search = request.args.get('search', '')
+    liga = request.args.get('liga', '')
+    source = request.args.get('source', '')
+    pagina = int(request.args.get('pagina', 1))
+    items_por_pagina = 12  # Equipos por página
+    
+    # Obtener todos los equipos disponibles
+    with _cache_lock:
+        cache_entry = _cached_data["equipos"]
+        if time.time() - cache_entry["timestamp"] < CACHE_EXPIRY:
+            todos_equipos = cache_entry["data"]
+        else:
+            # Si no hay datos en caché o están expirados, obtener equipos de ligas principales
+            ligas_principales = ["LaLiga", "Premier League", "Serie A", "Bundesliga", "Ligue 1", 
+                              "Champions League", "Europa League"]
+            todos_equipos = []
+            
+            for liga_nombre in ligas_principales:
+                equipos_liga = unified_adapter.obtener_equipos_liga(liga_nombre)
+                for equipo in equipos_liga:
+                    # Evitar duplicados por ID
+                    if not any(e.get('id') == equipo.get('id') for e in todos_equipos):
+                        todos_equipos.append(equipo)
+    
+    # Aplicar filtros si es necesario
+    equipos_filtrados = todos_equipos
+    
+    if search:
+        equipos_filtrados = [e for e in equipos_filtrados if search.lower() in e.get('nombre', '').lower()]
+    
+    if liga:
+        equipos_filtrados = [e for e in equipos_filtrados if liga.lower() == e.get('liga', '').lower()]
+    
+    if source:
+        equipos_filtrados = [e for e in equipos_filtrados if source.lower() in e.get('fuente', '').lower()]
+    
+    # Calcular paginación
+    total_equipos = len(equipos_filtrados)
+    total_paginas = (total_equipos + items_por_pagina - 1) // items_por_pagina
+    
+    # Asegurar que la página sea válida
+    if pagina < 1:
+        pagina = 1
+    elif pagina > total_paginas and total_paginas > 0:
+        pagina = total_paginas
+    
+    # Obtener equipos para la página actual
+    inicio = (pagina - 1) * items_por_pagina
+    fin = min(inicio + items_por_pagina, total_equipos)
+    equipos_pagina = equipos_filtrados[inicio:fin]
+    
+    # Obtener lista de ligas para filtrado
+    ligas = sorted(list(set(e.get('liga', '') for e in todos_equipos if e.get('liga'))))
+    
+    # Renderizar plantilla
+    return render_template('datos_equipos.html',
+                          equipos=equipos_pagina,
+                          total_equipos=total_equipos,
+                          pagina=pagina,
+                          total_paginas=total_paginas,
+                          search=search,
+                          liga=liga,
+                          source=source)
+
+@app.route('/crear-equipo', methods=['POST'])
+def crear_equipo():
+    """Crear un nuevo equipo"""
+    try:
+        # Obtener datos del formulario
+        equipo_datos = {
+            'nombre': request.form.get('nombre'),
+            'nombre_corto': request.form.get('nombre_corto'),
+            'pais': request.form.get('pais'),
+            'liga': request.form.get('liga'),
+            'fundacion': request.form.get('fundacion'),
+            'estadio': request.form.get('estadio'),
+            'entrenador': request.form.get('entrenador'),
+            'colores': request.form.get('colores'),
+            'web': request.form.get('web'),
+            'escudo_url': request.form.get('escudo_url'),
+            'fuente': request.form.get('fuente', 'manual')
+        }
+        
+        # Guardar equipo
+        resultado = unified_adapter.guardar_equipo(equipo_datos)
+        
+        if resultado.get('success'):
+            mensaje = f"Equipo {equipo_datos['nombre']} creado correctamente."
+            tipo_mensaje = "success"
+        else:
+            mensaje = f"Error al crear equipo: {resultado.get('error', 'Error desconocido')}"
+            tipo_mensaje = "danger"
+    
+    except Exception as e:
+        mensaje = f"Error al crear equipo: {str(e)}"
+        tipo_mensaje = "danger"
+    
+    # Redirigir a la página de equipos con mensaje
+    flash(mensaje, tipo_mensaje)
+    return redirect(url_for('datos_equipos'))
+
+@app.route('/editar-equipo', methods=['POST'])
+def editar_equipo():
+    """Editar un equipo existente"""
+    try:
+        # Obtener datos del formulario
+        equipo_id = request.form.get('id')
+        equipo_datos = {
+            'id': equipo_id,
+            'nombre': request.form.get('nombre'),
+            'nombre_corto': request.form.get('nombre_corto'),
+            'pais': request.form.get('pais'),
+            'liga': request.form.get('liga'),
+            'fundacion': request.form.get('fundacion'),
+            'estadio': request.form.get('estadio'),
+            'entrenador': request.form.get('entrenador'),
+            'colores': request.form.get('colores'),
+            'web': request.form.get('web'),
+            'escudo_url': request.form.get('escudo_url'),
+            'fuente': request.form.get('fuente', 'manual')
+        }
+        
+        # Actualizar equipo
+        resultado = unified_adapter.actualizar_equipo(equipo_id, equipo_datos)
+        
+        if resultado.get('success'):
+            mensaje = f"Equipo {equipo_datos['nombre']} actualizado correctamente."
+            tipo_mensaje = "success"
+        else:
+            mensaje = f"Error al actualizar equipo: {resultado.get('error', 'Error desconocido')}"
+            tipo_mensaje = "danger"
+    
+    except Exception as e:
+        mensaje = f"Error al actualizar equipo: {str(e)}"
+        tipo_mensaje = "danger"
+    
+    # Redirigir a la página de equipos con mensaje
+    flash(mensaje, tipo_mensaje)
+    return redirect(url_for('datos_equipos'))
+
+@app.route('/eliminar-equipo', methods=['POST'])
+def eliminar_equipo():
+    """Eliminar un equipo"""
+    try:
+        equipo_id = request.form.get('id')
+        
+        # Eliminar equipo
+        resultado = unified_adapter.eliminar_equipo(equipo_id)
+        
+        if resultado.get('success'):
+            mensaje = "Equipo eliminado correctamente."
+            tipo_mensaje = "success"
+        else:
+            mensaje = f"Error al eliminar equipo: {resultado.get('error', 'Error desconocido')}"
+            tipo_mensaje = "danger"
+    
+    except Exception as e:
+        mensaje = f"Error al eliminar equipo: {str(e)}"
+        tipo_mensaje = "danger"
+    
+    # Redirigir a la página de equipos con mensaje
+    flash(mensaje, tipo_mensaje)
+    return redirect(url_for('datos_equipos'))
+
+@app.route('/importar-equipos', methods=['POST'])
+def importar_equipos():
+    """Importar equipos desde un archivo CSV o JSON"""
+    try:
+        if 'importFile' not in request.files:
+            raise ValueError("No se ha proporcionado un archivo")
+        
+        archivo = request.files['importFile']
+        if archivo.filename == '':
+            raise ValueError("No se ha seleccionado un archivo")
+        
+        fuente = request.form.get('importSource', 'import')
+        sobrescribir = request.form.get('overwriteExisting') == 'on'
+        
+        # Procesar el archivo según su tipo
+        filename = archivo.filename.lower()
+        if filename.endswith('.csv'):
+            # Procesar CSV
+            df = pd.read_csv(archivo)
+            equipos = df.to_dict(orient='records')
+        elif filename.endswith('.json'):
+            # Procesar JSON
+            equipos = json.loads(archivo.read())
+            if not isinstance(equipos, list):
+                # Si el JSON no es una lista, verificar si es un objeto con una propiedad de equipos
+                if isinstance(equipos, dict) and 'equipos' in equipos:
+                    equipos = equipos['equipos']
+                else:
+                    raise ValueError("Formato JSON no válido. Debe ser una lista de equipos o un objeto con propiedad 'equipos'")
+        else:
+            raise ValueError("Formato de archivo no soportado. Use CSV o JSON")
+        
+        # Añadir fuente a cada equipo si no está especificada
+        for equipo in equipos:
+            if 'fuente' not in equipo:
+                equipo['fuente'] = fuente
+        
+        # Importar equipos
+        resultado = unified_adapter.importar_equipos(equipos, sobrescribir)
+        
+        mensaje = f"Se importaron {resultado.get('importados', 0)} equipos. {resultado.get('errores', 0)} errores."
+        tipo_mensaje = "success" if resultado.get('importados', 0) > 0 else "warning"
+        
+    except Exception as e:
+        mensaje = f"Error al importar equipos: {str(e)}"
+        tipo_mensaje = "danger"
+    
+    # Redirigir a la página de equipos con mensaje
+    flash(mensaje, tipo_mensaje)
+    return redirect(url_for('datos_equipos'))
+
+@app.route('/api/equipos/<equipo_id>')
+def api_equipo(equipo_id):
+    """API para obtener datos de un equipo específico"""
+    try:
+        equipo = unified_adapter.obtener_equipo_por_id(equipo_id)
+        
+        if equipo:
+            return jsonify({
+                'success': True,
+                'equipo': equipo
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': f"Equipo con ID {equipo_id} no encontrado"
+            }), 404
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/datos-jugadores')
+def datos_jugadores():
+    """Vista para gestionar datos de jugadores con filtrado y edición"""
+    # Obtener parámetros de filtrado
+    search = request.args.get('search', '')
+    equipo = request.args.get('equipo', '')
+    posicion = request.args.get('posicion', '')
+    source = request.args.get('source', '')
+    pagina = int(request.args.get('pagina', 1))
+    items_por_pagina = 16  # Jugadores por página
+    
+    # Obtener lista de equipos para filtrado
+    equipos = []
+    with _cache_lock:
+        cache_entry = _cached_data["equipos"]
+        if time.time() - cache_entry["timestamp"] < CACHE_EXPIRY:
+            equipos = cache_entry["data"]
+        else:
+            ligas_principales = ["LaLiga", "Premier League", "Serie A", "Bundesliga", "Ligue 1"]
+            for liga in ligas_principales:
+                equipos_liga = unified_adapter.obtener_equipos_liga(liga)
+                for equipo_obj in equipos_liga:
+                    if not any(e.get('id') == equipo_obj.get('id') for e in equipos):
+                        equipos.append(equipo_obj)
+    
+    # Nombre del equipo seleccionado para mostrar en filtros activos
+    equipo_nombre = ""
+    if equipo:
+        for e in equipos:
+            if e.get('id') == equipo:
+                equipo_nombre = e.get('nombre', '')
+                break
+    
+    # Obtener jugadores según los filtros
+    todos_jugadores = []
+    
+    # Si hay un equipo seleccionado, obtener solo sus jugadores
+    if equipo:
+        jugadores_equipo = unified_adapter.obtener_jugadores_equipo(equipo)
+        for jugador in jugadores_equipo:
+            jugador['equipo_nombre'] = equipo_nombre
+            todos_jugadores.append(jugador)
+    else:
+        # Obtener jugadores de todos los equipos en caché o principales
+        for equipo_obj in equipos[:10]:  # Limitamos a 10 equipos para no sobrecargar
+            jugadores_equipo = unified_adapter.obtener_jugadores_equipo(equipo_obj.get('id', ''))
+            for jugador in jugadores_equipo:
+                jugador['equipo_nombre'] = equipo_obj.get('nombre', '')
+                jugador['equipo_id'] = equipo_obj.get('id', '')
+                todos_jugadores.append(jugador)
+    
+    # Aplicar filtros
+    jugadores_filtrados = todos_jugadores
+    
+    if search:
+        jugadores_filtrados = [j for j in jugadores_filtrados if 
+                             search.lower() in j.get('nombre_completo', '').lower() or
+                             search.lower() in j.get('nombre', '').lower() + ' ' + j.get('apellido', '').lower()]
+    
+    if posicion:
+        jugadores_filtrados = [j for j in jugadores_filtrados if 
+                             j.get('posicion', '').lower() == posicion.lower()]
+    
+    if source:
+        jugadores_filtrados = [j for j in jugadores_filtrados if 
+                             source.lower() in j.get('fuente', '').lower()]
+    
+    # Calcular paginación
+    total_jugadores = len(jugadores_filtrados)
+    total_paginas = (total_jugadores + items_por_pagina - 1) // items_por_pagina
+    
+    # Asegurar que la página sea válida
+    if pagina < 1:
+        pagina = 1
+    elif pagina > total_paginas and total_paginas > 0:
+        pagina = total_paginas
+    
+    # Obtener jugadores para la página actual
+    inicio = (pagina - 1) * items_por_pagina
+    fin = min(inicio + items_por_pagina, total_jugadores)
+    jugadores_pagina = jugadores_filtrados[inicio:fin]
+    
+    # Renderizar plantilla
+    return render_template('datos_jugadores.html',
+                          jugadores=jugadores_pagina,
+                          equipos=equipos,
+                          total_jugadores=total_jugadores,
+                          pagina=pagina,
+                          total_paginas=total_paginas,
+                          search=search,
+                          equipo=equipo,
+                          equipo_nombre=equipo_nombre,
+                          posicion=posicion,
+                          source=source)
+
+@app.route('/crear-jugador', methods=['POST'])
+def crear_jugador():
+    """Crear un nuevo jugador"""
+    try:
+        # Obtener datos del formulario
+        equipo_id = request.form.get('equipo_id')
+        jugador_datos = {
+            'nombre': request.form.get('nombre'),
+            'apellido': request.form.get('apellido'),
+            'nombre_completo': f"{request.form.get('nombre')} {request.form.get('apellido')}",
+            'posicion': request.form.get('posicion'),
+            'nacionalidad': request.form.get('nacionalidad'),
+            'fecha_nacimiento': request.form.get('fecha_nacimiento'),
+            'altura': request.form.get('altura'),
+            'peso': request.form.get('peso'),
+            'dorsal': request.form.get('dorsal'),
+            'imagen_url': request.form.get('imagen_url'),
+            'fuente': request.form.get('fuente', 'manual')
+        }
+        
+        # Guardar jugador
+        resultado = unified_adapter.guardar_jugador(jugador_datos, equipo_id)
+        
+        if resultado.get('success'):
+            mensaje = f"Jugador {jugador_datos['nombre_completo']} creado correctamente."
+            tipo_mensaje = "success"
+        else:
+            mensaje = f"Error al crear jugador: {resultado.get('error', 'Error desconocido')}"
+            tipo_mensaje = "danger"
+    
+    except Exception as e:
+        mensaje = f"Error al crear jugador: {str(e)}"
+        tipo_mensaje = "danger"
+    
+    # Redirigir a la página de jugadores con mensaje
+    flash(mensaje, tipo_mensaje)
+    return redirect(url_for('datos_jugadores', equipo=request.form.get('equipo_id')))
+
+@app.route('/editar-jugador', methods=['POST'])
+def editar_jugador():
+    """Editar un jugador existente"""
+    try:
+        # Obtener datos del formulario
+        jugador_id = request.form.get('id')
+        equipo_id = request.form.get('equipo_id')
+        jugador_datos = {
+            'id': jugador_id,
+            'nombre': request.form.get('nombre'),
+            'apellido': request.form.get('apellido'),
+            'nombre_completo': f"{request.form.get('nombre')} {request.form.get('apellido')}",
+            'posicion': request.form.get('posicion'),
+            'nacionalidad': request.form.get('nacionalidad'),
+            'fecha_nacimiento': request.form.get('fecha_nacimiento'),
+            'altura': request.form.get('altura'),
+            'peso': request.form.get('peso'),
+            'dorsal': request.form.get('dorsal'),
+            'imagen_url': request.form.get('imagen_url'),
+            'fuente': request.form.get('fuente', 'manual')
+        }
+        
+        # Actualizar jugador
+        resultado = unified_adapter.actualizar_jugador(jugador_id, jugador_datos, equipo_id)
+        
+        if resultado.get('success'):
+            mensaje = f"Jugador {jugador_datos['nombre_completo']} actualizado correctamente."
+            tipo_mensaje = "success"
+        else:
+            mensaje = f"Error al actualizar jugador: {resultado.get('error', 'Error desconocido')}"
+            tipo_mensaje = "danger"
+    
+    except Exception as e:
+        mensaje = f"Error al actualizar jugador: {str(e)}"
+        tipo_mensaje = "danger"
+    
+    # Redirigir a la página de jugadores con mensaje
+    flash(mensaje, tipo_mensaje)
+    return redirect(url_for('datos_jugadores', equipo=request.form.get('equipo_id')))
+
+@app.route('/eliminar-jugador', methods=['POST'])
+def eliminar_jugador():
+    """Eliminar un jugador"""
+    try:
+        jugador_id = request.form.get('id')
+        equipo_id = request.form.get('equipo_id')
+        
+        # Eliminar jugador
+        resultado = unified_adapter.eliminar_jugador(jugador_id, equipo_id)
+        
+        if resultado.get('success'):
+            mensaje = "Jugador eliminado correctamente."
+            tipo_mensaje = "success"
+        else:
+            mensaje = f"Error al eliminar jugador: {resultado.get('error', 'Error desconocido')}"
+            tipo_mensaje = "danger"
+    
+    except Exception as e:
+        mensaje = f"Error al eliminar jugador: {str(e)}"
+        tipo_mensaje = "danger"
+    
+    # Redirigir a la página de jugadores con mensaje
+    flash(mensaje, tipo_mensaje)
+    return redirect(url_for('datos_jugadores', equipo=request.form.get('equipo_id')))
+
+@app.route('/importar-jugadores', methods=['POST'])
+def importar_jugadores():
+    """Importar jugadores desde un archivo CSV o JSON"""
+    try:
+        if 'importFile' not in request.files:
+            raise ValueError("No se ha proporcionado un archivo")
+        
+        archivo = request.files['importFile']
+        if archivo.filename == '':
+            raise ValueError("No se ha seleccionado un archivo")
+        
+        equipo_id = request.form.get('importEquipoId')
+        if not equipo_id:
+            raise ValueError("No se ha seleccionado un equipo")
+            
+        fuente = request.form.get('importSource', 'import')
+        sobrescribir = request.form.get('overwriteExisting') == 'on'
+        
+        # Procesar el archivo según su tipo
+        filename = archivo.filename.lower()
+        if filename.endswith('.csv'):
+            # Procesar CSV
+            df = pd.read_csv(archivo)
+            jugadores = df.to_dict(orient='records')
+        elif filename.endswith('.json'):
+            # Procesar JSON
+            jugadores = json.loads(archivo.read())
+            if not isinstance(jugadores, list):
+                # Si el JSON no es una lista, verificar si es un objeto con una propiedad de jugadores
+                if isinstance(jugadores, dict) and 'jugadores' in jugadores:
+                    jugadores = jugadores['jugadores']
+                else:
+                    raise ValueError("Formato JSON no válido. Debe ser una lista de jugadores o un objeto con propiedad 'jugadores'")
+        else:
+            raise ValueError("Formato de archivo no soportado. Use CSV o JSON")
+        
+        # Añadir fuente a cada jugador si no está especificada
+        for jugador in jugadores:
+            if 'fuente' not in jugador:
+                jugador['fuente'] = fuente
+        
+        # Importar jugadores
+        resultado = unified_adapter.importar_jugadores(jugadores, equipo_id, sobrescribir)
+        
+        mensaje = f"Se importaron {resultado.get('importados', 0)} jugadores. {resultado.get('errores', 0)} errores."
+        tipo_mensaje = "success" if resultado.get('importados', 0) > 0 else "warning"
+        
+    except Exception as e:
+        mensaje = f"Error al importar jugadores: {str(e)}"
+        tipo_mensaje = "danger"
+    
+    # Redirigir a la página de jugadores with mensaje
+    flash(mensaje, tipo_mensaje)
+    return redirect(url_for('datos_jugadores', equipo=request.form.get('importEquipoId')))
+
+@app.route('/api/jugadores/<jugador_id>')
+def api_jugador(jugador_id):
+    """API para obtener datos de un jugador específico"""
+    try:
+        equipo_id = request.args.get('equipo_id')
+        jugador = unified_adapter.obtener_jugador_por_id(jugador_id, equipo_id)
+        
+        if jugador:
+            return jsonify({
+                'success': True,
+                'jugador': jugador
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': f"Jugador con ID {jugador_id} no encontrado"
+            }), 404
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/datos-partidos')
+def datos_partidos():
+    """Vista para gestionar datos de partidos con filtrado y edición"""
+    # Obtener parámetros de filtrado
+    search = request.args.get('search', '')
+    liga = request.args.get('liga', '')
+    equipo = request.args.get('equipo', '')
+    estado = request.args.get('estado', '')
+    source = request.args.get('source', '')
+    desde = request.args.get('desde', '')
+    hasta = request.args.get('hasta', '')
+    pagina = int(request.args.get('pagina', 1))
+    items_por_pagina = 10  # Partidos por página
+    
+    # Obtener todos los partidos disponibles
+    partidos = unified_adapter.obtener_partidos(desde=desde, hasta=hasta, liga=liga)
+    
+    # Aplicar filtros adicionales
+    partidos_filtrados = partidos
+    
+    if search:
+        partidos_filtrados = [p for p in partidos_filtrados if 
+                            search.lower() in p.get('equipo_local', {}).get('nombre', '').lower() or
+                            search.lower() in p.get('equipo_visitante', {}).get('nombre', '').lower()]
+    
+    if equipo:
+        partidos_filtrados = [p for p in partidos_filtrados if 
+                            equipo == p.get('equipo_local', {}).get('id') or 
+                            equipo == p.get('equipo_visitante', {}).get('id')]
+    
+    if estado:
+        partidos_filtrados = [p for p in partidos_filtrados if 
+                            estado.lower() == p.get('estado', '').lower()]
+    
+    if source:
+        partidos_filtrados = [p for p in partidos_filtrados if 
+                            source.lower() in p.get('fuente', '').lower()]
+    
+    # Calcular paginación
+    total_partidos = len(partidos_filtrados)
+    total_paginas = (total_partidos + items_por_pagina - 1) // items_por_pagina
+    
+    # Asegurar que la página sea válida
+    if pagina < 1:
+        pagina = 1
+    elif pagina > total_paginas and total_paginas > 0:
+        pagina = total_paginas
+    
+    # Obtener partidos para la página actual
+    inicio = (pagina - 1) * items_por_pagina
+    fin = min(inicio + items_por_pagina, total_partidos)
+    partidos_pagina = partidos_filtrados[inicio:fin]
+    
+    # Obtener equipos para el filtro
+    equipos = []
+    with _cache_lock:
+        cache_entry = _cached_data["equipos"]
+        if time.time() - cache_entry["timestamp"] < CACHE_EXPIRY:
+            equipos = cache_entry["data"]
+        else:
+            ligas_principales = ["LaLiga", "Premier League", "Serie A", "Bundesliga", "Ligue 1"]
+            for liga_nombre in ligas_principales:
+                equipos_liga = unified_adapter.obtener_equipos_liga(liga_nombre)
+                for equipo_obj in equipos_liga:
+                    if not any(e.get('id') == equipo_obj.get('id') for e in equipos):
+                        equipos.append(equipo_obj)
+    
+    # Obtener ligas disponibles
+    ligas = sorted(list(set(p.get('liga', '') for p in partidos if p.get('liga'))))
+    
+    # Renderizar plantilla
+    return render_template('datos_partidos.html',
+                          partidos=partidos_pagina,
+                          equipos=equipos,
+                          ligas=ligas,
+                          total_partidos=total_partidos,
+                          pagina=pagina,
+                          total_paginas=total_paginas,
+                          search=search,
+                          liga=liga,
+                          equipo=equipo,
+                          estado=estado,
+                          source=source,
+                          desde=desde,
+                          hasta=hasta)
+
+@app.route('/crear-partido', methods=['POST'])
+def crear_partido():
+    """Crear un nuevo partido"""
+    try:
+        # Obtener datos del formulario
+        partido_datos = {
+            'fecha': request.form.get('fecha'),
+            'hora': request.form.get('hora'),
+            'equipo_local': {
+                'id': request.form.get('equipo_local_id'),
+                'nombre': request.form.get('equipo_local_nombre')
+            },
+            'equipo_visitante': {
+                'id': request.form.get('equipo_visitante_id'),
+                'nombre': request.form.get('equipo_visitante_nombre')
+            },
+            'liga': request.form.get('liga'),
+            'temporada': request.form.get('temporada'),
+            'jornada': request.form.get('jornada'),
+            'estadio': request.form.get('estadio'),
+            'arbitro': request.form.get('arbitro'),
+            'goles_local': request.form.get('goles_local'),
+            'goles_visitante': request.form.get('goles_visitante'),
+            'estado': request.form.get('estado', 'programado'),
+            'fuente': request.form.get('fuente', 'manual')
+        }
+        
+        # Guardar partido
+        resultado = unified_adapter.guardar_partido(partido_datos)
+        
+        if resultado.get('success'):
+            mensaje = f"Partido {partido_datos['equipo_local']['nombre']} vs {partido_datos['equipo_visitante']['nombre']} creado correctamente."
+            tipo_mensaje = "success"
+        else:
+            mensaje = f"Error al crear partido: {resultado.get('error', 'Error desconocido')}"
+            tipo_mensaje = "danger"
+    
+    except Exception as e:
+        mensaje = f"Error al crear partido: {str(e)}"
+        tipo_mensaje = "danger"
+    
+    # Redirigir a la página de partidos con mensaje
+    flash(mensaje, tipo_mensaje)
+    return redirect(url_for('datos_partidos'))
+
+@app.route('/editar-partido', methods=['POST'])
+def editar_partido():
+    """Editar un partido existente"""
+    try:
+        # Obtener datos del formulario
+        partido_id = request.form.get('id')
+        partido_datos = {
+            'id': partido_id,
+            'fecha': request.form.get('fecha'),
+            'hora': request.form.get('hora'),
+            'equipo_local': {
+                'id': request.form.get('equipo_local_id'),
+                'nombre': request.form.get('equipo_local_nombre')
+            },
+            'equipo_visitante': {
+                'id': request.form.get('equipo_visitante_id'),
+                'nombre': request.form.get('equipo_visitante_nombre')
+            },
+            'liga': request.form.get('liga'),
+            'temporada': request.form.get('temporada'),
+            'jornada': request.form.get('jornada'),
+            'estadio': request.form.get('estadio'),
+            'arbitro': request.form.get('arbitro'),
+            'goles_local': request.form.get('goles_local'),
+            'goles_visitante': request.form.get('goles_visitante'),
+            'estado': request.form.get('estado'),
+            'fuente': request.form.get('fuente', 'manual')
+        }
+        
+        # Actualizar partido
+        resultado = unified_adapter.actualizar_partido(partido_id, partido_datos)
+        
+        if resultado.get('success'):
+            mensaje = f"Partido {partido_datos['equipo_local']['nombre']} vs {partido_datos['equipo_visitante']['nombre']} actualizado correctamente."
+            tipo_mensaje = "success"
+        else:
+            mensaje = f"Error al actualizar partido: {resultado.get('error', 'Error desconocido')}"
+            tipo_mensaje = "danger"
+    
+    except Exception as e:
+        mensaje = f"Error al actualizar partido: {str(e)}"
+        tipo_mensaje = "danger"
+    
+    # Redirigir a la página de partidos con mensaje
+    flash(mensaje, tipo_mensaje)
+    return redirect(url_for('datos_partidos'))
+
+@app.route('/eliminar-partido', methods=['POST'])
+def eliminar_partido():
+    """Eliminar un partido"""
+    try:
+        partido_id = request.form.get('id')
+        
+        # Eliminar partido
+        resultado = unified_adapter.eliminar_partido(partido_id)
+        
+        if resultado.get('success'):
+            mensaje = "Partido eliminado correctamente."
+            tipo_mensaje = "success"
+        else:
+            mensaje = f"Error al eliminar partido: {resultado.get('error', 'Error desconocido')}"
+            tipo_mensaje = "danger"
+    
+    except Exception as e:
+        mensaje = f"Error al eliminar partido: {str(e)}"
+        tipo_mensaje = "danger"
+    
+    # Redirigir a la página de partidos con mensaje
+    flash(mensaje, tipo_mensaje)
+    return redirect(url_for('datos_partidos'))
+
+@app.route('/importar-partidos', methods=['POST'])
+def importar_partidos():
+    """Importar partidos desde un archivo CSV o JSON"""
+    try:
+        if 'importFile' not in request.files:
+            raise ValueError("No se ha proporcionado un archivo")
+        
+        archivo = request.files['importFile']
+        if archivo.filename == '':
+            raise ValueError("No se ha seleccionado un archivo")
+            
+        fuente = request.form.get('importSource', 'import')
+        sobrescribir = request.form.get('overwriteExisting') == 'on'
+        
+        # Procesar el archivo según su tipo
+        filename = archivo.filename.lower()
+        if filename.endswith('.csv'):
+            # Procesar CSV
+            df = pd.read_csv(archivo)
+            partidos = df.to_dict(orient='records')
+        elif filename.endswith('.json'):
+            # Procesar JSON
+            partidos = json.loads(archivo.read())
+            if not isinstance(partidos, list):
+                # Si el JSON no es una lista, verificar si es un objeto con una propiedad de partidos
+                if isinstance(partidos, dict) and 'partidos' in partidos:
+                    partidos = partidos['partidos']
+                else:
+                    raise ValueError("Formato JSON no válido. Debe ser una lista de partidos o un objeto con propiedad 'partidos'")
+        else:
+            raise ValueError("Formato de archivo no soportado. Use CSV o JSON")
+        
+        # Añadir fuente a cada partido si no está especificada
+        for partido in partidos:
+            if 'fuente' not in partido:
+                partido['fuente'] = fuente
+        
+        # Importar partidos
+        resultado = unified_adapter.importar_partidos(partidos, sobrescribir)
+        
+        mensaje = f"Se importaron {resultado.get('importados', 0)} partidos. {resultado.get('errores', 0)} errores."
+        tipo_mensaje = "success" if resultado.get('importados', 0) > 0 else "warning"
+        
+    except Exception as e:
+        mensaje = f"Error al importar partidos: {str(e)}"
+        tipo_mensaje = "danger"
+    
+    # Redirigir a la página de partidos con mensaje
+    flash(mensaje, tipo_mensaje)
+    return redirect(url_for('datos_partidos'))
+
+@app.route('/api/partidos/<partido_id>')
+def api_partido(partido_id):
+    """API para obtener datos de un partido específico"""
+    try:
+        partido = unified_adapter.obtener_partido_por_id(partido_id)
+        
+        if partido:
+            return jsonify({
+                'success': True,
+                'partido': partido
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': f"Partido con ID {partido_id} no encontrado"
+            }), 404
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    """Manejador global de excepciones con logging mejorado"""
+    log_manager.log_exception(e)
+    return render_template("error.html", error=str(e)), 500
+
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    """Manejador global de excepciones con logging mejorado"""
+    log_manager.log_exception(e)
+    return render_template("error.html", error=str(e)), 500

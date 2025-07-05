@@ -1,0 +1,851 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestión de Datos de Equipos{% endblock %}
+
+{% block head_extra %}
+<style>
+    .team-card {
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .team-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+    
+    .team-logo {
+        height: 100px;
+        width: 100px;
+        object-fit: contain;
+        margin: 1rem auto;
+    }
+    
+    .team-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .team-source {
+        font-size: 0.8rem;
+        color: #6c757d;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+    
+    .data-filters {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .filter-badge {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+        border-radius: 50px;
+    }
+    
+    .source-indicator {
+        width: 12px;
+        height: 12px;
+        display: inline-block;
+        border-radius: 50%;
+        margin-right: 5px;
+    }
+    
+    .source-espn-api { background-color: #FF0000; }
+    .source-football-data { background-color: #0073CF; }
+    .source-espn { background-color: #FF7F00; }
+    .source-open-football { background-color: #4CAF50; }
+    .source-world-football { background-color: #9C27B0; }
+    
+    .team-stats {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .team-stat {
+        flex: 1 0 50%;
+        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .team-stat-label {
+        color: #6c757d;
+    }
+    
+    .team-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+    }
+    
+    /* Estilo para la paginación */
+    .custom-pagination {
+        margin-top: 2rem;
+    }
+    
+    .custom-pagination .page-item .page-link {
+        border-radius: 50%;
+        margin: 0 3px;
+        color: #1a76d2;
+    }
+    
+    .custom-pagination .page-item.active .page-link {
+        background-color: #1a76d2;
+        border-color: #1a76d2;
+    }
+    
+    .no-results-container {
+        text-align: center;
+        padding: 3rem;
+    }
+    
+    .no-results-icon {
+        font-size: 5rem;
+        color: #dee2e6;
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Gestión de Datos de Equipos</h1>
+        <div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importModal">
+                <i class="fas fa-file-import me-2"></i>Importar
+            </button>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newTeamModal">
+                <i class="fas fa-plus me-2"></i>Nuevo Equipo
+            </button>
+        </div>
+    </div>
+
+    <!-- Alertas -->
+    {% if mensaje %}
+    <div class="alert alert-{{ tipo_mensaje|default('info') }} alert-dismissible fade show" role="alert">
+        {{ mensaje }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    <!-- Filtros -->
+    <div class="data-filters">
+        <form method="get" action="{{ url_for('datos_equipos') }}" class="row g-3">
+            <div class="col-md-4">
+                <label for="search" class="form-label">Buscar:</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" class="form-control" id="search" name="search" 
+                           value="{{ search|default('') }}" placeholder="Nombre del equipo">
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <label for="liga" class="form-label">Liga:</label>
+                <select class="form-select" id="liga" name="liga">
+                    <option value="" {% if not liga %}selected{% endif %}>Todas las ligas</option>
+                    {% for l in ligas %}
+                    <option value="{{ l }}" {% if liga == l %}selected{% endif %}>{{ l }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-md-3">
+                <label for="source" class="form-label">Fuente:</label>
+                <select class="form-select" id="source" name="source">
+                    <option value="" {% if not source %}selected{% endif %}>Todas las fuentes</option>
+                    <option value="espn-api" {% if source == 'espn-api' %}selected{% endif %}>ESPN API</option>
+                    <option value="football-data" {% if source == 'football-data' %}selected{% endif %}>Football-Data.org</option>
+                    <option value="espn" {% if source == 'espn' %}selected{% endif %}>ESPN Scraping</option>
+                    <option value="open-football" {% if source == 'open-football' %}selected{% endif %}>Open Football</option>
+                    <option value="world-football" {% if source == 'world-football' %}selected{% endif %}>World Football</option>
+                </select>
+            </div>
+            
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-filter me-2"></i>Filtrar
+                </button>
+            </div>
+            
+            <!-- Filtros activos -->
+            <div class="col-12 mt-3">
+                {% if search or liga or source %}
+                <div class="d-flex align-items-center">
+                    <strong class="me-2">Filtros activos:</strong>
+                    {% if search %}
+                    <span class="badge bg-primary filter-badge">
+                        Búsqueda: {{ search }}
+                        <a href="{{ url_for('datos_equipos', search='', liga=liga, source=source) }}" class="text-white ms-2">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                    
+                    {% if liga %}
+                    <span class="badge bg-secondary filter-badge">
+                        Liga: {{ liga }}
+                        <a href="{{ url_for('datos_equipos', search=search, liga='', source=source) }}" class="text-white ms-2">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                    
+                    {% if source %}
+                    <span class="badge bg-info filter-badge">
+                        Fuente: {{ source }}
+                        <a href="{{ url_for('datos_equipos', search=search, liga=liga, source='') }}" class="text-white ms-2">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                    
+                    <a href="{{ url_for('datos_equipos') }}" class="btn btn-sm btn-outline-secondary ms-auto">
+                        <i class="fas fa-broom me-1"></i> Limpiar todos
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <!-- Leyenda de Fuentes -->
+    <div class="mb-4">
+        <div class="d-flex flex-wrap">
+            <div class="me-3 mb-2">
+                <span class="source-indicator source-espn-api"></span> ESPN API
+            </div>
+            <div class="me-3 mb-2">
+                <span class="source-indicator source-football-data"></span> Football-Data.org
+            </div>
+            <div class="me-3 mb-2">
+                <span class="source-indicator source-espn"></span> ESPN Scraping
+            </div>
+            <div class="me-3 mb-2">
+                <span class="source-indicator source-open-football"></span> Open Football
+            </div>
+            <div class="me-3 mb-2">
+                <span class="source-indicator source-world-football"></span> World Football
+            </div>
+        </div>
+    </div>
+
+    <!-- Listado de Equipos -->
+    <div class="row">
+        {% if equipos %}
+            {% for equipo in equipos %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card h-100 team-card">
+                        <div class="card-body text-center position-relative">
+                            <span class="badge bg-light text-dark team-source">
+                                <span class="source-indicator source-{{ equipo.fuente|replace('.', '-') }}"></span>
+                                {{ equipo.fuente }}
+                            </span>
+                            
+                            <img src="{{ equipo.escudo_url|default('https://via.placeholder.com/100?text=' + equipo.nombre|replace(' ', '+')) }}" 
+                                 alt="{{ equipo.nombre }}" class="team-logo">
+                            <h5 class="team-name">{{ equipo.nombre }}</h5>
+                            <div class="badge bg-secondary mb-2">{{ equipo.liga|default('--') }}</div>
+                            
+                            <div class="team-stats">
+                                <div class="team-stat">
+                                    <span class="team-stat-label">País:</span>
+                                    <span>{{ equipo.pais|default('--') }}</span>
+                                </div>
+                                <div class="team-stat">
+                                    <span class="team-stat-label">Estadio:</span>
+                                    <span>{{ equipo.estadio|default('--') }}</span>
+                                </div>
+                                <div class="team-stat">
+                                    <span class="team-stat-label">Fundación:</span>
+                                    <span>{{ equipo.fundacion|default('--') }}</span>
+                                </div>
+                                <div class="team-stat">
+                                    <span class="team-stat-label">Entrenador:</span>
+                                    <span>{{ equipo.entrenador|default('--') }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="team-actions">
+                                <button class="btn btn-sm btn-outline-primary" onclick="verEquipo('{{ equipo.id }}')">
+                                    <i class="fas fa-eye"></i> Ver
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="editarEquipo('{{ equipo.id }}')">
+                                    <i class="fas fa-edit"></i> Editar
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="confirmarEliminar('{{ equipo.id }}', '{{ equipo.nombre }}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 no-results-container">
+                <i class="fas fa-search no-results-icon"></i>
+                <h3>No se encontraron equipos</h3>
+                <p class="text-muted">Intenta con otros filtros o crea un nuevo equipo.</p>
+                <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#newTeamModal">
+                    <i class="fas fa-plus me-2"></i>Crear Nuevo Equipo
+                </button>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Paginación -->
+    {% if total_paginas > 1 %}
+    <nav aria-label="Navegación de páginas">
+        <ul class="pagination justify-content-center custom-pagination">
+            <li class="page-item {% if pagina == 1 %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('datos_equipos', pagina=pagina-1, search=search, liga=liga, source=source) }}" aria-label="Anterior">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            
+            {% set start_page = pagina-2 if pagina-2 > 0 else 1 %}
+            {% set end_page = start_page+4 if start_page+4 <= total_paginas else total_paginas %}
+            {% set start_page = end_page-4 if end_page-4 > 0 else 1 %}
+            
+            {% for p in range(start_page, end_page+1) %}
+            <li class="page-item {% if p == pagina %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('datos_equipos', pagina=p, search=search, liga=liga, source=source) }}">{{ p }}</a>
+            </li>
+            {% endfor %}
+            
+            <li class="page-item {% if pagina == total_paginas %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('datos_equipos', pagina=pagina+1, search=search, liga=liga, source=source) }}" aria-label="Siguiente">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
+    
+    <div class="text-center mb-4">
+        <p class="text-muted">Mostrando {{ equipos|length }} de {{ total_equipos }} equipos</p>
+    </div>
+</div>
+
+<!-- Modal Ver Equipo -->
+<div class="modal fade" id="viewTeamModal" tabindex="-1" aria-labelledby="viewTeamModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewTeamModalLabel">Detalles del Equipo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4" id="viewTeamLoading">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-2">Cargando datos del equipo...</p>
+                </div>
+                
+                <div id="viewTeamContent" class="d-none">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <img id="viewTeamLogo" src="" alt="Logo del equipo" class="img-fluid mb-3" style="max-height: 200px;">
+                            <h4 id="viewTeamName" class="mb-2"></h4>
+                            <div id="viewTeamBadges" class="mb-3"></div>
+                        </div>
+                        
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0">Información General</h5>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                            <tr>
+                                                <th width="140">ID:</th>
+                                                <td id="viewTeamId"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nombre Corto:</th>
+                                                <td id="viewTeamShortName"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>País:</th>
+                                                <td id="viewTeamCountry"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Fundación:</th>
+                                                <td id="viewTeamFounded"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Estadio:</th>
+                                                <td id="viewTeamStadium"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Entrenador:</th>
+                                                <td id="viewTeamCoach"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Sitio Web:</th>
+                                                <td id="viewTeamWebsite"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Colores:</th>
+                                                <td id="viewTeamColors"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Fuente:</th>
+                                                <td id="viewTeamSource"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="card mt-3">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0">Datos Disponibles</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex flex-wrap">
+                                        <a href="#" class="btn btn-outline-primary m-1" id="viewTeamPlayers">
+                                            <i class="fas fa-users me-2"></i>Ver Jugadores
+                                        </a>
+                                        <a href="#" class="btn btn-outline-secondary m-1" id="viewTeamMatches">
+                                            <i class="fas fa-futbol me-2"></i>Ver Partidos
+                                        </a>
+                                        <a href="#" class="btn btn-outline-success m-1" id="viewTeamStats">
+                                            <i class="fas fa-chart-bar me-2"></i>Estadísticas
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="editarEquipoActual()">
+                    <i class="fas fa-edit me-2"></i>Editar
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Equipo -->
+<div class="modal fade" id="editTeamModal" tabindex="-1" aria-labelledby="editTeamModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editTeamModalLabel">Editar Equipo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editTeamForm" method="post" action="{{ url_for('editar_equipo') }}">
+                <div class="modal-body">
+                    <div class="text-center mb-4" id="editTeamLoading">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-2">Cargando datos del equipo...</p>
+                    </div>
+                    
+                    <div id="editTeamContent" class="d-none">
+                        <input type="hidden" id="editTeamId" name="id">
+                        <input type="hidden" id="editTeamFuente" name="fuente">
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editTeamNombre" class="form-label">Nombre:</label>
+                                <input type="text" class="form-control" id="editTeamNombre" name="nombre" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="editTeamNombreCorto" class="form-label">Nombre Corto:</label>
+                                <input type="text" class="form-control" id="editTeamNombreCorto" name="nombre_corto">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editTeamPais" class="form-label">País:</label>
+                                <input type="text" class="form-control" id="editTeamPais" name="pais">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="editTeamLiga" class="form-label">Liga:</label>
+                                <input type="text" class="form-control" id="editTeamLiga" name="liga">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editTeamFundacion" class="form-label">Año de Fundación:</label>
+                                <input type="number" class="form-control" id="editTeamFundacion" name="fundacion" min="1800" max="2025">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="editTeamEstadio" class="form-label">Estadio:</label>
+                                <input type="text" class="form-control" id="editTeamEstadio" name="estadio">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editTeamEntrenador" class="form-label">Entrenador:</label>
+                                <input type="text" class="form-control" id="editTeamEntrenador" name="entrenador">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="editTeamColores" class="form-label">Colores:</label>
+                                <input type="text" class="form-control" id="editTeamColores" name="colores">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editTeamWeb" class="form-label">Sitio Web:</label>
+                                <input type="url" class="form-control" id="editTeamWeb" name="web">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="editTeamEscudoUrl" class="form-label">URL del Escudo:</label>
+                                <input type="url" class="form-control" id="editTeamEscudoUrl" name="escudo_url">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Nuevo Equipo -->
+<div class="modal fade" id="newTeamModal" tabindex="-1" aria-labelledby="newTeamModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newTeamModalLabel">Nuevo Equipo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{{ url_for('crear_equipo') }}">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="newTeamNombre" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="newTeamNombre" name="nombre" required>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="newTeamNombreCorto" class="form-label">Nombre Corto:</label>
+                            <input type="text" class="form-control" id="newTeamNombreCorto" name="nombre_corto">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="newTeamPais" class="form-label">País:</label>
+                            <input type="text" class="form-control" id="newTeamPais" name="pais">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="newTeamLiga" class="form-label">Liga:</label>
+                            <input type="text" class="form-control" id="newTeamLiga" name="liga">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="newTeamFundacion" class="form-label">Año de Fundación:</label>
+                            <input type="number" class="form-control" id="newTeamFundacion" name="fundacion" min="1800" max="2025">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="newTeamEstadio" class="form-label">Estadio:</label>
+                            <input type="text" class="form-control" id="newTeamEstadio" name="estadio">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="newTeamEntrenador" class="form-label">Entrenador:</label>
+                            <input type="text" class="form-control" id="newTeamEntrenador" name="entrenador">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="newTeamColores" class="form-label">Colores:</label>
+                            <input type="text" class="form-control" id="newTeamColores" name="colores">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="newTeamWeb" class="form-label">Sitio Web:</label>
+                            <input type="url" class="form-control" id="newTeamWeb" name="web">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="newTeamEscudoUrl" class="form-label">URL del Escudo:</label>
+                            <input type="url" class="form-control" id="newTeamEscudoUrl" name="escudo_url">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="newTeamFuente" class="form-label">Fuente de Datos:</label>
+                            <select class="form-select" id="newTeamFuente" name="fuente">
+                                <option value="manual">Entrada Manual</option>
+                                <option value="espn-api">ESPN API</option>
+                                <option value="football-data">Football-Data.org</option>
+                                <option value="espn">ESPN Scraping</option>
+                                <option value="open-football">Open Football</option>
+                                <option value="world-football">World Football</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Crear Equipo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Importar -->
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importModalLabel">Importar Equipos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{{ url_for('importar_equipos') }}" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="importFile" class="form-label">Archivo CSV/JSON:</label>
+                        <input type="file" class="form-control" id="importFile" name="importFile" 
+                               accept=".csv,.json" required>
+                        <div class="form-text">Seleccione un archivo CSV o JSON con datos de equipos</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="importSource" class="form-label">Fuente de Datos:</label>
+                        <select class="form-select" id="importSource" name="importSource">
+                            <option value="import">Importación de Archivo</option>
+                            <option value="espn-api">ESPN API</option>
+                            <option value="football-data">Football-Data.org</option>
+                            <option value="espn">ESPN Scraping</option>
+                            <option value="open-football">Open Football</option>
+                            <option value="world-football">World Football</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="overwriteExisting" name="overwriteExisting">
+                            <label class="form-check-label" for="overwriteExisting">
+                                Sobrescribir datos existentes
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Importar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Confirmación Eliminar -->
+<div class="modal fade" id="deleteTeamModal" tabindex="-1" aria-labelledby="deleteTeamModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteTeamModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que quieres eliminar al equipo <strong id="deleteTeamName"></strong>?</p>
+                <p class="text-danger">Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="deleteTeamForm" method="post" action="{{ url_for('eliminar_equipo') }}">
+                    <input type="hidden" id="deleteTeamId" name="id">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Variables globales
+    let currentTeamId = null;
+    
+    // Función para ver detalles de un equipo
+    function verEquipo(id) {
+        currentTeamId = id;
+        const modal = new bootstrap.Modal(document.getElementById('viewTeamModal'));
+        modal.show();
+        
+        // Mostrar cargando y ocultar contenido
+        document.getElementById('viewTeamLoading').classList.remove('d-none');
+        document.getElementById('viewTeamContent').classList.add('d-none');
+        
+        // Cargar datos del equipo mediante API
+        fetch(`/api/equipos/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const equipo = data.equipo;
+                    
+                    // Llenar campos del modal
+                    document.getElementById('viewTeamLogo').src = equipo.escudo_url || `https://via.placeholder.com/200?text=${equipo.nombre.replace(' ', '+')}`;
+                    document.getElementById('viewTeamName').textContent = equipo.nombre;
+                    
+                    // Badges
+                    let badgesHTML = '';
+                    if (equipo.liga) {
+                        badgesHTML += `<span class="badge bg-secondary me-1">${equipo.liga}</span>`;
+                    }
+                    badgesHTML += `<span class="badge bg-light text-dark">
+                                    <span class="source-indicator source-${equipo.fuente.replace('.', '-')}"></span>
+                                    ${equipo.fuente}
+                                   </span>`;
+                    document.getElementById('viewTeamBadges').innerHTML = badgesHTML;
+                    
+                    // Información general
+                    document.getElementById('viewTeamId').textContent = equipo.id;
+                    document.getElementById('viewTeamShortName').textContent = equipo.nombre_corto || '--';
+                    document.getElementById('viewTeamCountry').textContent = equipo.pais || '--';
+                    document.getElementById('viewTeamFounded').textContent = equipo.fundacion || '--';
+                    document.getElementById('viewTeamStadium').textContent = equipo.estadio || '--';
+                    document.getElementById('viewTeamCoach').textContent = equipo.entrenador || '--';
+                    
+                    // Website con enlace si existe
+                    if (equipo.web) {
+                        document.getElementById('viewTeamWebsite').innerHTML = `<a href="${equipo.web}" target="_blank">${equipo.web}</a>`;
+                    } else {
+                        document.getElementById('viewTeamWebsite').textContent = '--';
+                    }
+                    
+                    document.getElementById('viewTeamColors').textContent = equipo.colores || '--';
+                    document.getElementById('viewTeamSource').textContent = equipo.fuente;
+                    
+                    // Enlaces a otros datos
+                    document.getElementById('viewTeamPlayers').href = `/datos-jugadores?equipo=${id}`;
+                    document.getElementById('viewTeamMatches').href = `/datos-partidos?equipo=${id}`;
+                    document.getElementById('viewTeamStats').href = `/estadisticas-equipo/${id}`;
+                    
+                    // Mostrar contenido y ocultar cargando
+                    document.getElementById('viewTeamLoading').classList.add('d-none');
+                    document.getElementById('viewTeamContent').classList.remove('d-none');
+                } else {
+                    alert('Error al cargar datos del equipo: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al cargar datos del equipo');
+            });
+    }
+    
+    // Función para editar un equipo
+    function editarEquipo(id) {
+        currentTeamId = id;
+        const modal = new bootstrap.Modal(document.getElementById('editTeamModal'));
+        modal.show();
+        
+        // Mostrar cargando y ocultar contenido
+        document.getElementById('editTeamLoading').classList.remove('d-none');
+        document.getElementById('editTeamContent').classList.add('d-none');
+        
+        // Cargar datos del equipo mediante API
+        fetch(`/api/equipos/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const equipo = data.equipo;
+                    
+                    // Llenar campos del formulario
+                    document.getElementById('editTeamId').value = equipo.id;
+                    document.getElementById('editTeamNombre').value = equipo.nombre || '';
+                    document.getElementById('editTeamNombreCorto').value = equipo.nombre_corto || '';
+                    document.getElementById('editTeamPais').value = equipo.pais || '';
+                    document.getElementById('editTeamLiga').value = equipo.liga || '';
+                    document.getElementById('editTeamFundacion').value = equipo.fundacion || '';
+                    document.getElementById('editTeamEstadio').value = equipo.estadio || '';
+                    document.getElementById('editTeamEntrenador').value = equipo.entrenador || '';
+                    document.getElementById('editTeamColores').value = equipo.colores || '';
+                    document.getElementById('editTeamWeb').value = equipo.web || '';
+                    document.getElementById('editTeamEscudoUrl').value = equipo.escudo_url || '';
+                    document.getElementById('editTeamFuente').value = equipo.fuente;
+                    
+                    // Mostrar contenido y ocultar cargando
+                    document.getElementById('editTeamLoading').classList.add('d-none');
+                    document.getElementById('editTeamContent').classList.remove('d-none');
+                } else {
+                    alert('Error al cargar datos del equipo: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al cargar datos del equipo');
+            });
+    }
+    
+    // Función para confirmar eliminación
+    function confirmarEliminar(id, nombre) {
+        document.getElementById('deleteTeamId').value = id;
+        document.getElementById('deleteTeamName').textContent = nombre;
+        
+        const modal = new bootstrap.Modal(document.getElementById('deleteTeamModal'));
+        modal.show();
+    }
+    
+    // Función para editar el equipo que se está viendo
+    function editarEquipoActual() {
+        if (currentTeamId) {
+            // Cerrar modal actual
+            const viewModal = bootstrap.Modal.getInstance(document.getElementById('viewTeamModal'));
+            viewModal.hide();
+            
+            // Abrir modal de edición
+            setTimeout(() => {
+                editarEquipo(currentTeamId);
+            }, 500);
+        }
+    }
+    
+    // Inicializar tooltips y popovers
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+{% endblock %}

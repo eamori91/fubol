@@ -123,7 +123,7 @@ class ESPNAPI(BaseDataFetcher):
             logger.error(f"Error al obtener ligas desde ESPN API: {str(e)}")
             return []
     
-    def fetch_teams(self, league: str = None, season: int = None) -> List[Dict[str, Any]]:
+    def fetch_teams(self, league: Optional[str] = None, season: Optional[int] = None, **kwargs) -> List[Dict[str, Any]]:
         """
         Obtiene la lista de equipos de una liga
         
@@ -177,7 +177,7 @@ class ESPNAPI(BaseDataFetcher):
             logger.error(f"Error al obtener equipos desde ESPN API: {str(e)}")
             return []
     
-    def fetch_players(self, team_id: str = None) -> List[Dict[str, Any]]:
+    def fetch_players(self, team_id: Optional[str] = None, **kwargs) -> List[Dict[str, Any]]:
         """
         Obtiene la lista de jugadores de un equipo
         
@@ -239,7 +239,7 @@ class ESPNAPI(BaseDataFetcher):
             logger.error(f"Error al obtener jugadores desde ESPN API: {str(e)}")
             return []
             
-    def fetch_matches(self, league: str = None, date_from: str = None, date_to: str = None) -> List[Dict[str, Any]]:
+    def fetch_matches(self, league: Optional[str] = None, date_from: Optional[str] = None, date_to: Optional[str] = None, **kwargs) -> List[Dict[str, Any]]:
         """
         Obtiene partidos de una liga en un rango de fechas
         
@@ -336,7 +336,7 @@ class ESPNAPI(BaseDataFetcher):
             logger.error(f"Error al obtener partidos desde ESPN API: {str(e)}")
             return []
             
-    def fetch_standings(self, league: str = None, season: int = None) -> List[Dict[str, Any]]:
+    def fetch_standings(self, league: Optional[str] = None, season: Optional[int] = None, **kwargs) -> List[Dict[str, Any]]:
         """
         Obtiene la clasificación de una liga
         
@@ -408,7 +408,7 @@ class ESPNAPI(BaseDataFetcher):
             logger.error(f"Error al obtener clasificación desde ESPN API: {str(e)}")
             return []
 
-    def fetch_team_stats(self, team_id: str = None) -> Dict[str, Any]:
+    def fetch_team_stats(self, team_id: Optional[str] = None, **kwargs) -> Dict[str, Any]:
         """
         Obtiene estadísticas detalladas de un equipo
         
@@ -458,3 +458,217 @@ class ESPNAPI(BaseDataFetcher):
         except Exception as e:
             logger.error(f"Error al obtener estadísticas desde ESPN API: {str(e)}")
             return {}
+        
+    def fetch_team(self, team_id: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Obtiene los datos de un equipo específico
+        
+        Args:
+            team_id: ID del equipo
+            
+        Returns:
+            Diccionario con datos del equipo o diccionario vacío si no se encuentra
+        """
+        if not team_id:
+            logger.warning("No se proporcionó ID de equipo")
+            return {}
+            
+        url = f"{self.site_api_url}/apis/site/v2/sports/soccer/teams/{team_id}"
+        
+        try:
+            data = self._make_request(url)
+            
+            if not data or 'team' not in data:
+                logger.warning(f"No se encontró el equipo con ID {team_id}")
+                return {}
+                
+            team = data['team']
+            
+            # Formatear datos al formato estándar del sistema
+            formatted_team = {
+                'id': f"espn-{str(team.get('id', ''))}",
+                'nombre': team.get('name', ''),
+                'nombre_corto': team.get('shortDisplayName', ''),
+                'siglas': team.get('abbreviation', ''),
+                'pais': team.get('location', ''),
+                'fundacion': team.get('yearFounded', None),
+                'estadio': None,  # No disponible directamente
+                'entrenador': None,  # No disponible directamente
+                'escudo_url': team.get('logos', [{}])[0].get('href', '') if team.get('logos') else '',
+                'colores': None,  # No disponible directamente
+                'liga': team.get('leagues', [{}])[0].get('name', '') if team.get('leagues') else '',
+                'fuente': 'espn-api'
+            }
+                
+            return formatted_team
+            
+        except Exception as e:
+            logger.error(f"Error al obtener equipo {team_id} desde ESPN API: {str(e)}")
+            return {}
+        
+        # --- Métodos de compatibilidad con UnifiedDataAdapter ---
+    
+    def get_proximos_partidos(self, dias: int = 7) -> List[Dict[str, Any]]:
+        """
+        Obtiene los partidos próximos a disputarse.
+        
+        Args:
+            dias: Número de días hacia adelante para buscar
+            
+        Returns:
+            Lista de partidos próximos en formato estándar
+        """
+        date_from = datetime.now().strftime("%Y%m%d")
+        date_to = (datetime.now() + timedelta(days=dias)).strftime("%Y%m%d")
+        
+        matches = self.fetch_matches(date_from=date_from, date_to=date_to)
+        
+        # Convertir al formato estándar esperado por UnifiedDataAdapter
+        proximos_partidos = []
+        
+        for match in matches:
+            try:
+                partido = {
+                    "id": str(match.get("id", "")),
+                    "local": match.get("home_team", {}).get("name", ""),
+                    "visitante": match.get("away_team", {}).get("name", ""),
+                    "fecha": match.get("date", datetime.now().strftime("%Y-%m-%d")),
+                    "liga": match.get("league", {}).get("name", ""),
+                    "estadio": match.get("venue", {}).get("name", ""),
+                    "fuente": "espn_api"
+                }
+                proximos_partidos.append(partido)
+            except Exception as e:
+                logger.error(f"Error al procesar partido de ESPN API: {e}")
+                
+        return proximos_partidos
+        
+    def get_equipo(self, nombre_equipo: str) -> Dict[str, Any]:
+        """
+        Busca un equipo por nombre.
+        
+        Args:
+            nombre_equipo: Nombre del equipo a buscar
+            
+        Returns:
+            Datos del equipo en formato estándar
+        """
+        # Primero necesitamos buscar todos los equipos
+        equipos = self.fetch_teams()
+        
+        # Normalizar el nombre para comparación
+        nombre_normalizado = nombre_equipo.lower()
+        
+        # Buscar coincidencias
+        for equipo in equipos:
+            if nombre_equipo.lower() in equipo.get("name", "").lower():
+                # Convertir al formato estándar
+                return {
+                    "id": str(equipo.get("id", "")),
+                    "nombre": equipo.get("name", ""),
+                    "pais": equipo.get("country", ""),
+                    "liga": equipo.get("league", {}).get("name", ""),
+                    "logo": equipo.get("logo", ""),
+                    "estadio": equipo.get("venue", {}).get("name", ""),
+                    "fuente": "espn_api"
+                }
+                
+        # Si no se encuentra, devolver vacío
+        return {}
+        
+    def get_equipo_por_id(self, equipo_id: str) -> Dict[str, Any]:
+        """
+        Obtiene información de un equipo por su ID.
+        
+        Args:
+            equipo_id: ID del equipo
+            
+        Returns:
+            Datos del equipo en formato estándar
+        """
+        try:
+            equipo = self.fetch_team(team_id=equipo_id)
+            
+            if not equipo:
+                return {}
+                
+            # Convertir al formato estándar
+            return {
+                "id": str(equipo.get("id", "")),
+                "nombre": equipo.get("name", ""),
+                "pais": equipo.get("country", ""),
+                "liga": equipo.get("league", {}).get("name", ""),
+                "logo": equipo.get("logo", ""),
+                "estadio": equipo.get("venue", {}).get("name", ""),
+                "fuente": "espn_api"
+            }
+            
+        except Exception as e:
+            logger.error(f"Error al obtener equipo por ID desde ESPN API: {e}")
+            return {}
+            
+    def get_equipos(self) -> List[Dict[str, Any]]:
+        """
+        Obtiene todos los equipos disponibles.
+        
+        Returns:
+            Lista de equipos en formato estándar
+        """
+        try:
+            equipos_raw = self.fetch_teams()
+            equipos = []
+            
+            for equipo in equipos_raw:
+                equipos.append({
+                    "id": str(equipo.get("id", "")),
+                    "nombre": equipo.get("name", ""),
+                    "pais": equipo.get("country", ""),
+                    "liga": equipo.get("league", {}).get("name", ""),
+                    "logo": equipo.get("logo", ""),
+                    "estadio": equipo.get("venue", {}).get("name", ""),
+                    "fuente": "espn_api"
+                })
+                
+            return equipos
+            
+        except Exception as e:
+            logger.error(f"Error al obtener equipos desde ESPN API: {e}")
+            return []
+            
+    def get_equipos_liga(self, liga: str) -> List[Dict[str, Any]]:
+        """
+        Obtiene todos los equipos de una liga específica.
+        
+        Args:
+            liga: Nombre de la liga
+            
+        Returns:
+            Lista de equipos en formato estándar
+        """
+        try:
+            # Intentar mapear el nombre de la liga a su código
+            liga_code = None
+            for code, name in self.league_mapping.items():
+                if liga.lower() in name.lower():
+                    liga_code = code
+                    break
+            
+            equipos_raw = self.fetch_teams(league=liga_code)
+            equipos = []
+            
+            for equipo in equipos_raw:
+                equipos.append({
+                    "id": str(equipo.get("id", "")),
+                    "nombre": equipo.get("name", ""),
+                    "pais": equipo.get("country", ""),
+                    "liga": equipo.get("league", {}).get("name", ""),
+                    "logo": equipo.get("logo", ""),
+                    "estadio": equipo.get("venue", {}).get("name", ""),
+                    "fuente": "espn_api"
+                })
+                
+            return equipos
+            
+        except Exception as e:
+            logger.error(f"Error al obtener equipos de liga desde ESPN API: {e}")
+            return []

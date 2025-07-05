@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Histórico - Analizador Deportivo</title>
+    
+    <!-- CSS Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/themes.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/interactive.css') }}" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-green: #28a745;
+            --primary-dark: #1e7e34;
+            --grass-green: #4CAF50;
+            --field-green: #2E7D32;
+            --white-clean: #ffffff;
+            --gray-light: #f8f9fa;
+            --gray-medium: #6c757d;
+            --shadow-soft: 0 2px 10px rgba(0,0,0,0.1);
+            --shadow-hover: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--gray-light) 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+
+        /* Header Mejorado */
+        .page-header {
+            background: linear-gradient(135deg, var(--grass-green) 0%, var(--field-green) 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-soft);
+        }
+
+        /* Breadcrumbs mejorados */
+        .breadcrumb-modern {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 2rem;
+        }
+
+        /* Cards de análisis */
+        .analysis-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            height: 100%;
+        }
+
+        .analysis-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-header-custom {
+            background: linear-gradient(135deg, var(--grass-green), var(--field-green));
+            color: white;
+            border-radius: 10px 10px 0 0;
+            padding: 1rem 1.5rem;
+            margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+        }
+
+        /* Formularios mejorados */
+        .form-control-modern {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .form-control-modern:focus {
+            border-color: var(--grass-green);
+            box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+        }
+
+        .btn-analyze {
+            background: linear-gradient(135deg, var(--grass-green), var(--field-green));
+            border: none;
+            border-radius: 25px;
+            padding: 0.8rem 2rem;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-analyze:hover {
+            background: linear-gradient(135deg, var(--field-green), var(--primary-dark));
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Filtros avanzados */
+        .filters-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 2rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1rem;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: var(--field-green);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Visualizaciones */
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--field-green);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Stats cards */
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            text-align: center;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--grass-green);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--gray-medium);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Progress bars */
+        .progress-modern {
+            height: 10px;
+            border-radius: 5px;
+            background: #e9ecef;
+            margin: 0.5rem 0;
+        }
+
+        .progress-bar-modern {
+            background: linear-gradient(90deg, var(--grass-green), var(--field-green));
+            border-radius: 5px;
+            transition: width 1s ease;
+        }
+
+        /* Comparison table */
+        .comparison-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .table-modern {
+            margin-bottom: 0;
+        }
+
+        .table-modern th {
+            background: var(--grass-green);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-weight: 600;
+        }
+
+        .table-modern td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+        }
+
+        .table-modern tbody tr:hover {
+            background: var(--gray-light);
+        }
+
+        /* Loading states */
+        .loading-container {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--grass-green);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .chart-container {
+                padding: 1rem;
+            }
+            
+            .stat-value {
+                font-size: 2rem;
+            }
+            
+            .filters-panel {
+                padding: 1rem;
+            }
+        }
+
+        /* Tooltips personalizados */
+        .tooltip-custom {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip-custom::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .tooltip-custom:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <div class="theme-toggle">
+        <i class="fas fa-sun"></i>
+        <i class="fas fa-moon"></i>
+    </div>
+
+    <!-- Notifications Container -->
+    <div class="notifications-container"></div>
+    <!-- Header -->
+    <div class="page-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-0">
+                        <i class="fas fa-chart-line me-3"></i>
+                        Análisis Histórico
+                    </h1>
+                    <p class="lead mb-0">Explora patrones y tendencias de equipos a lo largo de temporadas</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-light" onclick="exportAnalysis()">
+                        <i class="fas fa-download me-2"></i>
+                        Exportar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-modern">
+                <li class="breadcrumb-item">
+                    <a href="/" class="text-decoration-none">
+                        <i class="fas fa-home me-1"></i>Inicio
+                    </a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <i class="fas fa-chart-line me-1"></i>Análisis Histórico
+                </li>
+            </ol>
+        </nav>
+
+        <!-- Filtros Avanzados -->
+        <div class="filters-panel" data-aos="fade-up">
+            <h4 class="mb-3">
+                <i class="fas fa-filter me-2 text-success"></i>
+                Filtros de Análisis
+            </h4>
+            
+            <form id="analysis-form" method="POST">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="filter-group">
+                            <label class="filter-label">Equipo Principal</label>
+                            <select class="form-control form-control-modern" id="equipo" name="equipo" required>
+                                <option value="" disabled selected>Seleccionar equipo...</option>
+                                <option value="FC Barcelona">FC Barcelona</option>
+                                <option value="Real Madrid">Real Madrid</option>
+                                <option value="Atlético Madrid">Atlético Madrid</option>
+                                <option value="Manchester City">Manchester City</option>
+                                <option value="Liverpool">Liverpool</option>
+                                <option value="Bayern Munich">Bayern Munich</option>
+                                <option value="Borussia Dortmund">Borussia Dortmund</option>
+                                <option value="PSG">Paris Saint-Germain</option>
+                                <option value="Juventus">Juventus</option>
+                                <option value="AC Milan">AC Milan</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="filter-group">
+                            <label class="filter-label">Temporada</label>
+                            <select class="form-control form-control-modern" id="temporada" name="temporada" required>
+                                <option value="" disabled selected>Seleccionar...</option>
+                                <option value="2023-24">2023-24</option>
+                                <option value="2022-23">2022-23</option>
+                                <option value="2021-22">2021-22</option>
+                                <option value="2020-21">2020-21</option>
+                                <option value="2019-20">2019-20</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="filter-group">
+                            <label class="filter-label">Competición</label>
+                            <select class="form-control form-control-modern" id="competicion" name="competicion">
+                                <option value="">Todas las competiciones</option>
+                                <option value="liga">Liga Nacional</option>
+                                <option value="champions">Champions League</option>
+                                <option value="copa">Copa Nacional</option>
+                                <option value="europa">Europa League</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-2">
+                        <div class="filter-group">
+                            <label class="filter-label">&nbsp;</label>
+                            <button type="submit" class="btn btn-analyze w-100">
+                                <i class="fas fa-search me-2"></i>
+                                Analizar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filtros Adicionales (Colapsables) -->
+                <div class="mt-3">
+                    <button class="btn btn-outline-success" type="button" data-bs-toggle="collapse" data-bs-target="#advanced-filters">
+                        <i class="fas fa-cog me-2"></i>
+                        Filtros Avanzados
+                    </button>
+                </div>
+                
+                <div class="collapse mt-3" id="advanced-filters">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="filter-label">Local/Visitante</label>
+                            <select class="form-control form-control-modern" name="localvisitante">
+                                <option value="">Ambos</option>
+                                <option value="local">Solo Local</option>
+                                <option value="visitante">Solo Visitante</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="filter-label">Resultado</label>
+                            <select class="form-control form-control-modern" name="resultado">
+                                <option value="">Todos</option>
+                                <option value="victoria">Solo Victorias</option>
+                                <option value="empate">Solo Empates</option>
+                                <option value="derrota">Solo Derrotas</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="filter-label">Período</label>
+                            <select class="form-control form-control-modern" name="periodo">
+                                <option value="">Toda la temporada</option>
+                                <option value="inicio">Inicio (10 primeros)</option>
+                                <option value="medio">Medio temporada</option>
+                                <option value="final">Final (10 últimos)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="filter-label">Rival</label>
+                            <select class="form-control form-control-modern" name="rival">
+                                <option value="">Cualquier rival</option>
+                                <option value="top6">Solo Top 6</option>
+                                <option value="bottom6">Solo Bottom 6</option>
+                                <option value="champions">Rivales de Champions</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Área de Resultados -->
+        <div id="results-area" style="display: none;">
+            <!-- Estadísticas Rápidas -->
+            <div class="row mb-4" data-aos="fade-up">
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-partidos">0</span>
+                        <div class="stat-label">Partidos Jugados</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-victorias">0</span>
+                        <div class="stat-label">Victorias</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-empates">0</span>
+                        <div class="stat-label">Empates</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-derrotas">0</span>
+                        <div class="stat-label">Derrotas</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráficos de Análisis -->
+            <div class="row">
+                <!-- Gráfico de Rendimiento Temporal -->
+                <div class="col-lg-8" data-aos="fade-right">
+                    <div class="chart-container">
+                        <h5 class="chart-title">
+                            <i class="fas fa-chart-line me-2"></i>
+                            Rendimiento a lo Largo de la Temporada
+                        </h5>
+                        <canvas id="performance-chart" height="100"></canvas>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Radar -->
+                <div class="col-lg-4" data-aos="fade-left">
+                    <div class="chart-container">
+                        <h5 class="chart-title">
+                            <i class="fas fa-satellite-dish me-2"></i>
+                            Análisis Radar
+                        </h5>
+                        <canvas id="radar-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Heatmap de Rendimiento -->
+                <div class="col-lg-6" data-aos="fade-up">
+                    <div class="chart-container">
+                        <h5 class="chart-title">
+                            <i class="fas fa-fire me-2"></i>
+                            Mapa de Calor por Mes/Rival
+                        </h5>
+                        <div id="heatmap-chart"></div>
+                    </div>
+                </div>
+
+                <!-- Distribución de Goles -->
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="chart-container">
+                        <h5 class="chart-title">
+                            <i class="fas fa-futbol me-2"></i>
+                            Distribución de Goles
+                        </h5>
+                        <canvas id="goals-distribution-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla de Comparación -->
+            <div class="row">
+                <div class="col-12" data-aos="fade-up">
+                    <div class="comparison-table">
+                        <h5 class="chart-title pt-3">
+                            <i class="fas fa-table me-2"></i>
+                            Análisis Detallado por Partido
+                        </h5>
+                        <div class="table-responsive">
+                            <table class="table table-modern">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Rival</th>
+                                        <th>L/V</th>
+                                        <th>Resultado</th>
+                                        <th>Goles F</th>
+                                        <th>Goles C</th>
+                                        <th>xG</th>
+                                        <th>Posesión</th>
+                                        <th>Rendimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="matches-table-body">
+                                    <!-- Datos se cargarán dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading-state" style="display: none;">
+            <div class="loading-container">
+                <div class="loading-spinner"></div>
+                <h5>Analizando datos históricos...</h5>
+                <p class="text-muted">Por favor espera mientras procesamos la información</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Inicializar AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        // Variables globales
+        let performanceChart = null;
+        let radarChart = null;
+        let goalsChart = null;
+
+        // Manejar envío del formulario
+        document.getElementById('analysis-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            performAnalysis();
+        });
+
+        function performAnalysis() {
+            showLoading();
+            
+            // Simular análisis (en producción haría llamada a API)
+            setTimeout(() => {
+                hideLoading();
+                showResults();
+                generateCharts();
+                populateTable();
+            }, 2000);
+        }
+
+        function showLoading() {
+            document.getElementById('loading-state').style.display = 'block';
+            document.getElementById('results-area').style.display = 'none';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-state').style.display = 'none';
+        }
+
+        function showResults() {
+            document.getElementById('results-area').style.display = 'block';
+            
+            // Actualizar estadísticas rápidas
+            document.getElementById('stat-partidos').textContent = '38';
+            document.getElementById('stat-victorias').textContent = '26';
+            document.getElementById('stat-empates').textContent = '8';
+            document.getElementById('stat-derrotas').textContent = '4';
+            
+            // Animar contadores
+            animateCounters();
+        }
+
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-value');
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent);
+                let current = 0;
+                const increment = target / 50;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current);
+                    }
+                }, 20);
+            });
+        }
+
+        function generateCharts() {
+            // Gráfico de rendimiento temporal
+            const ctx1 = document.getElementById('performance-chart').getContext('2d');
+            if (performanceChart) {
+                performanceChart.destroy();
+            }
+            
+            performanceChart = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['Sep', 'Oct', 'Nov', 'Dic', 'Ene', 'Feb', 'Mar', 'Abr', 'May'],
+                    datasets: [{
+                        label: 'Puntos por Partido',
+                        data: [2.1, 2.5, 2.8, 2.3, 2.6, 2.9, 2.4, 2.7, 2.5],
+                        borderColor: '#4CAF50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Media de Liga',
+                        data: [1.8, 1.8, 1.8, 1.8, 1.8, 1.8, 1.8, 1.8, 1.8],
+                        borderColor: '#FF9800',
+                        borderDash: [5, 5],
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 3
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de radar
+            const ctx2 = document.getElementById('radar-chart').getContext('2d');
+            if (radarChart) {
+                radarChart.destroy();
+            }
+            
+            radarChart = new Chart(ctx2, {
+                type: 'radar',
+                data: {
+                    labels: ['Ataque', 'Defensa', 'Posesión', 'Física', 'Mental', 'Táctica'],
+                    datasets: [{
+                        label: 'Equipo Seleccionado',
+                        data: [85, 78, 92, 76, 88, 82],
+                        borderColor: '#4CAF50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                        pointBackgroundColor: '#4CAF50'
+                    }, {
+                        label: 'Media de Liga',
+                        data: [70, 70, 70, 70, 70, 70],
+                        borderColor: '#FF9800',
+                        backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                        pointBackgroundColor: '#FF9800'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de distribución de goles
+            const ctx3 = document.getElementById('goals-distribution-chart').getContext('2d');
+            if (goalsChart) {
+                goalsChart.destroy();
+            }
+            
+            goalsChart = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: ['0', '1', '2', '3', '4+'],
+                    datasets: [{
+                        label: 'Goles a Favor',
+                        data: [2, 8, 15, 10, 3],
+                        backgroundColor: '#4CAF50'
+                    }, {
+                        label: 'Goles en Contra',
+                        data: [12, 18, 6, 2, 0],
+                        backgroundColor: '#FF5722'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    }
+                }
+            });
+        }
+
+        function populateTable() {
+            const tbody = document.getElementById('matches-table-body');
+            const sampleData = [
+                ['15/05/2024', 'Real Madrid', 'L', '2-1', '2', '1', '1.8', '58%', '8.2'],
+                ['08/05/2024', 'Sevilla', 'V', '0-2', '2', '0', '2.1', '62%', '8.5'],
+                ['01/05/2024', 'Valencia', 'L', '3-0', '3', '0', '2.3', '71%', '9.1'],
+                ['25/04/2024', 'Atlético Madrid', 'V', '1-1', '1', '1', '1.5', '49%', '7.3'],
+                ['18/04/2024', 'Getafe', 'L', '4-1', '4', '1', '3.2', '68%', '8.7']
+            ];
+
+            tbody.innerHTML = '';
+            sampleData.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row[0]}</td>
+                    <td>${row[1]}</td>
+                    <td><span class="badge ${row[2] === 'L' ? 'bg-success' : 'bg-warning'}">${row[2]}</span></td>
+                    <td><strong>${row[3]}</strong></td>
+                    <td>${row[4]}</td>
+                    <td>${row[5]}</td>
+                    <td>${row[6]}</td>
+                    <td>
+                        <div class="progress progress-modern">
+                            <div class="progress-bar progress-bar-modern" style="width: ${row[7]}"></div>
+                        </div>
+                        <small>${row[7]}</small>
+                    </td>
+                    <td>
+                        <span class="badge ${parseFloat(row[8]) >= 8 ? 'bg-success' : parseFloat(row[8]) >= 7 ? 'bg-warning' : 'bg-danger'}">
+                            ${row[8]}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function exportAnalysis() {
+            // Implementar exportación a PDF/Excel
+            alert('Funcionalidad de exportación en desarrollo');
+        }
+    </script>
+</body>
+</html>

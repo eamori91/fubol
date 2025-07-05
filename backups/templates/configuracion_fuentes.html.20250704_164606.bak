@@ -1,0 +1,521 @@
+{% extends 'base.html' %}
+
+{% block title %}Configuración de Fuentes de Datos{% endblock %}
+
+{% block head_extra %}
+<style>
+    .source-card {
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .source-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+    
+    .source-logo {
+        height: 60px;
+        object-fit: contain;
+        margin-bottom: 1rem;
+    }
+    
+    .source-toggle .form-check-input {
+        width: 3rem;
+        height: 1.5rem;
+    }
+    
+    .source-description {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-bottom: 1rem;
+    }
+    
+    .active-source-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 10;
+    }
+    
+    .source-metrics {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .data-format-selector {
+        margin-top: 2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Configuración de Fuentes de Datos</h1>
+        <div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#helpModal">
+                <i class="fas fa-question-circle"></i> Ayuda
+            </button>
+        </div>
+    </div>
+
+    {% if mensaje %}
+    <div class="alert alert-{{ tipo_mensaje|default('info') }} alert-dismissible fade show" role="alert">
+        {{ mensaje }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('configurar_fuentes') }}">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Preferencias Globales</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="formato_datos" class="form-label">Formato de Datos Estadísticos:</label>
+                        <select class="form-select" id="formato_datos" name="formato_datos">
+                            <option value="estandar" {% if formato_datos == 'estandar' %}selected{% endif %}>Formato Estándar</option>
+                            <option value="detallado" {% if formato_datos == 'detallado' %}selected{% endif %}>Formato Detallado</option>
+                            <option value="compacto" {% if formato_datos == 'compacto' %}selected{% endif %}>Formato Compacto</option>
+                        </select>
+                        <div class="form-text">Define qué nivel de detalle se incluye en las estadísticas.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="duracion_cache" class="form-label">Duración de Caché (horas):</label>
+                        <input type="number" class="form-control" id="duracion_cache" name="duracion_cache" 
+                               value="{{ duracion_cache|default(1) }}" min="0.5" max="24" step="0.5">
+                        <div class="form-text">Tiempo que se guardan los datos en caché antes de refrescarlos.</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="estrategia_conflictos" class="form-label">Estrategia para Conflictos de Datos:</label>
+                        <select class="form-select" id="estrategia_conflictos" name="estrategia_conflictos">
+                            <option value="prioridad" {% if estrategia_conflictos == 'prioridad' %}selected{% endif %}>Usar Fuente Prioritaria</option>
+                            <option value="combinacion" {% if estrategia_conflictos == 'combinacion' %}selected{% endif %}>Combinar Fuentes</option>
+                            <option value="reciente" {% if estrategia_conflictos == 'reciente' %}selected{% endif %}>Datos Más Recientes</option>
+                        </select>
+                        <div class="form-text">Cómo manejar datos diferentes de múltiples fuentes.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="guardar_datos" class="form-label">Almacenar Datos Recuperados:</label>
+                        <div class="form-check form-switch mt-2">
+                            <input class="form-check-input" type="checkbox" id="guardar_datos" name="guardar_datos" {% if guardar_datos %}checked{% endif %}>
+                            <label class="form-check-label" for="guardar_datos">
+                                Guardar datos recuperados en la base de datos local
+                            </label>
+                        </div>
+                        <div class="form-text">Los datos recuperados se almacenarán para consultas sin conexión.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <!-- ESPN API -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 source-card {% if use_espn_api %}border-success{% endif %}">
+                    {% if use_espn_api %}
+                    <span class="badge bg-success active-source-badge">Activo</span>
+                    {% endif %}
+                    <div class="card-header">
+                        <h5 class="mb-0">ESPN API</h5>
+                    </div>
+                    <div class="card-body">
+                        <img src="https://a.espncdn.com/redesign/assets/img/espn-logo-white.png" alt="ESPN API" class="source-logo">
+                        <p class="source-description">API no oficial de ESPN que proporciona datos detallados sobre ligas, equipos, jugadores y partidos.</p>
+                        
+                        <div class="form-check form-switch source-toggle mb-4">
+                            <input class="form-check-input" type="checkbox" id="use_espn_api" name="use_espn_api" {% if use_espn_api %}checked{% endif %}>
+                            <label class="form-check-label" for="use_espn_api">
+                                Activar ESPN API
+                            </label>
+                        </div>
+                        
+                        <div class="source-metrics">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Equipos:</span>
+                                <span class="badge bg-primary">{{ metricas.espn_api.equipos|default('N/A') }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Jugadores:</span>
+                                <span class="badge bg-primary">{{ metricas.espn_api.jugadores|default('N/A') }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Partidos:</span>
+                                <span class="badge bg-primary">{{ metricas.espn_api.partidos|default('N/A') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Football Data API -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 source-card {% if use_football_data_api %}border-success{% endif %}">
+                    {% if use_football_data_api %}
+                    <span class="badge bg-success active-source-badge">Activo</span>
+                    {% endif %}
+                    <div class="card-header">
+                        <h5 class="mb-0">Football-Data.org API</h5>
+                    </div>
+                    <div class="card-body">
+                        <img src="https://www.football-data.org/assets/logo.jpg" alt="Football-Data.org" class="source-logo">
+                        <p class="source-description">API oficial con datos actualizados regularmente. Ofrece información detallada sobre competiciones, equipos y resultados.</p>
+                        
+                        <div class="form-check form-switch source-toggle mb-4">
+                            <input class="form-check-input" type="checkbox" id="use_football_data_api" name="use_football_data_api" {% if use_football_data_api %}checked{% endif %}>
+                            <label class="form-check-label" for="use_football_data_api">
+                                Activar Football-Data API
+                            </label>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="football_data_api_key" class="form-label">API Key:</label>
+                            <input type="text" class="form-control" id="football_data_api_key" name="football_data_api_key" 
+                                   value="{{ football_data_api_key|default('') }}" placeholder="Ingrese su API key">
+                        </div>
+                        
+                        <div class="source-metrics">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Equipos:</span>
+                                <span class="badge bg-primary">{{ metricas.football_data_api.equipos|default('N/A') }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Jugadores:</span>
+                                <span class="badge bg-primary">{{ metricas.football_data_api.jugadores|default('N/A') }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Partidos:</span>
+                                <span class="badge bg-primary">{{ metricas.football_data_api.partidos|default('N/A') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ESPN Scraping -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 source-card {% if use_espn_data %}border-success{% endif %}">
+                    {% if use_espn_data %}
+                    <span class="badge bg-success active-source-badge">Activo</span>
+                    {% endif %}
+                    <div class="card-header">
+                        <h5 class="mb-0">ESPN Scraping</h5>
+                    </div>
+                    <div class="card-body">
+                        <img src="https://a.espncdn.com/redesign/assets/img/espn-logo-white.png" alt="ESPN Scraping" class="source-logo">
+                        <p class="source-description">Obtiene datos del portal web de ESPN mediante técnicas de scraping. Actualización frecuente pero con limitaciones.</p>
+                        
+                        <div class="form-check form-switch source-toggle mb-4">
+                            <input class="form-check-input" type="checkbox" id="use_espn_data" name="use_espn_data" {% if use_espn_data %}checked{% endif %}>
+                            <label class="form-check-label" for="use_espn_data">
+                                Activar ESPN Scraping
+                            </label>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="espn_base_url" class="form-label">URL Base:</label>
+                            <input type="text" class="form-control" id="espn_base_url" name="espn_base_url" 
+                                   value="{{ espn_base_url|default('https://www.espn.com/soccer') }}">
+                        </div>
+                        
+                        <div class="source-metrics">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Equipos:</span>
+                                <span class="badge bg-primary">{{ metricas.espn_data.equipos|default('N/A') }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Jugadores:</span>
+                                <span class="badge bg-primary">{{ metricas.espn_data.jugadores|default('N/A') }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Partidos:</span>
+                                <span class="badge bg-primary">{{ metricas.espn_data.partidos|default('N/A') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Open Football Data -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 source-card {% if use_open_football %}border-success{% endif %}">
+                    {% if use_open_football %}
+                    <span class="badge bg-success active-source-badge">Activo</span>
+                    {% endif %}
+                    <div class="card-header">
+                        <h5 class="mb-0">Open Football Data</h5>
+                    </div>
+                    <div class="card-body">
+                        <img src="https://openfootball.github.io/images/openfootball.png" alt="Open Football Data" class="source-logo">
+                        <p class="source-description">Datos abiertos y gratuitos en formato JSON. Incluye datos históricos y resultados para múltiples ligas.</p>
+                        
+                        <div class="form-check form-switch source-toggle mb-4">
+                            <input class="form-check-input" type="checkbox" id="use_open_football" name="use_open_football" {% if use_open_football %}checked{% endif %}>
+                            <label class="form-check-label" for="use_open_football">
+                                Activar Open Football Data
+                            </label>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="open_football_url" class="form-label">URL Repositorio:</label>
+                            <input type="text" class="form-control" id="open_football_url" name="open_football_url" 
+                                   value="{{ open_football_url|default('https://github.com/openfootball/football.json') }}">
+                        </div>
+                        
+                        <div class="source-metrics">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Equipos:</span>
+                                <span class="badge bg-primary">{{ metricas.open_football.equipos|default('N/A') }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Jugadores:</span>
+                                <span class="badge bg-primary">{{ metricas.open_football.jugadores|default('N/A') }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Partidos:</span>
+                                <span class="badge bg-primary">{{ metricas.open_football.partidos|default('N/A') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- World Football Data -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 source-card {% if use_world_football %}border-success{% endif %}">
+                    {% if use_world_football %}
+                    <span class="badge bg-success active-source-badge">Activo</span>
+                    {% endif %}
+                    <div class="card-header">
+                        <h5 class="mb-0">World Football Data</h5>
+                    </div>
+                    <div class="card-body">
+                        <img src="https://www.football-data.co.uk/assets/images/football-data-logo.png" alt="World Football Data" class="source-logo">
+                        <p class="source-description">Base de datos histórica en formato CSV con resultados detallados de partidos y estadísticas avanzadas.</p>
+                        
+                        <div class="form-check form-switch source-toggle mb-4">
+                            <input class="form-check-input" type="checkbox" id="use_world_football" name="use_world_football" {% if use_world_football %}checked{% endif %}>
+                            <label class="form-check-label" for="use_world_football">
+                                Activar World Football Data
+                            </label>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="world_football_url" class="form-label">URL Base:</label>
+                            <input type="text" class="form-control" id="world_football_url" name="world_football_url" 
+                                   value="{{ world_football_url|default('https://www.football-data.co.uk/data.php') }}">
+                        </div>
+                        
+                        <div class="source-metrics">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Equipos:</span>
+                                <span class="badge bg-primary">{{ metricas.world_football.equipos|default('N/A') }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Jugadores:</span>
+                                <span class="badge bg-primary">{{ metricas.world_football.jugadores|default('N/A') }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Partidos:</span>
+                                <span class="badge bg-primary">{{ metricas.world_football.partidos|default('N/A') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col text-center">
+                <button type="submit" class="btn btn-primary btn-lg px-5">
+                    <i class="fas fa-save me-2"></i> Guardar Configuración
+                </button>
+                <a href="{{ url_for('test_fuentes') }}" class="btn btn-secondary btn-lg px-5 ms-2">
+                    <i class="fas fa-vial me-2"></i> Probar Fuentes
+                </a>
+            </div>
+        </div>
+    </form>
+    
+    <!-- Tabla de Pruebas de Datos -->
+    {% if datos_prueba %}
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">Vista Previa de Datos por Fuente</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Fuente</th>
+                            <th>Equipos</th>
+                            <th>Jugadores</th>
+                            <th>Partidos Próximos</th>
+                            <th>Tiempo Respuesta</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fuente, data in datos_prueba.items() %}
+                        <tr>
+                            <td>{{ fuente }}</td>
+                            <td>{{ data.equipos|default(0) }}</td>
+                            <td>{{ data.jugadores|default(0) }}</td>
+                            <td>{{ data.partidos|default(0) }}</td>
+                            <td>{{ data.tiempo|default(0) }}s</td>
+                            <td>
+                                {% if data.estado == 'ok' %}
+                                <span class="badge bg-success">OK</span>
+                                {% else %}
+                                <span class="badge bg-danger">Error</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modal de Ayuda -->
+<div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="helpModalLabel">Ayuda - Configuración de Fuentes de Datos</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 class="mb-3">Formatos de Datos Estadísticos</h5>
+                <div class="mb-4">
+                    <ul>
+                        <li><strong>Formato Estándar:</strong> Incluye estadísticas básicas como goles, asistencias, posesión y tiros.</li>
+                        <li><strong>Formato Detallado:</strong> Añade métricas avanzadas como xG (Expected Goals), distancia recorrida y mapas de calor.</li>
+                        <li><strong>Formato Compacto:</strong> Solo las estadísticas más esenciales para un rendimiento más rápido.</li>
+                    </ul>
+                </div>
+                
+                <h5 class="mb-3">Estrategias para Conflictos de Datos</h5>
+                <div class="mb-4">
+                    <ul>
+                        <li><strong>Usar Fuente Prioritaria:</strong> Cuando hay datos contradictorios, se usa la fuente con mayor prioridad.</li>
+                        <li><strong>Combinar Fuentes:</strong> Se combinan datos de varias fuentes para obtener información más completa.</li>
+                        <li><strong>Datos Más Recientes:</strong> Se utilizan los datos que tengan la marca de tiempo más reciente.</li>
+                    </ul>
+                </div>
+                
+                <h5 class="mb-3">Comparación de Fuentes</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Fuente</th>
+                                <th>Cobertura</th>
+                                <th>Actualización</th>
+                                <th>Estadísticas</th>
+                                <th>Datos Históricos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ESPN API</td>
+                                <td>Alta</td>
+                                <td>Frecuente</td>
+                                <td>Muy completas</td>
+                                <td>Limitados</td>
+                            </tr>
+                            <tr>
+                                <td>Football-Data.org</td>
+                                <td>Media-Alta</td>
+                                <td>Diaria</td>
+                                <td>Completas</td>
+                                <td>Buenos</td>
+                            </tr>
+                            <tr>
+                                <td>ESPN Scraping</td>
+                                <td>Media</td>
+                                <td>Variable</td>
+                                <td>Básicas</td>
+                                <td>Limitados</td>
+                            </tr>
+                            <tr>
+                                <td>Open Football</td>
+                                <td>Media</td>
+                                <td>Semanal</td>
+                                <td>Básicas</td>
+                                <td>Excelentes</td>
+                            </tr>
+                            <tr>
+                                <td>World Football</td>
+                                <td>Alta</td>
+                                <td>Semanal</td>
+                                <td>Avanzadas</td>
+                                <td>Excelentes</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mostrar/ocultar campos de configuración según estados de los toggles
+        const toggles = {
+            'use_espn_api': [],
+            'use_football_data_api': ['#football_data_api_key'],
+            'use_espn_data': ['#espn_base_url'],
+            'use_open_football': ['#open_football_url'],
+            'use_world_football': ['#world_football_url']
+        };
+        
+        for (const [toggleId, fieldSelectors] of Object.entries(toggles)) {
+            const toggle = document.getElementById(toggleId);
+            if (toggle) {
+                const updateFields = function() {
+                    fieldSelectors.forEach(selector => {
+                        const field = document.querySelector(selector);
+                        if (field) {
+                            field.disabled = !toggle.checked;
+                            field.parentElement.style.opacity = toggle.checked ? 1 : 0.5;
+                        }
+                    });
+                };
+                
+                toggle.addEventListener('change', updateFields);
+                updateFields(); // Inicializar estado
+            }
+        }
+        
+        // Animación para las tarjetas
+        document.querySelectorAll('.source-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.classList.add('shadow-lg');
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.classList.remove('shadow-lg');
+            });
+        });
+    });
+</script>
+{% endblock %}

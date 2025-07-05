@@ -60,6 +60,16 @@
     </style>
     
     {% block head_extra %}{% endblock %}
+    <!-- Optimizaciones de rendimiento -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="{{ url_for('static', filename='css/styles.css') }}" as="style">
+    <link rel="preload" href="{{ url_for('static', filename='js/main.js') }}" as="script">
+    <!-- Optimizaciones de rendimiento -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="{{ url_for('static', filename='css/styles.css') }}" as="style">
+    <link rel="preload" href="{{ url_for('static', filename='js/main.js') }}" as="script">
 </head>
 <body>
     <!-- Barra de navegación -->
@@ -91,14 +101,42 @@
                             <i class="fas fa-crystal-ball"></i> Predicciones
                         </a>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="datosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-database"></i> Datos
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="datosDropdown">
+                            <li>
+                                <a class="dropdown-item" href="/datos-equipos">
+                                    <i class="fas fa-shield-alt"></i> Equipos
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/datos-jugadores">
+                                    <i class="fas fa-user"></i> Jugadores
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/datos-partidos">
+                                    <i class="fas fa-futbol"></i> Partidos
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="/explorar-db">
+                                    <i class="fas fa-table"></i> Explorar Base de Datos
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/api">
-                            <i class="fas fa-code"></i> API
+                        <a class="nav-link" href="/configurar-fuentes">
+                            <i class="fas fa-cogs"></i> Fuentes
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/explorar-db">
-                            <i class="fas fa-database"></i> Base de Datos
+                        <a class="nav-link" href="/api">
+                            <i class="fas fa-code"></i> API
                         </a>
                     </li>
                 </ul>
@@ -130,5 +168,25 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     {% block scripts %}{% endblock %}
+    <!-- Service Worker para optimización y soporte offline -->
+    <script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", function() {
+                navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}")
+                    .then(reg => console.log("Service Worker registrado"))
+                    .catch(err => console.error("Error al registrar Service Worker:", err));
+            });
+        }
+    </script>
+    <!-- Service Worker para optimización y soporte offline -->
+    <script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", function() {
+                navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}")
+                    .then(reg => console.log("Service Worker registrado"))
+                    .catch(err => console.error("Error al registrar Service Worker:", err));
+            });
+        }
+    </script>
 </body>
 </html>

@@ -1,0 +1,800 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestión de Datos de Partidos{% endblock %}
+
+{% block head_extra %}
+<style>
+    .match-card {
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .match-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+    
+    .team-logo {
+        height: 40px;
+        width: 40px;
+        object-fit: contain;
+    }
+    
+    .match-date {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .match-source {
+        font-size: 0.8rem;
+        color: #6c757d;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+    
+    .data-filters {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .filter-badge {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+        border-radius: 50px;
+    }
+    
+    .source-indicator {
+        width: 12px;
+        height: 12px;
+        display: inline-block;
+        border-radius: 50%;
+        margin-right: 5px;
+    }
+    
+    .source-espn-api { background-color: #FF0000; }
+    .source-football-data { background-color: #0073CF; }
+    .source-espn { background-color: #FF7F00; }
+    .source-open-football { background-color: #4CAF50; }
+    .source-world-football { background-color: #9C27B0; }
+    
+    .match-result {
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        padding: 0.5rem;
+        text-align: center;
+        font-weight: bold;
+    }
+    
+    .match-pending {
+        background-color: #e9ecef;
+        color: #6c757d;
+    }
+    
+    .match-live {
+        background-color: #dc3545;
+        color: white;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.8; }
+        100% { opacity: 1; }
+    }
+    
+    .match-vs {
+        font-size: 0.9rem;
+        font-weight: bold;
+        color: #6c757d;
+        padding: 0 0.5rem;
+    }
+    
+    .match-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+    }
+    
+    /* Estilo para la paginación */
+    .custom-pagination {
+        margin-top: 2rem;
+    }
+    
+    .custom-pagination .page-item .page-link {
+        border-radius: 50%;
+        margin: 0 3px;
+        color: #1a76d2;
+    }
+    
+    .custom-pagination .page-item.active .page-link {
+        background-color: #1a76d2;
+        border-color: #1a76d2;
+    }
+    
+    .no-results-container {
+        text-align: center;
+        padding: 3rem;
+    }
+    
+    .no-results-icon {
+        font-size: 5rem;
+        color: #dee2e6;
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Gestión de Datos de Partidos</h1>
+        <div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importModal">
+                <i class="fas fa-file-import me-2"></i>Importar
+            </button>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newMatchModal">
+                <i class="fas fa-plus me-2"></i>Nuevo Partido
+            </button>
+        </div>
+    </div>
+
+    <!-- Alertas -->
+    {% if mensaje %}
+    <div class="alert alert-{{ tipo_mensaje|default('info') }} alert-dismissible fade show" role="alert">
+        {{ mensaje }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    <!-- Filtros -->
+    <div class="data-filters">
+        <form method="get" action="{{ url_for('datos_partidos') }}" class="row g-3">
+            <div class="col-md-3">
+                <label for="search" class="form-label">Buscar:</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" class="form-control" id="search" name="search" 
+                           value="{{ search|default('') }}" placeholder="Equipo o estadio">
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <label for="liga" class="form-label">Liga:</label>
+                <select class="form-select" id="liga" name="liga">
+                    <option value="" {% if not liga %}selected{% endif %}>Todas las ligas</option>
+                    {% for l in ligas %}
+                    <option value="{{ l }}" {% if liga == l %}selected{% endif %}>{{ l }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-md-2">
+                <label for="fecha_desde" class="form-label">Desde:</label>
+                <input type="date" class="form-select" id="fecha_desde" name="fecha_desde" value="{{ fecha_desde|default('') }}">
+            </div>
+            
+            <div class="col-md-2">
+                <label for="fecha_hasta" class="form-label">Hasta:</label>
+                <input type="date" class="form-select" id="fecha_hasta" name="fecha_hasta" value="{{ fecha_hasta|default('') }}">
+            </div>
+            
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-filter me-2"></i>Filtrar
+                </button>
+            </div>
+            
+            <!-- Filtros activos -->
+            <div class="col-12 mt-3">
+                {% if search or liga or fecha_desde or fecha_hasta %}
+                <div class="d-flex align-items-center flex-wrap">
+                    <strong class="me-2 mb-2">Filtros activos:</strong>
+                    {% if search %}
+                    <span class="badge bg-primary filter-badge">
+                        Búsqueda: {{ search }}
+                        <a href="{{ url_for('datos_partidos', search='', liga=liga, fecha_desde=fecha_desde, fecha_hasta=fecha_hasta) }}" class="text-white ms-2">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                    
+                    {% if liga %}
+                    <span class="badge bg-secondary filter-badge">
+                        Liga: {{ liga }}
+                        <a href="{{ url_for('datos_partidos', search=search, liga='', fecha_desde=fecha_desde, fecha_hasta=fecha_hasta) }}" class="text-white ms-2">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                    
+                    {% if fecha_desde %}
+                    <span class="badge bg-success filter-badge">
+                        Desde: {{ fecha_desde }}
+                        <a href="{{ url_for('datos_partidos', search=search, liga=liga, fecha_desde='', fecha_hasta=fecha_hasta) }}" class="text-white ms-2">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                    
+                    {% if fecha_hasta %}
+                    <span class="badge bg-info filter-badge">
+                        Hasta: {{ fecha_hasta }}
+                        <a href="{{ url_for('datos_partidos', search=search, liga=liga, fecha_desde=fecha_desde, fecha_hasta='') }}" class="text-white ms-2">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                    
+                    <a href="{{ url_for('datos_partidos') }}" class="btn btn-sm btn-outline-secondary ms-auto">
+                        <i class="fas fa-broom me-1"></i> Limpiar todos
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <!-- Leyenda de Fuentes -->
+    <div class="mb-4">
+        <div class="d-flex flex-wrap">
+            <div class="me-3 mb-2">
+                <span class="source-indicator source-espn-api"></span> ESPN API
+            </div>
+            <div class="me-3 mb-2">
+                <span class="source-indicator source-football-data"></span> Football-Data.org
+            </div>
+            <div class="me-3 mb-2">
+                <span class="source-indicator source-espn"></span> ESPN Scraping
+            </div>
+            <div class="me-3 mb-2">
+                <span class="source-indicator source-open-football"></span> Open Football
+            </div>
+        </div>
+    </div>
+
+    <!-- Listado de Partidos -->
+    <div class="row">
+        {% if partidos %}
+            {% for partido in partidos %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 match-card">
+                        <div class="card-body position-relative">
+                            <span class="badge bg-light text-dark match-source">
+                                <span class="source-indicator source-{{ partido.fuente|replace('.', '-') }}"></span>
+                                {{ partido.fuente }}
+                            </span>
+                            
+                            <div class="text-center mb-2">
+                                <span class="badge bg-secondary mb-2">{{ partido.liga }}</span>
+                                <div class="match-date">
+                                    <i class="far fa-calendar-alt"></i>
+                                    {{ partido.fecha|date('d/m/Y H:i') }}
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div class="text-end" style="width: 40%;">
+                                    <h6 class="mb-0">{{ partido.equipo_local }}</h6>
+                                    <img src="{{ partido.logo_local|default('https://via.placeholder.com/40?text=' + partido.equipo_local|replace(' ', '+')) }}" 
+                                         alt="{{ partido.equipo_local }}" class="team-logo mt-2">
+                                </div>
+                                
+                                {% if partido.estado == 'SCHEDULED' %}
+                                    <div class="match-result match-pending">vs</div>
+                                {% elif partido.estado == 'LIVE' %}
+                                    <div class="match-result match-live">
+                                        {{ partido.goles_local|default('0') }} - {{ partido.goles_visitante|default('0') }}
+                                    </div>
+                                {% else %}
+                                    <div class="match-result">
+                                        {{ partido.goles_local|default('-') }} - {{ partido.goles_visitante|default('-') }}
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="text-start" style="width: 40%;">
+                                    <h6 class="mb-0">{{ partido.equipo_visitante }}</h6>
+                                    <img src="{{ partido.logo_visitante|default('https://via.placeholder.com/40?text=' + partido.equipo_visitante|replace(' ', '+')) }}" 
+                                         alt="{{ partido.equipo_visitante }}" class="team-logo mt-2">
+                                </div>
+                            </div>
+                            
+                            <div class="mt-3">
+                                <div class="d-flex justify-content-between">
+                                    <small class="text-muted">
+                                        <i class="fas fa-map-marker-alt"></i> {{ partido.estadio|default('No especificado') }}
+                                    </small>
+                                    <small class="text-muted">
+                                        <i class="fas fa-whistle"></i> {{ partido.arbitro|default('No especificado') }}
+                                    </small>
+                                </div>
+                            </div>
+                            
+                            <div class="match-actions">
+                                <button class="btn btn-sm btn-outline-primary" onclick="verPartido('{{ partido.id }}')">
+                                    <i class="fas fa-eye"></i> Ver
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="editarPartido('{{ partido.id }}')">
+                                    <i class="fas fa-edit"></i> Editar
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="confirmarEliminar('{{ partido.id }}', '{{ partido.equipo_local }} vs {{ partido.equipo_visitante }}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 no-results-container">
+                <i class="fas fa-search no-results-icon"></i>
+                <h3>No se encontraron partidos</h3>
+                <p class="text-muted">Intenta con otros filtros o crea un nuevo partido.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Paginación -->
+    {% if total_paginas > 1 %}
+    <nav aria-label="Navegación de páginas" class="d-flex justify-content-center custom-pagination">
+        <ul class="pagination">
+            <li class="page-item {% if pagina == 1 %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('datos_partidos', pagina=pagina-1, search=search, liga=liga, fecha_desde=fecha_desde, fecha_hasta=fecha_hasta) }}" aria-label="Anterior">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            
+            {% set start = [pagina - 2, 1] | max %}
+            {% set end = [start + 4, total_paginas + 1] | min %}
+            {% set start = [end - 5, 1] | max %}
+            
+            {% if start > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('datos_partidos', pagina=1, search=search, liga=liga, fecha_desde=fecha_desde, fecha_hasta=fecha_hasta) }}">1</a>
+                </li>
+                {% if start > 2 %}
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+            {% endif %}
+            
+            {% for p in range(start, end) %}
+                <li class="page-item {% if p == pagina %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('datos_partidos', pagina=p, search=search, liga=liga, fecha_desde=fecha_desde, fecha_hasta=fecha_hasta) }}">{{ p }}</a>
+                </li>
+            {% endfor %}
+            
+            {% if end <= total_paginas %}
+                {% if end < total_paginas %}
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('datos_partidos', pagina=total_paginas, search=search, liga=liga, fecha_desde=fecha_desde, fecha_hasta=fecha_hasta) }}">{{ total_paginas }}</a>
+                </li>
+            {% endif %}
+            
+            <li class="page-item {% if pagina == total_paginas %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('datos_partidos', pagina=pagina+1, search=search, liga=liga, fecha_desde=fecha_desde, fecha_hasta=fecha_hasta) }}" aria-label="Siguiente">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
+    
+    <!-- Información de resultados -->
+    <div class="text-center text-muted mt-3 mb-5">
+        Mostrando {{ partidos|length }} de {{ total_partidos }} partidos
+    </div>
+</div>
+
+<!-- Modal para ver partido -->
+<div class="modal fade" id="viewMatchModal" tabindex="-1" aria-labelledby="viewMatchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewMatchModalLabel">Detalles del Partido</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="viewMatchDetails">
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-2">Cargando datos del partido...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para crear/editar partido -->
+<div class="modal fade" id="matchFormModal" tabindex="-1" aria-labelledby="matchFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="matchFormModalLabel">Nuevo Partido</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="matchForm" method="post" action="{{ url_for('crear_partido') }}">
+                    <input type="hidden" id="partido_id" name="id" value="">
+                    <input type="hidden" id="form_action" name="form_action" value="create">
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="liga" class="form-label">Liga</label>
+                            <select class="form-select" id="liga_form" name="liga" required>
+                                <option value="" disabled selected>Seleccionar...</option>
+                                {% for l in ligas %}
+                                <option value="{{ l }}">{{ l }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="fecha" class="form-label">Fecha y Hora</label>
+                            <input type="datetime-local" class="form-control" id="fecha" name="fecha" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-5">
+                            <label for="equipo_local" class="form-label">Equipo Local</label>
+                            <select class="form-select" id="equipo_local" name="equipo_local" required>
+                                <option value="" disabled selected>Seleccionar...</option>
+                                {% for e in equipos %}
+                                <option value="{{ e.id }}">{{ e.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end justify-content-center">
+                            <div class="text-center mb-3">vs</div>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="equipo_visitante" class="form-label">Equipo Visitante</label>
+                            <select class="form-select" id="equipo_visitante" name="equipo_visitante" required>
+                                <option value="" disabled selected>Seleccionar...</option>
+                                {% for e in equipos %}
+                                <option value="{{ e.id }}">{{ e.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="estado" class="form-label">Estado</label>
+                            <select class="form-select" id="estado" name="estado" required>
+                                <option value="SCHEDULED">Programado</option>
+                                <option value="LIVE">En Vivo</option>
+                                <option value="FINISHED">Finalizado</option>
+                                <option value="POSTPONED">Pospuesto</option>
+                                <option value="CANCELED">Cancelado</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="goles_local" class="form-label">Goles Local</label>
+                            <input type="number" class="form-control" id="goles_local" name="goles_local" min="0" max="20">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="goles_visitante" class="form-label">Goles Visitante</label>
+                            <input type="number" class="form-control" id="goles_visitante" name="goles_visitante" min="0" max="20">
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="estadio" class="form-label">Estadio</label>
+                            <input type="text" class="form-control" id="estadio" name="estadio">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="arbitro" class="form-label">Árbitro</label>
+                            <input type="text" class="form-control" id="arbitro" name="arbitro">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="fuente" class="form-label">Fuente de Datos</label>
+                        <select class="form-select" id="fuente" name="fuente">
+                            <option value="manual">Manual</option>
+                            <option value="espn-api">ESPN API</option>
+                            <option value="football-data">Football-Data.org</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="submitMatchForm()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para confirmar eliminación -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro que deseas eliminar el partido <strong id="deleteMatchName"></strong>?
+                <p class="text-danger mt-2">Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="deleteMatchForm" method="post" action="{{ url_for('eliminar_partido') }}">
+                    <input type="hidden" id="delete_partido_id" name="id" value="">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para importar partidos -->
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importModalLabel">Importar Partidos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="importForm" method="post" action="{{ url_for('importar_partidos') }}" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="importFile" class="form-label">Archivo CSV o JSON</label>
+                        <input type="file" class="form-control" id="importFile" name="importFile" accept=".csv,.json" required>
+                        <div class="form-text">
+                            Selecciona un archivo CSV o JSON con la información de los partidos.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="importSource" class="form-label">Fuente</label>
+                        <select class="form-select" id="importSource" name="importSource">
+                            <option value="import">Importado</option>
+                            <option value="espn-api">ESPN API</option>
+                            <option value="football-data">Football-Data.org</option>
+                            <option value="espn">ESPN Scraping</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="overwriteExisting" name="overwriteExisting">
+                        <label class="form-check-label" for="overwriteExisting">
+                            Sobrescribir partidos existentes
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" form="importForm" class="btn btn-primary">Importar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Función para ver detalles de un partido
+    function verPartido(id) {
+        const modal = new bootstrap.Modal(document.getElementById('viewMatchModal'));
+        const detailsContainer = document.getElementById('viewMatchDetails');
+        
+        // Mostrar spinner de carga
+        detailsContainer.innerHTML = `
+            <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="mt-2">Cargando datos del partido...</p>
+            </div>
+        `;
+        
+        modal.show();
+        
+        // Obtener datos del partido
+        fetch(`/api/partidos/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const partido = data.partido;
+                    let estadoClass = "";
+                    let estadoTexto = partido.estado || "SCHEDULED";
+                    
+                    // Determinar clase de estado
+                    if (partido.estado === 'LIVE') {
+                        estadoClass = "text-danger fw-bold";
+                        estadoTexto = "EN VIVO";
+                    } else if (partido.estado === 'FINISHED') {
+                        estadoClass = "text-success";
+                        estadoTexto = "FINALIZADO";
+                    } else if (partido.estado === 'POSTPONED') {
+                        estadoClass = "text-warning";
+                        estadoTexto = "POSPUESTO";
+                    } else if (partido.estado === 'CANCELED') {
+                        estadoClass = "text-muted";
+                        estadoTexto = "CANCELADO";
+                    } else {
+                        estadoClass = "text-primary";
+                        estadoTexto = "PROGRAMADO";
+                    }
+                    
+                    // Formatear fecha
+                    let fecha = "No disponible";
+                    if (partido.fecha) {
+                        const fechaObj = new Date(partido.fecha);
+                        fecha = fechaObj.toLocaleDateString() + ' ' + fechaObj.toLocaleTimeString();
+                    }
+                    
+                    // Construir HTML con los detalles
+                    detailsContainer.innerHTML = `
+                        <div class="text-center mb-4">
+                            <span class="badge bg-secondary">{{ partido.liga }}</span>
+                            <p class="mt-2 mb-0">
+                                <i class="far fa-calendar-alt"></i> ${fecha}
+                            </p>
+                            <p class="mt-1 ${estadoClass}">${estadoTexto}</p>
+                        </div>
+                        
+                        <div class="row align-items-center text-center mb-4">
+                            <div class="col-5">
+                                <img src="${partido.logo_local || 'https://via.placeholder.com/100?text=' + encodeURIComponent(partido.equipo_local)}" 
+                                     alt="${partido.equipo_local}" class="img-fluid" style="max-height: 80px;">
+                                <h4 class="mt-2">${partido.equipo_local}</h4>
+                            </div>
+                            <div class="col-2">
+                                <div class="display-4">
+                                    ${partido.goles_local !== undefined ? partido.goles_local : '-'} - ${partido.goles_visitante !== undefined ? partido.goles_visitante : '-'}
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <img src="${partido.logo_visitante || 'https://via.placeholder.com/100?text=' + encodeURIComponent(partido.equipo_visitante)}" 
+                                     alt="${partido.equipo_visitante}" class="img-fluid" style="max-height: 80px;">
+                                <h4 class="mt-2">${partido.equipo_visitante}</h4>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6 mb-3">
+                                <strong>Estadio:</strong> ${partido.estadio || 'No especificado'}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <strong>Árbitro:</strong> ${partido.arbitro || 'No especificado'}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <strong>Liga:</strong> ${partido.liga || 'No especificada'}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <strong>Fuente:</strong> 
+                                <span class="badge bg-light text-dark">
+                                    <span class="source-indicator source-${partido.fuente.replace('.', '-')}"></span>
+                                    ${partido.fuente}
+                                </span>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <strong>ID:</strong> ${partido.id}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    detailsContainer.innerHTML = `
+                        <div class="alert alert-danger">
+                            Error al cargar los datos del partido: ${data.error || 'Error desconocido'}
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                detailsContainer.innerHTML = `
+                    <div class="alert alert-danger">
+                        Error al cargar los datos del partido: ${error.message}
+                    </div>
+                `;
+            });
+    }
+    
+    // Función para editar un partido
+    function editarPartido(id) {
+        const modal = new bootstrap.Modal(document.getElementById('matchFormModal'));
+        const form = document.getElementById('matchForm');
+        
+        // Actualizar título del modal
+        document.getElementById('matchFormModalLabel').textContent = 'Editar Partido';
+        
+        // Configurar formulario para edición
+        document.getElementById('partido_id').value = id;
+        document.getElementById('form_action').value = 'update';
+        form.action = '{{ url_for("editar_partido") }}';
+        
+        // Obtener datos del partido
+        fetch(`/api/partidos/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const partido = data.partido;
+                    
+                    // Convertir fecha a formato datetime-local
+                    let fechaFormateada = '';
+                    if (partido.fecha) {
+                        const fecha = new Date(partido.fecha);
+                        fechaFormateada = fecha.toISOString().slice(0, 16);
+                    }
+                    
+                    // Llenar formulario
+                    document.getElementById('liga_form').value = partido.liga || '';
+                    document.getElementById('fecha').value = fechaFormateada;
+                    document.getElementById('equipo_local').value = partido.equipo_local_id || '';
+                    document.getElementById('equipo_visitante').value = partido.equipo_visitante_id || '';
+                    document.getElementById('estado').value = partido.estado || 'SCHEDULED';
+                    document.getElementById('goles_local').value = partido.goles_local || '';
+                    document.getElementById('goles_visitante').value = partido.goles_visitante || '';
+                    document.getElementById('estadio').value = partido.estadio || '';
+                    document.getElementById('arbitro').value = partido.arbitro || '';
+                    document.getElementById('fuente').value = partido.fuente || 'manual';
+                    
+                    modal.show();
+                } else {
+                    alert(`Error al cargar datos del partido: ${data.error || 'Error desconocido'}`);
+                }
+            })
+            .catch(error => {
+                alert(`Error al cargar datos del partido: ${error.message}`);
+            });
+    }
+    
+    // Función para preparar el formulario de nuevo partido
+    function nuevoPartido() {
+        const modal = new bootstrap.Modal(document.getElementById('matchFormModal'));
+        const form = document.getElementById('matchForm');
+        
+        // Actualizar título del modal
+        document.getElementById('matchFormModalLabel').textContent = 'Nuevo Partido';
+        
+        // Configurar formulario para creación
+        document.getElementById('partido_id').value = '';
+        document.getElementById('form_action').value = 'create';
+        form.action = '{{ url_for("crear_partido") }}';
+        
+        // Limpiar formulario
+        form.reset();
+        
+        modal.show();
+    }
+    
+    // Función para confirmar eliminación
+    function confirmarEliminar(id, nombre) {
+        document.getElementById('delete_partido_id').value = id;
+        document.getElementById('deleteMatchName').textContent = nombre;
+        
+        const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+        modal.show();
+    }
+    
+    // Función para enviar formulario
+    function submitMatchForm() {
+        document.getElementById('matchForm').submit();
+    }
+    
+    // Configurar modal de nuevo partido
+    document.addEventListener('DOMContentLoaded', function() {
+        const newMatchBtn = document.querySelector('[data-bs-target="#newMatchModal"]');
+        if (newMatchBtn) {
+            newMatchBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                nuevoPartido();
+            });
+        }
+    });
+</script>
+{% endblock %}

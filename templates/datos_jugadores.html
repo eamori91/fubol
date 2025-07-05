@@ -1,0 +1,806 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestión de Datos de Jugadores{% endblock %}
+
+{% block head_extra %}
+<style>
+    .player-card {
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .player-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+    
+    .player-avatar {
+        height: 120px;
+        width: 120px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin: 1rem auto;
+        border: 2px solid #f8f9fa;
+    }
+    
+    .player-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .player-source {
+        font-size: 0.8rem;
+        color: #6c757d;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+    
+    .data-filters {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .filter-badge {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+        border-radius: 50px;
+    }
+    
+    .source-indicator {
+        width: 12px;
+        height: 12px;
+        display: inline-block;
+        border-radius: 50%;
+        margin-right: 5px;
+    }
+    
+    .source-espn-api { background-color: #FF0000; }
+    .source-football-data { background-color: #0073CF; }
+    .source-espn { background-color: #FF7F00; }
+    .source-open-football { background-color: #4CAF50; }
+    .source-world-football { background-color: #9C27B0; }
+    
+    .player-stats {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .player-stat {
+        flex: 1 0 50%;
+        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .player-stat-label {
+        color: #6c757d;
+    }
+    
+    .player-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+    }
+    
+    /* Estilo para la paginación */
+    .custom-pagination {
+        margin-top: 2rem;
+    }
+    
+    .custom-pagination .page-item .page-link {
+        border-radius: 50%;
+        margin: 0 3px;
+        color: #1a76d2;
+    }
+    
+    .custom-pagination .page-item.active .page-link {
+        background-color: #1a76d2;
+        border-color: #1a76d2;
+    }
+    
+    .no-results-container {
+        text-align: center;
+        padding: 3rem;
+    }
+    
+    .no-results-icon {
+        font-size: 5rem;
+        color: #dee2e6;
+        margin-bottom: 1rem;
+    }
+    
+    .position-badge {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        border-radius: 0.25rem;
+    }
+    
+    .position-goalkeeper {
+        background-color: #ffc107;
+        color: #212529;
+    }
+    
+    .position-defender {
+        background-color: #28a745;
+        color: #fff;
+    }
+    
+    .position-midfielder {
+        background-color: #17a2b8;
+        color: #fff;
+    }
+    
+    .position-forward {
+        background-color: #dc3545;
+        color: #fff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Gestión de Datos de Jugadores</h1>
+        <div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importModal">
+                <i class="fas fa-file-import me-2"></i>Importar
+            </button>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newPlayerModal">
+                <i class="fas fa-plus me-2"></i>Nuevo Jugador
+            </button>
+        </div>
+    </div>
+
+    <!-- Alertas -->
+    {% if mensaje %}
+    <div class="alert alert-{{ tipo_mensaje|default('info') }} alert-dismissible fade show" role="alert">
+        {{ mensaje }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    <!-- Filtros -->
+    <div class="data-filters">
+        <form method="get" action="{{ url_for('datos_jugadores') }}" class="row g-3">
+            <div class="col-md-3">
+                <label for="search" class="form-label">Buscar:</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" class="form-control" id="search" name="search" 
+                           value="{{ search|default('') }}" placeholder="Nombre del jugador">
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <label for="equipo" class="form-label">Equipo:</label>
+                <select class="form-select" id="equipo" name="equipo">
+                    <option value="" {% if not equipo %}selected{% endif %}>Todos los equipos</option>
+                    {% for e in equipos %}
+                    <option value="{{ e.id }}" {% if equipo == e.id %}selected{% endif %}>{{ e.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-md-2">
+                <label for="posicion" class="form-label">Posición:</label>
+                <select class="form-select" id="posicion" name="posicion">
+                    <option value="" {% if not posicion %}selected{% endif %}>Todas</option>
+                    <option value="Goalkeeper" {% if posicion == 'Goalkeeper' %}selected{% endif %}>Portero</option>
+                    <option value="Defender" {% if posicion == 'Defender' %}selected{% endif %}>Defensa</option>
+                    <option value="Midfielder" {% if posicion == 'Midfielder' %}selected{% endif %}>Mediocampista</option>
+                    <option value="Forward" {% if posicion == 'Forward' %}selected{% endif %}>Delantero</option>
+                </select>
+            </div>
+            
+            <div class="col-md-2">
+                <label for="source" class="form-label">Fuente:</label>
+                <select class="form-select" id="source" name="source">
+                    <option value="" {% if not source %}selected{% endif %}>Todas las fuentes</option>
+                    <option value="espn-api" {% if source == 'espn-api' %}selected{% endif %}>ESPN API</option>
+                    <option value="football-data" {% if source == 'football-data' %}selected{% endif %}>Football-Data.org</option>
+                    <option value="espn" {% if source == 'espn' %}selected{% endif %}>ESPN Scraping</option>
+                </select>
+            </div>
+            
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-filter me-2"></i>Filtrar
+                </button>
+            </div>
+            
+            <!-- Filtros activos -->
+            <div class="col-12 mt-3">
+                {% if search or equipo or posicion or source %}
+                <div class="d-flex align-items-center flex-wrap">
+                    <strong class="me-2 mb-2">Filtros activos:</strong>
+                    {% if search %}
+                    <span class="badge bg-primary filter-badge">
+                        Búsqueda: {{ search }}
+                        <a href="{{ url_for('datos_jugadores', search='', equipo=equipo, posicion=posicion, source=source) }}" class="text-white ms-2">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                    
+                    {% if equipo %}
+                    <span class="badge bg-secondary filter-badge">
+                        Equipo: {{ equipo_nombre }}
+                        <a href="{{ url_for('datos_jugadores', search=search, equipo='', posicion=posicion, source=source) }}" class="text-white ms-2">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                    
+                    {% if posicion %}
+                    <span class="badge bg-success filter-badge">
+                        Posición: {{ posicion }}
+                        <a href="{{ url_for('datos_jugadores', search=search, equipo=equipo, posicion='', source=source) }}" class="text-white ms-2">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                    
+                    {% if source %}
+                    <span class="badge bg-info filter-badge">
+                        Fuente: {{ source }}
+                        <a href="{{ url_for('datos_jugadores', search=search, equipo=equipo, posicion=posicion, source='') }}" class="text-white ms-2">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                    
+                    <a href="{{ url_for('datos_jugadores') }}" class="btn btn-sm btn-outline-secondary ms-auto">
+                        <i class="fas fa-broom me-1"></i> Limpiar todos
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <!-- Leyenda de Fuentes -->
+    <div class="mb-4">
+        <div class="d-flex flex-wrap">
+            <div class="me-3 mb-2">
+                <span class="source-indicator source-espn-api"></span> ESPN API
+            </div>
+            <div class="me-3 mb-2">
+                <span class="source-indicator source-football-data"></span> Football-Data.org
+            </div>
+            <div class="me-3 mb-2">
+                <span class="source-indicator source-espn"></span> ESPN Scraping
+            </div>
+        </div>
+    </div>
+
+    <!-- Listado de Jugadores -->
+    <div class="row">
+        {% if jugadores %}
+            {% for jugador in jugadores %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card h-100 player-card">
+                        <div class="card-body text-center position-relative">
+                            <span class="badge bg-light text-dark player-source">
+                                <span class="source-indicator source-{{ jugador.fuente|replace('.', '-') }}"></span>
+                                {{ jugador.fuente }}
+                            </span>
+                            
+                            <img loading="lazy" src="{{ jugador.imagen_url|default('https://via.placeholder.com/150?text=Sin+Foto') }}" 
+                                 alt="{{ jugador.nombre_completo }}" class="player-avatar">
+                            <h5 class="player-name">{{ jugador.nombre_completo }}</h5>
+                            
+                            {% if jugador.posicion == 'Goalkeeper' %}
+                                <span class="badge position-badge position-goalkeeper mb-2">Portero</span>
+                            {% elif jugador.posicion == 'Defender' %}
+                                <span class="badge position-badge position-defender mb-2">Defensa</span>
+                            {% elif jugador.posicion == 'Midfielder' %}
+                                <span class="badge position-badge position-midfielder mb-2">Mediocampista</span>
+                            {% elif jugador.posicion == 'Forward' %}
+                                <span class="badge position-badge position-forward mb-2">Delantero</span>
+                            {% else %}
+                                <span class="badge bg-secondary mb-2">{{ jugador.posicion|default('--') }}</span>
+                            {% endif %}
+                            
+                            <div class="player-stats">
+                                <div class="player-stat">
+                                    <span class="player-stat-label">Nacionalidad:</span>
+                                    <span>{{ jugador.nacionalidad|default('--') }}</span>
+                                </div>
+                                <div class="player-stat">
+                                    <span class="player-stat-label">Edad:</span>
+                                    <span>{{ jugador.edad|default('--') }}</span>
+                                </div>
+                                <div class="player-stat">
+                                    <span class="player-stat-label">Dorsal:</span>
+                                    <span>{{ jugador.dorsal|default('--') }}</span>
+                                </div>
+                                <div class="player-stat">
+                                    <span class="player-stat-label">Equipo:</span>
+                                    <span>{{ jugador.equipo_nombre|default('--') }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="player-actions">
+                                <button class="btn btn-sm btn-outline-primary" onclick="verJugador('{{ jugador.id }}')">
+                                    <i class="fas fa-eye"></i> Ver
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="editarJugador('{{ jugador.id }}')">
+                                    <i class="fas fa-edit"></i> Editar
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="confirmarEliminarJugador('{{ jugador.id }}', '{{ jugador.nombre_completo }}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 no-results-container">
+                <i class="fas fa-search no-results-icon"></i>
+                <h3>No se encontraron jugadores</h3>
+                <p class="text-muted">Intenta con otros filtros o crea un nuevo jugador.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Paginación -->
+    {% if total_paginas > 1 %}
+    <nav aria-label="Navegación de páginas" class="d-flex justify-content-center custom-pagination">
+        <ul class="pagination">
+            <li class="page-item {% if pagina == 1 %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('datos_jugadores', pagina=pagina-1, search=search, equipo=equipo, posicion=posicion, source=source) }}" aria-label="Anterior">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            
+            {% set start = [pagina - 2, 1] | max %}
+            {% set end = [start + 4, total_paginas + 1] | min %}
+            {% set start = [end - 5, 1] | max %}
+            
+            {% if start > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('datos_jugadores', pagina=1, search=search, equipo=equipo, posicion=posicion, source=source) }}">1</a>
+                </li>
+                {% if start > 2 %}
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+            {% endif %}
+            
+            {% for p in range(start, end) %}
+                <li class="page-item {% if p == pagina %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('datos_jugadores', pagina=p, search=search, equipo=equipo, posicion=posicion, source=source) }}">{{ p }}</a>
+                </li>
+            {% endfor %}
+            
+            {% if end <= total_paginas %}
+                {% if end < total_paginas %}
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('datos_jugadores', pagina=total_paginas, search=search, equipo=equipo, posicion=posicion, source=source) }}">{{ total_paginas }}</a>
+                </li>
+            {% endif %}
+            
+            <li class="page-item {% if pagina == total_paginas %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('datos_jugadores', pagina=pagina+1, search=search, equipo=equipo, posicion=posicion, source=source) }}" aria-label="Siguiente">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
+    
+    <!-- Información de resultados -->
+    <div class="text-center text-muted mt-3 mb-5">
+        Mostrando {{ jugadores|length }} de {{ total_jugadores }} jugadores
+    </div>
+</div>
+
+<!-- Modal para ver jugador -->
+<div class="modal fade" id="viewPlayerModal" tabindex="-1" aria-labelledby="viewPlayerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewPlayerModalLabel">Detalles del Jugador</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="viewPlayerDetails">
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-2">Cargando datos del jugador...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para crear/editar jugador -->
+<div class="modal fade" id="playerFormModal" tabindex="-1" aria-labelledby="playerFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="playerFormModalLabel">Nuevo Jugador</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="playerForm" method="post" action="{{ url_for('crear_jugador') }}">
+                    <input type="hidden" id="jugador_id" name="id" value="">
+                    <input type="hidden" id="form_action" name="form_action" value="create">
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="apellido" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="apellido" name="apellido" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="posicion" class="form-label">Posición</label>
+                            <select class="form-select" id="posicion_form" name="posicion" required>
+                                <option value="" disabled selected>Seleccionar...</option>
+                                <option value="Goalkeeper">Portero</option>
+                                <option value="Defender">Defensa</option>
+                                <option value="Midfielder">Mediocampista</option>
+                                <option value="Forward">Delantero</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="nacionalidad" class="form-label">Nacionalidad</label>
+                            <input type="text" class="form-control" id="nacionalidad" name="nacionalidad">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="dorsal" class="form-label">Dorsal</label>
+                            <input type="number" class="form-control" id="dorsal" name="dorsal" min="1" max="99">
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="equipo_id" class="form-label">Equipo</label>
+                            <select class="form-select" id="equipo_id" name="equipo_id" required>
+                                <option value="" disabled selected>Seleccionar...</option>
+                                {% for e in equipos %}
+                                <option value="{{ e.id }}">{{ e.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="altura" class="form-label">Altura (cm)</label>
+                            <input type="number" class="form-control" id="altura" name="altura" min="140" max="220">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="peso" class="form-label">Peso (kg)</label>
+                            <input type="number" class="form-control" id="peso" name="peso" min="50" max="120">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="imagen_url" class="form-label">URL de Imagen</label>
+                        <input type="url" class="form-control" id="imagen_url" name="imagen_url" placeholder="https://...">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="fuente" class="form-label">Fuente de Datos</label>
+                        <select class="form-select" id="fuente" name="fuente">
+                            <option value="manual">Manual</option>
+                            <option value="espn-api">ESPN API</option>
+                            <option value="football-data">Football-Data.org</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="submitPlayerForm()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para confirmar eliminación -->
+<div class="modal fade" id="confirmDeletePlayerModal" tabindex="-1" aria-labelledby="confirmDeletePlayerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeletePlayerModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro que deseas eliminar al jugador <strong id="deletePlayerName"></strong>?
+                <p class="text-danger mt-2">Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="deletePlayerForm" method="post" action="{{ url_for('eliminar_jugador') }}">
+                    <input type="hidden" id="delete_jugador_id" name="id" value="">
+                    <input type="hidden" id="delete_equipo_id" name="equipo_id" value="">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para importar jugadores -->
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importModalLabel">Importar Jugadores</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="importForm" method="post" action="{{ url_for('importar_jugadores') }}" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="importFile" class="form-label">Archivo CSV o JSON</label>
+                        <input type="file" class="form-control" id="importFile" name="importFile" accept=".csv,.json" required>
+                        <div class="form-text">
+                            Selecciona un archivo CSV o JSON con la información de los jugadores.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="importEquipoId" class="form-label">Equipo</label>
+                        <select class="form-select" id="importEquipoId" name="importEquipoId" required>
+                            <option value="" disabled selected>Selecciona el equipo para los jugadores</option>
+                            {% for e in equipos %}
+                            <option value="{{ e.id }}">{{ e.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="importSource" class="form-label">Fuente</label>
+                        <select class="form-select" id="importSource" name="importSource">
+                            <option value="import">Importado</option>
+                            <option value="espn-api">ESPN API</option>
+                            <option value="football-data">Football-Data.org</option>
+                            <option value="espn">ESPN Scraping</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="overwriteExisting" name="overwriteExisting">
+                        <label class="form-check-label" for="overwriteExisting">
+                            Sobrescribir jugadores existentes
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" form="importForm" class="btn btn-primary">Importar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Función para ver detalles de un jugador
+    function verJugador(id) {
+        const modal = new bootstrap.Modal(document.getElementById('viewPlayerModal'));
+        const detailsContainer = document.getElementById('viewPlayerDetails');
+        
+        // Mostrar spinner de carga
+        detailsContainer.innerHTML = `
+            <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="mt-2">Cargando datos del jugador...</p>
+            </div>
+        `;
+        
+        modal.show();
+        
+        // Obtener datos del jugador
+        fetch(`/api/jugadores/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const jugador = data.jugador;
+                    let posicionClass = "";
+                    let posicionTexto = jugador.posicion || "--";
+                    
+                    // Determinar clase de posición
+                    if (jugador.posicion === 'Goalkeeper') {
+                        posicionClass = "position-goalkeeper";
+                        posicionTexto = "Portero";
+                    } else if (jugador.posicion === 'Defender') {
+                        posicionClass = "position-defender";
+                        posicionTexto = "Defensa";
+                    } else if (jugador.posicion === 'Midfielder') {
+                        posicionClass = "position-midfielder";
+                        posicionTexto = "Mediocampista";
+                    } else if (jugador.posicion === 'Forward') {
+                        posicionClass = "position-forward";
+                        posicionTexto = "Delantero";
+                    }
+                    
+                    // Calcular edad si hay fecha de nacimiento
+                    let edad = "--";
+                    if (jugador.fecha_nacimiento) {
+                        const fechaNac = new Date(jugador.fecha_nacimiento);
+                        const hoy = new Date();
+                        edad = hoy.getFullYear() - fechaNac.getFullYear();
+                        const mes = hoy.getMonth() - fechaNac.getMonth();
+                        if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+                            edad--;
+                        }
+                    }
+                    
+                    // Construir HTML con los detalles
+                    detailsContainer.innerHTML = `
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <img loading="lazy" src="${jugador.imagen_url || 'https://via.placeholder.com/200?text=Sin+Foto'}" 
+                                     alt="${jugador.nombre_completo}" class="img-fluid rounded mb-3" 
+                                     style="max-height: 250px; max-width: 200px;">
+                                <div>
+                                    <span class="badge position-badge ${posicionClass}">${posicionTexto}</span>
+                                    <span class="badge bg-secondary">#${jugador.dorsal || "--"}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <h3>${jugador.nombre_completo}</h3>
+                                <p class="text-muted">${jugador.equipo_nombre || "--"}</p>
+                                
+                                <div class="row mt-4">
+                                    <div class="col-md-6 mb-3">
+                                        <strong>Nacionalidad:</strong> ${jugador.nacionalidad || "--"}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <strong>Fecha de Nacimiento:</strong> ${jugador.fecha_nacimiento || "--"} (${edad} años)
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <strong>Altura:</strong> ${jugador.altura ? jugador.altura + ' cm' : "--"}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <strong>Peso:</strong> ${jugador.peso ? jugador.peso + ' kg' : "--"}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <strong>Fuente:</strong> 
+                                        <span class="badge bg-light text-dark">
+                                            <span class="source-indicator source-${jugador.fuente.replace('.', '-')}"></span>
+                                            ${jugador.fuente}
+                                        </span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <strong>ID:</strong> ${jugador.id}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    detailsContainer.innerHTML = `
+                        <div class="alert alert-danger">
+                            Error al cargar los datos del jugador: ${data.error || 'Error desconocido'}
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                detailsContainer.innerHTML = `
+                    <div class="alert alert-danger">
+                        Error al cargar los datos del jugador: ${error.message}
+                    </div>
+                `;
+            });
+    }
+    
+    // Función para editar un jugador
+    function editarJugador(id) {
+        const modal = new bootstrap.Modal(document.getElementById('playerFormModal'));
+        const form = document.getElementById('playerForm');
+        
+        // Actualizar título del modal
+        document.getElementById('playerFormModalLabel').textContent = 'Editar Jugador';
+        
+        // Configurar formulario para edición
+        document.getElementById('jugador_id').value = id;
+        document.getElementById('form_action').value = 'update';
+        form.action = '{{ url_for("editar_jugador") }}';
+        
+        // Obtener datos del jugador
+        fetch(`/api/jugadores/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const jugador = data.jugador;
+                    
+                    // Llenar formulario
+                    document.getElementById('nombre').value = jugador.nombre || '';
+                    document.getElementById('apellido').value = jugador.apellido || '';
+                    document.getElementById('posicion_form').value = jugador.posicion || '';
+                    document.getElementById('nacionalidad').value = jugador.nacionalidad || '';
+                    document.getElementById('dorsal').value = jugador.dorsal || '';
+                    document.getElementById('fecha_nacimiento').value = jugador.fecha_nacimiento || '';
+                    document.getElementById('equipo_id').value = jugador.equipo_id || '';
+                    document.getElementById('altura').value = jugador.altura || '';
+                    document.getElementById('peso').value = jugador.peso || '';
+                    document.getElementById('imagen_url').value = jugador.imagen_url || '';
+                    document.getElementById('fuente').value = jugador.fuente || 'manual';
+                    
+                    modal.show();
+                } else {
+                    alert(`Error al cargar datos del jugador: ${data.error || 'Error desconocido'}`);
+                }
+            })
+            .catch(error => {
+                alert(`Error al cargar datos del jugador: ${error.message}`);
+            });
+    }
+    
+    // Función para preparar el formulario de nuevo jugador
+    function nuevoJugador() {
+        const modal = new bootstrap.Modal(document.getElementById('playerFormModal'));
+        const form = document.getElementById('playerForm');
+        
+        // Actualizar título del modal
+        document.getElementById('playerFormModalLabel').textContent = 'Nuevo Jugador';
+        
+        // Configurar formulario para creación
+        document.getElementById('jugador_id').value = '';
+        document.getElementById('form_action').value = 'create';
+        form.action = '{{ url_for("crear_jugador") }}';
+        
+        // Limpiar formulario
+        form.reset();
+        
+        modal.show();
+    }
+    
+    // Función para confirmar eliminación
+    function confirmarEliminarJugador(id, nombre) {
+        document.getElementById('delete_jugador_id').value = id;
+        document.getElementById('deletePlayerName').textContent = nombre;
+        
+        const modal = new bootstrap.Modal(document.getElementById('confirmDeletePlayerModal'));
+        modal.show();
+    }
+    
+    // Función para enviar formulario
+    function submitPlayerForm() {
+        document.getElementById('playerForm').submit();
+    }
+    
+    // Configurar modal de nuevo jugador
+    document.addEventListener('DOMContentLoaded', function() {
+        const newPlayerBtn = document.querySelector('[data-bs-target="#newPlayerModal"]');
+        if (newPlayerBtn) {
+            newPlayerBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                nuevoJugador();
+            });
+        }
+    });
+</script>
+{% endblock %}
